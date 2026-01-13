@@ -1,0 +1,691 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ============================================
+   BASE STYLES - Typography & Global
+   ============================================ */
+@layer base {
+  html {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, system-ui, sans-serif;
+    font-size: 12px; /* Small font size - Mobile first */
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Responsive font sizes */
+  @media (min-width: 640px) {
+    html {
+      font-size: 13px;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    html {
+      font-size: 14px;
+    }
+  }
+
+  body {
+    @apply bg-gray-50 text-gray-900;
+    @apply min-h-screen w-full;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+    text-align: left;
+  }
+
+  /* Root container */
+  #root {
+    @apply w-full min-h-screen;
+  }
+
+  /* Better text rendering */
+  * {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* Focus visible for accessibility */
+  *:focus-visible {
+    @apply outline-none ring-2 ring-primary-500 ring-offset-2;
+  }
+
+  /* Smooth scrolling with reduced motion support */
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+/* ============================================
+   COMPONENT STYLES
+   ============================================ */
+@layer components {
+  /* Button Variants */
+  .btn-primary {
+    @apply bg-primary-600 text-white font-semibold;
+    @apply px-4 py-3 sm:px-6 sm:py-3 lg:px-8;
+    @apply rounded-lg shadow-sm;
+    @apply hover:bg-primary-700 active:bg-primary-800;
+    @apply focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2;
+    @apply disabled:opacity-50 disabled:cursor-not-allowed;
+    @apply transition-all duration-200;
+    @apply w-full sm:w-auto;
+    @apply text-sm sm:text-base;
+  }
+
+  .btn-secondary {
+    @apply bg-gray-200 text-gray-900 font-semibold;
+    @apply px-4 py-3 sm:px-6 sm:py-3 lg:px-8;
+    @apply rounded-lg shadow-sm;
+    @apply hover:bg-gray-300 active:bg-gray-400;
+    @apply focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2;
+    @apply disabled:opacity-50 disabled:cursor-not-allowed;
+    @apply transition-all duration-200;
+    @apply w-full sm:w-auto;
+    @apply text-sm sm:text-base;
+  }
+
+  .btn-outline {
+    @apply border-2 border-primary-600 text-primary-600 font-semibold;
+    @apply px-4 py-3 sm:px-6 sm:py-3 lg:px-8;
+    @apply rounded-lg;
+    @apply hover:bg-primary-50 active:bg-primary-100;
+    @apply focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2;
+    @apply disabled:opacity-50 disabled:cursor-not-allowed;
+    @apply transition-all duration-200;
+    @apply w-full sm:w-auto;
+    @apply text-sm sm:text-base;
+  }
+
+  .btn-ghost {
+    @apply text-gray-700 font-medium;
+    @apply px-3 py-2 sm:px-4 sm:py-2;
+    @apply rounded-lg;
+    @apply hover:bg-gray-100 active:bg-gray-200;
+    @apply focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2;
+    @apply transition-colors duration-200;
+  }
+
+  .btn-icon {
+    @apply p-2 rounded-lg;
+    @apply hover:bg-gray-100 active:bg-gray-200;
+    @apply focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2;
+    @apply transition-colors duration-200;
+  }
+
+  /* Card Variants */
+  .card {
+    @apply bg-white rounded-lg shadow-sm border border-gray-200;
+    @apply p-4 sm:p-6 lg:p-8;
+    @apply transition-shadow duration-200;
+  }
+
+  .card-hover {
+    @apply card;
+    @apply hover:shadow-md cursor-pointer;
+  }
+
+  .card-compact {
+    @apply bg-white rounded-lg shadow-sm border border-gray-200;
+    @apply p-3 sm:p-4;
+  }
+
+  .card-elevated {
+    @apply bg-white rounded-xl shadow-lg border border-gray-100;
+    @apply p-6 sm:p-8;
+  }
+
+  /* Input Fields */
+  .input-field {
+    @apply w-full;
+    @apply px-3 py-3 sm:px-4 sm:py-2.5;
+    @apply text-base sm:text-sm;
+    @apply border border-gray-300 rounded-lg;
+    @apply bg-white text-gray-900;
+    @apply placeholder-gray-400;
+    @apply focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent;
+    @apply disabled:bg-gray-50 disabled:text-gray-500 disabled:cursor-not-allowed;
+    @apply transition-all duration-200;
+  }
+
+  .input-error {
+    @apply border-red-300 focus:ring-red-500 focus:border-red-500;
+  }
+
+  .input-success {
+    @apply border-green-300 focus:ring-green-500 focus:border-green-500;
+  }
+
+  /* Form Labels */
+  .form-label {
+    @apply block text-sm font-medium text-gray-700 mb-1.5;
+  }
+
+  .form-error {
+    @apply text-xs sm:text-sm text-red-600 mt-1;
+  }
+
+  .form-hint {
+    @apply text-xs text-gray-500 mt-1;
+  }
+
+  /* Container Utilities */
+  .container-custom {
+    @apply max-w-7xl mx-auto;
+    @apply px-4 sm:px-6 lg:px-8;
+  }
+
+  .container-narrow {
+    @apply max-w-4xl mx-auto;
+    @apply px-4 sm:px-6 lg:px-8;
+  }
+
+  .container-wide {
+    @apply max-w-[1400px] mx-auto;
+    @apply px-4 sm:px-6 lg:px-8;
+  }
+
+  /* Loading States */
+  .loading-spinner {
+    @apply animate-spin rounded-full;
+    @apply h-5 w-5 sm:h-6 sm:w-6;
+    @apply border-2 sm:border-3 border-current border-t-transparent;
+  }
+
+  .loading-spinner-lg {
+    @apply animate-spin rounded-full;
+    @apply h-8 w-8 sm:h-10 sm:w-10;
+    @apply border-3 border-current border-t-transparent;
+  }
+
+  .skeleton {
+    @apply animate-pulse bg-gray-200 rounded;
+  }
+
+  /* Badge Variants */
+  .badge {
+    @apply inline-flex items-center;
+    @apply px-2 py-1 sm:px-2.5 sm:py-0.5;
+    @apply text-xs font-medium rounded-full;
+  }
+
+  .badge-primary {
+    @apply badge bg-primary-100 text-primary-800;
+  }
+
+  .badge-success {
+    @apply badge bg-green-100 text-green-800;
+  }
+
+  .badge-warning {
+    @apply badge bg-yellow-100 text-yellow-800;
+  }
+
+  .badge-error {
+    @apply badge bg-red-100 text-red-800;
+  }
+
+  .badge-info {
+    @apply badge bg-blue-100 text-blue-800;
+  }
+
+  /* Alert Variants */
+  .alert {
+    @apply p-4 rounded-lg border;
+    @apply flex items-start gap-3;
+  }
+
+  .alert-info {
+    @apply alert bg-blue-50 border-blue-200 text-blue-800;
+  }
+
+  .alert-success {
+    @apply alert bg-green-50 border-green-200 text-green-800;
+  }
+
+  .alert-warning {
+    @apply alert bg-yellow-50 border-yellow-200 text-yellow-800;
+  }
+
+  .alert-error {
+    @apply alert bg-red-50 border-red-200 text-red-800;
+  }
+
+  /* Divider */
+  .divider {
+    @apply border-t border-gray-200 my-6;
+  }
+
+  .divider-lg {
+    @apply border-t border-gray-200 my-8 sm:my-10 lg:my-12;
+  }
+
+  /* Link Styles */
+  .link {
+    @apply text-primary-600 hover:text-primary-700 hover:underline;
+    @apply transition-colors duration-200;
+  }
+
+  .link-subtle {
+    @apply text-gray-600 hover:text-gray-900;
+    @apply transition-colors duration-200;
+  }
+}
+
+/* ============================================
+   UTILITY CLASSES
+   ============================================ */
+@layer utilities {
+  /* Spacing Utilities */
+  .section-padding {
+    @apply px-4 sm:px-6 lg:px-8;
+    @apply py-8 sm:py-12 lg:py-16;
+  }
+
+  .section-padding-y {
+    @apply py-8 sm:py-12 lg:py-16;
+  }
+
+  .section-padding-x {
+    @apply px-4 sm:px-6 lg:px-8;
+  }
+
+  /* Text Utilities */
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .text-pretty {
+    text-wrap: pretty;
+  }
+
+  /* Scrollbar Utilities */
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .custom-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: theme('colors.gray.300') transparent;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background-color: theme('colors.gray.300');
+    border-radius: 20px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background-color: theme('colors.gray.400');
+  }
+
+  /* Touch Device Optimizations */
+  .touch-target {
+    @apply min-h-[44px] min-w-[44px]; /* iOS/Android recommended touch target */
+  }
+
+  .safe-area-inset-top {
+    padding-top: env(safe-area-inset-top);
+  }
+
+  .safe-area-inset-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  .safe-area-inset-left {
+    padding-left: env(safe-area-inset-left);
+  }
+
+  .safe-area-inset-right {
+    padding-right: env(safe-area-inset-right);
+  }
+
+  /* Glass Morphism */
+  .glass {
+    @apply bg-white/80 backdrop-blur-sm;
+  }
+
+  .glass-dark {
+    @apply bg-gray-900/80 backdrop-blur-sm;
+  }
+
+  /* Gradient Text */
+  .gradient-text {
+    @apply bg-gradient-to-r from-primary-600 to-purple-600 bg-clip-text text-transparent;
+  }
+
+  /* Hide on Mobile */
+  .hide-mobile {
+    @apply hidden sm:block;
+  }
+
+  /* Show only on Mobile */
+  .show-mobile {
+    @apply block sm:hidden;
+  }
+
+  /* Aspect Ratios */
+  .aspect-square {
+    aspect-ratio: 1 / 1;
+  }
+
+  .aspect-video {
+    aspect-ratio: 16 / 9;
+  }
+
+  .aspect-portrait {
+    aspect-ratio: 3 / 4;
+  }
+
+  /* Truncate Text */
+  .truncate-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .truncate-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  /* Animation Delays */
+  .animate-delay-100 {
+    animation-delay: 100ms;
+  }
+
+  .animate-delay-200 {
+    animation-delay: 200ms;
+  }
+
+  .animate-delay-300 {
+    animation-delay: 300ms;
+  }
+
+  .animate-delay-500 {
+    animation-delay: 500ms;
+  }
+}
+
+/* ============================================
+   CUSTOM ANIMATIONS
+   ============================================ */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slide-down {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.3s ease-out;
+}
+
+.animate-slide-up {
+  animation: slide-up 0.4s ease-out;
+}
+
+.animate-slide-down {
+  animation: slide-down 0.4s ease-out;
+}
+
+.animate-scale-in {
+  animation: scale-in 0.3s ease-out;
+}
+
+/* ============================================
+   PRINT STYLES
+   ============================================ */
+@media print {
+  .header,
+  .footer,
+  .no-print,
+  .btn-primary,
+  .btn-secondary,
+  .btn-outline {
+    display: none !important;
+  }
+
+  body {
+    @apply bg-white text-black;
+  }
+
+  .card {
+    @apply shadow-none border-2 border-gray-300;
+  }
+
+  a {
+    text-decoration: underline;
+  }
+
+  * {
+    color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+}
+
+/* ============================================
+   TOAST/NOTIFICATION STYLES
+   ============================================ */
+.toast-container {
+  @apply z-[9999];
+}
+
+/* ============================================
+   MOBILE SPECIFIC OPTIMIZATIONS
+   ============================================ */
+@media (max-width: 639px) {
+  /* Larger touch targets on mobile */
+  button,
+  a,
+  input,
+  select {
+    @apply min-h-[44px];
+  }
+
+  /* Prevent zoom on input focus (iOS) */
+  input[type="text"],
+  input[type="email"],
+  input[type="tel"],
+  input[type="password"],
+  input[type="number"],
+  input[type="search"],
+  select,
+  textarea {
+    font-size: 16px !important; /* Prevents iOS zoom */
+  }
+
+  /* Better mobile modal */
+  .modal-mobile {
+    @apply fixed inset-x-0 bottom-0 top-auto;
+    @apply rounded-t-2xl;
+    @apply max-h-[90vh] overflow-y-auto;
+  }
+
+  /* Mobile-friendly cards */
+  .card-mobile {
+    @apply rounded-lg;
+    @apply shadow-sm;
+  }
+
+  /* Sticky mobile header spacing */
+  .mobile-header-offset {
+    @apply pt-16; /* Account for fixed header */
+  }
+
+  /* Full-width on mobile */
+  .mobile-full {
+    @apply w-full rounded-none;
+  }
+}
+
+/* ============================================
+   TABLET SPECIFIC (640px - 1023px)
+   ============================================ */
+@media (min-width: 640px) and (max-width: 1023px) {
+  /* Optimized grid for tablets */
+  .tablet-grid-2 {
+    @apply grid grid-cols-2 gap-4;
+  }
+
+  .tablet-grid-3 {
+    @apply grid grid-cols-3 gap-4;
+  }
+}
+
+/* ============================================
+   DARK MODE SUPPORT (Optional)
+   ============================================ */
+@media (prefers-color-scheme: dark) {
+  /* Uncomment if you want dark mode support */
+  /*
+  .dark-mode-auto body {
+    @apply bg-gray-900 text-gray-100;
+  }
+
+  .dark-mode-auto .card {
+    @apply bg-gray-800 border-gray-700;
+  }
+
+  .dark-mode-auto .input-field {
+    @apply bg-gray-800 border-gray-700 text-gray-100;
+  }
+  */
+}
+
+/* ============================================
+   HIGH CONTRAST MODE (Accessibility)
+   ============================================ */
+@media (prefers-contrast: high) {
+  * {
+    @apply border-2;
+  }
+
+  .btn-primary,
+  .btn-secondary,
+  .btn-outline {
+    @apply border-2 border-black;
+  }
+}
+
+/* ============================================
+   PERFORMANCE OPTIMIZATIONS
+   ============================================ */
+
+/* GPU Acceleration for animations */
+.will-change-transform {
+  will-change: transform;
+}
+
+.will-change-opacity {
+  will-change: opacity;
+}
+
+/* Optimize image loading */
+img {
+  content-visibility: auto;
+}
+
+/* ============================================
+   UTILITY EXTENSIONS
+   ============================================ */
+
+/* Center content both ways */
+.center-content {
+  @apply flex items-center justify-center;
+}
+
+/* Center content vertically */
+.center-y {
+  @apply flex items-center;
+}
+
+/* Center content horizontally */
+.center-x {
+  @apply flex justify-center;
+}
+
+/* Sticky positioning utilities */
+.sticky-top {
+  @apply sticky top-0 z-10;
+}
+
+.sticky-bottom {
+  @apply sticky bottom-0 z-10;
+}
+
+/* Absolute positioning utilities */
+.absolute-center {
+  @apply absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2;
+}
+
+.absolute-center-x {
+  @apply absolute left-1/2 -translate-x-1/2;
+}
+
+.absolute-center-y {
+  @apply absolute top-1/2 -translate-y-1/2;
+}

@@ -1,0 +1,14 @@
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /cart
+Disallow: /checkout
+Disallow: /profile
+Disallow: /orders
+Disallow: /wishlist
+Disallow: /my-designs
+Disallow: /custom-designs
+Disallow: /login
+Disallow: /signup
+
+Sitemap: https://www.coverghar.in/sitemap.xml
