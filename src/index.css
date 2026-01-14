@@ -46,7 +46,11 @@
     -webkit-tap-highlight-color: transparent;
   }
 
+<<<<<<< HEAD
   /* Focus visible for accessibility hj*/
+=======
+  /* Focus visible for accessibility */
+>>>>>>> b80147e54a1b13d73869fd03c430eefd716ddd8b
   *:focus-visible {
     @apply outline-none ring-2 ring-primary-500 ring-offset-2;
   }
@@ -200,13 +204,21 @@
   .loading-spinner {
     @apply animate-spin rounded-full;
     @apply h-5 w-5 sm:h-6 sm:w-6;
+<<<<<<< HEAD
     @apply border-2 sm:border-4 border-current border-t-transparent;
+=======
+    @apply border-2 sm:border-3 border-current border-t-transparent;
+>>>>>>> b80147e54a1b13d73869fd03c430eefd716ddd8b
   }
 
   .loading-spinner-lg {
     @apply animate-spin rounded-full;
     @apply h-8 w-8 sm:h-10 sm:w-10;
+<<<<<<< HEAD
     @apply border-4 border-current border-t-transparent;
+=======
+    @apply border-3 border-current border-t-transparent;
+>>>>>>> b80147e54a1b13d73869fd03c430eefd716ddd8b
   }
 
   .skeleton {
@@ -281,6 +293,7 @@
     @apply text-gray-600 hover:text-gray-900;
     @apply transition-colors duration-200;
   }
+<<<<<<< HEAD
 
   /* Additional Component Styles */
   .gradient-border {
@@ -391,6 +404,8 @@
   .animate-in {
     animation-fill-mode: both;
   }
+=======
+>>>>>>> b80147e54a1b13d73869fd03c430eefd716ddd8b
 }
 
 /* ============================================

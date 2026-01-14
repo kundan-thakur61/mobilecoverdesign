@@ -9,7 +9,10 @@ import { resolveImageUrl, getProductImage } from '../utils/helpers';
 
 /**
  * Admin Shipments Management Page
+<<<<<<< HEAD
  * 
+=======
+>>>>>>> b80147e54a1b13d73869fd03c430eefd716ddd8b
  * Manage Shiprocket shipments for all orders
  */
 export default function AdminShipments() {
@@ -282,7 +285,10 @@ export default function AdminShipments() {
                   {/* Shiprocket Management */}
                   {order.payment?.status === 'paid' && (
                     <AdminShiprocketManagement
+<<<<<<< HEAD
                       key={order._id}
+=======
+>>>>>>> b80147e54a1b13d73869fd03c430eefd716ddd8b
                       orderId={order._id}
                       orderType="regular"
                       order={order}

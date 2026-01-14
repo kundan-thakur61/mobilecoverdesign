@@ -20,7 +20,11 @@ const OrderSuccess = () => {
   const [paymentStatus, setPaymentStatus] = useState(null);
   const [isRefreshing, setIsRefreshing] = useState(false);
 
+<<<<<<< HEAD
   // Fetch payment status hj
+=======
+  // Fetch payment status
+>>>>>>> b80147e54a1b13d73869fd03c430eefd716ddd8b
   const fetchPaymentStatus = useCallback(async () => {
     try {
       const response = await paymentAPI.getPaymentStatus(id);
@@ -256,7 +260,11 @@ const OrderSuccess = () => {
                 )}
                 
                 {/* Fallback for orders without shipment */}
+<<<<<<< HEAD
                 {!order.shiprocket?.waybill && (
+=======
+                {!order.deliveryOne?.waybill && (
+>>>>>>> b80147e54a1b13d73869fd03c430eefd716ddd8b
                   <div className="space-y-4">
                     <div className="flex items-center gap-4">
                       <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">

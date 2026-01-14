@@ -13,7 +13,11 @@ export default function AdminShiprocketManagement({ orderId, orderType = 'regula
   const [selectedCourier, setSelectedCourier] = useState(null);
   const [showCourierSelection, setShowCourierSelection] = useState(false);
 
+<<<<<<< HEAD
   // Update shipmentData when order prop 
+=======
+  // Update shipmentData when order prop changes
+>>>>>>> b80147e54a1b13d73869fd03c430eefd716ddd8b
   useEffect(() => {
     setShipmentData(order?.shiprocket || null);
   }, [order?.shiprocket]);
@@ -342,6 +346,7 @@ export default function AdminShiprocketManagement({ orderId, orderType = 'regula
       <div className="mt-4 p-3 sm:p-4 bg-gray-50 rounded-lg text-xs sm:text-sm text-gray-600">
         <p className="font-semibold mb-2">Workflow:</p>
         <ol className="list-decimal list-inside space-y-1">
+<<<<<<< HEAD
           <li key="create-shipment" className={shipmentData?.shipmentId ? 'line-through text-green-600' : ''}>
             Create Shipment in Shiprocket
           </li>
@@ -352,6 +357,18 @@ export default function AdminShiprocketManagement({ orderId, orderType = 'regula
             Generate shipping label (optional)
           </li>
           <li key="request-pickup" className={!shipmentData?.shipmentId ? 'text-gray-400' : ''}>
+=======
+          <li className={shipmentData?.shipmentId ? 'line-through text-green-600' : ''}>
+            Create Shipment in DeliveryOne
+          </li>
+          <li className={!shipmentData?.shipmentId ? 'text-gray-400' : shipmentData?.awbCode ? 'line-through text-green-600' : ''}>
+            Auto-assign cheapest courier OR select manually
+          </li>
+          <li className={!shipmentData?.shipmentId ? 'text-gray-400' : ''}>
+            Generate shipping label (optional)
+          </li>
+          <li className={!shipmentData?.shipmentId ? 'text-gray-400' : ''}>
+>>>>>>> b80147e54a1b13d73869fd03c430eefd716ddd8b
             Request pickup from courier
           </li>
         </ol>
