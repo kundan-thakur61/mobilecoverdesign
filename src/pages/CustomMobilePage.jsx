@@ -701,7 +701,7 @@ const CustomMobilePage = () => {
     toast.success(`Selected ${template.name} template`);
     setShowTemplates(false);
     // Simulate template loading
-    setImagePreview('/placeholder-template.jpg');
+    setImagePreview('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgdmlld0JveD0iMCAwIDEwMCAxMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIiBmaWxsPSIjRjVGNUY1Ii8+Cjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iOSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iIGZpbGw9IiM4ODgiPlRlbXBsYXRlPC90ZXh0Pgo8L3N2Zz4=');
   };
 
   const handleSaveDesign = () => {

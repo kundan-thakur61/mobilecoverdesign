@@ -1,10 +1,7 @@
 import { useState, useEffect } from 'react';
 import { FiPackage, FiTruck, FiMapPin, FiCheckCircle, FiClock, FiAlertCircle } from 'react-icons/fi';
 import { toast } from 'react-toastify';
-<<<<<<< HEAD
 import { trackShipment } from '../api/shiprocket';
-=======
->>>>>>> b80147e54a1b13d73869fd03c430eefd716ddd8b
 
 const ShipmentTracking = ({ orderId, waybill, className = '' }) => {
   const [trackingData, setTrackingData] = useState(null);
@@ -12,34 +9,15 @@ const ShipmentTracking = ({ orderId, waybill, className = '' }) => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-<<<<<<< HEAD
     if (!orderId) return;
-=======
-    if (!waybill) return;
->>>>>>> b80147e54a1b13d73869fd03c430eefd716ddd8b
 
     const fetchTrackingData = async () => {
       try {
         setLoading(true);
         setError(null);
-<<<<<<< HEAD
 
         // Call Shiprocket tracking API integration
         const data = await trackShipment(orderId, 'regular');
-
-=======
-        
-        // Call your backend tracking API
-        const response = await fetch(`/api/deliveryone/track/${waybill}`, {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        });
-
-        const data = await response.json();
-        
->>>>>>> b80147e54a1b13d73869fd03c430eefd716ddd8b
         if (data.success) {
           setTrackingData(data.data);
         } else {
@@ -55,11 +33,7 @@ const ShipmentTracking = ({ orderId, waybill, className = '' }) => {
     };
 
     fetchTrackingData();
-<<<<<<< HEAD
   }, [orderId]);
-=======
-  }, [waybill]);
->>>>>>> b80147e54a1b13d73869fd03c430eefd716ddd8b
 
   const getStatusIcon = (status) => {
     switch (status?.toLowerCase()) {
@@ -196,26 +170,16 @@ const ShipmentTracking = ({ orderId, waybill, className = '' }) => {
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-2 bg-primary-600 text-white px-4 py-2 rounded-lg hover:bg-primary-700 transition-colors"
                 >
-<<<<<<< HEAD
                   Track on Shiprocket Website
-=======
-                  Track on Delhivery Website
->>>>>>> b80147e54a1b13d73869fd03c430eefd716ddd8b
                 </a>
               </div>
             )}
           </div>
         )}
 
-<<<<<<< HEAD
         {/* Shiprocket Branding */}
         <div className="text-center text-xs text-gray-500 mt-6">
           Powered by Shiprocket
-=======
-        {/* Delhivery Branding */}
-        <div className="text-center text-xs text-gray-500 mt-6">
-          Powered by Delhivery
->>>>>>> b80147e54a1b13d73869fd03c430eefd716ddd8b
         </div>
       </div>
     </div>

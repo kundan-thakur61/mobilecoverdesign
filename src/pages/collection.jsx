@@ -2,8 +2,6 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
-<<<<<<< HEAD
-import "../Collectionenhancements.css";
 import { 
   FiArrowLeft, 
   FiCheckCircle, 
@@ -20,9 +18,6 @@ import {
   FiList,
   FiDownload
 } from 'react-icons/fi';
-=======
-import { FiArrowLeft, FiCheckCircle, FiImage, FiSmartphone, FiTrash2, FiUpload } from 'react-icons/fi';
->>>>>>> b80147e54a1b13d73869fd03c430eefd716ddd8b
 import collectionAPI from '../api/collectionAPI';
 import mobileAPI from '../api/mobileAPI';
 import { FALLBACK_COLLECTION_MAP } from '../data/fallbackCollections';
@@ -39,18 +34,12 @@ const emptyMeta = {
 
 const DEFAULT_FRAME = '/frames/frame-1-fixed.svg';
 const COLLECTION_CASE_PRICE = 199;
-<<<<<<< HEAD
 
-=======
->>>>>>> b80147e54a1b13d73869fd03c430eefd716ddd8b
 const slugifyId = (value) => {
   const parsed = String(value || '').toLowerCase().replace(/[^a-z0-9]/g, '') || 'x';
   return parsed;
 };
-<<<<<<< HEAD
 
-=======
->>>>>>> b80147e54a1b13d73869fd03c430eefd716ddd8b
 const normalizeHandle = (value = '') => (
   value
     .toString()
@@ -60,7 +49,6 @@ const normalizeHandle = (value = '') => (
     .replace(/^-+|-+$/g, '')
 );
 
-<<<<<<< HEAD
 // Image Lightbox Component
 const ImageLightbox = ({ image, collection, onClose, onNext, onPrev, currentIndex, totalCount }) => {
   const imgSrc = resolveImageUrl(
@@ -79,7 +67,7 @@ const ImageLightbox = ({ image, collection, onClose, onNext, onPrev, currentInde
 
   return (
     <div 
-      className="fixed inset-0 bg-black/95 z-50 flex items-center justify-center p-4 lightbox-backdrop"
+      className="fixed inset-0 bg-black/95 z-50 flex items-center justify-center p-4"
       onClick={onClose}
     >
       <button
@@ -108,18 +96,13 @@ const ImageLightbox = ({ image, collection, onClose, onNext, onPrev, currentInde
       )}
 
       <div 
-        className="max-w-6xl max-h-[90vh] flex flex-col items-center lightbox-content"
+        className="max-w-6xl max-h-[90vh] flex flex-col items-center"
         onClick={(e) => e.stopPropagation()}
       >
         <img
           src={imgSrc}
           alt={image?.caption || collection?.title}
-          className="max-w-full max-h-[80vh] object-contain rounded-lg shadow-2xl image-zoom smooth-color"
-          onError={(e) => {
-            e.target.onerror = null; // Prevent infinite loop if fallback also fails
-            e.target.src = '/placeholder-image.svg'; // Fallback image
-          }}
-          style={{ imageRendering: 'crisp-edges' }}
+          className="max-w-full max-h-[80vh] object-contain rounded-lg shadow-2xl"
         />
         {image?.caption && (
           <p className="text-white mt-4 text-lg">{image.caption}</p>
@@ -148,7 +131,6 @@ const ImageCard = ({
 }) => {
   const [isLoaded, setIsLoaded] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
-  const [imageError, setImageError] = useState(false);
 
   const key = image._id || image.publicId || image.url;
   const tileSrc = resolveImageUrl(
@@ -157,7 +139,7 @@ const ImageCard = ({
 
   return (
     <div
-      className={`relative group rounded-2xl overflow-hidden border transition-all duration-300 transform image-card card-hover ${
+      className={`relative group rounded-2xl overflow-hidden border transition-all duration-300 transform ${
         isSelected 
           ? 'border-primary-500 ring-4 ring-primary-200 scale-[1.02] shadow-xl' 
           : 'border-gray-200 hover:border-primary-300 hover:shadow-lg hover:scale-[1.01]'
@@ -166,8 +148,8 @@ const ImageCard = ({
       onMouseLeave={() => setIsHovered(false)}
     >
       <div
-        className="relative w-full aspect-[3/4] bg-gradient-to-br from-gray-50 to-gray-100 image-zoom smooth-color cursor-pointer"
         onClick={() => onSelect(image)}
+        className="relative w-full aspect-[3/4] bg-gradient-to-br from-gray-50 to-gray-100 cursor-pointer"
         role="button"
         tabIndex="0"
         onKeyDown={(e) => {
@@ -179,48 +161,43 @@ const ImageCard = ({
       >
         {/* Loading skeleton */}
         {!isLoaded && (
-          <div className="absolute inset-0 bg-gray-200 animate-pulse skeleton will-change-opacity" />
+          <div className="absolute inset-0 bg-gray-200 animate-pulse" />
         )}
 
         {/* Image */}
-        <div className="absolute inset-0 flex items-center justify-center p-2 contain-paint">
+        <div className="absolute inset-0 flex items-center justify-center p-2">
           <img
-            src={imageError ? '/placeholder-image.svg' : tileSrc}
+            src={tileSrc}
             alt={image.caption || collection.title}
-            className={`max-w-full max-h-full object-contain transition-all duration-500 image-blur-load will-change-transform ${
-              isLoaded ? 'opacity-100 scale-100 loaded' : 'opacity-0 scale-95'
+            className={`max-w-full max-h-full object-contain transition-all duration-500 ${
+              isLoaded ? 'opacity-100 scale-100' : 'opacity-0 scale-95'
             } ${isHovered ? 'scale-105' : ''}`}
             loading="lazy"
             onLoad={() => setIsLoaded(true)}
-            onError={() => {
-              setImageError(true);
-            }}
-            style={{ imageRendering: 'crisp-edges' }}
           />
         </div>
 
         {/* Hover overlay */}
         {isHovered && (
-          <div className="absolute inset-0 bg-black/20 backdrop-blur-[2px] transition-all duration-300 glass smooth-color">
+          <div className="absolute inset-0 bg-black/20 backdrop-blur-[2px] transition-all duration-300">
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex gap-2">
-              <div
+              <button
                 onClick={(e) => {
                   e.stopPropagation();
                   onZoom(image);
                 }}
-                className="bg-white/90 hover:bg-white p-3 rounded-full shadow-lg transition smooth-color tooltip cursor-pointer"
+                className="bg-white/90 hover:bg-white p-3 rounded-full shadow-lg transition"
                 title="View full size"
-                data-tooltip="Zoom image"
               >
                 <FiMaximize2 className="w-5 h-5 text-gray-800" />
-              </div>
+              </button>
             </div>
           </div>
         )}
 
         {/* Selected badge */}
         {isSelected && (
-          <span className="absolute top-3 left-3 flex items-center gap-1.5 bg-white/95 text-primary-600 text-xs font-bold px-3 py-1.5 rounded-full shadow-lg backdrop-blur-sm animate-in fade-in slide-in-from-top-2 duration-300 badge-enter">
+          <span className="absolute top-3 left-3 flex items-center gap-1.5 bg-white/95 text-primary-600 text-xs font-bold px-3 py-1.5 rounded-full shadow-lg backdrop-blur-sm animate-in fade-in slide-in-from-top-2 duration-300">
             <FiCheckCircle className="h-4 w-4" />
             Selected
           </span>
@@ -228,21 +205,21 @@ const ImageCard = ({
 
         {/* Mobile Company Badge */}
         {selectedCompany && selectedModel && (
-          <span className="absolute top-3 right-3 flex items-center gap-1 bg-gradient-to-r from-primary-600 to-primary-700 text-white text-xs font-medium px-2.5 py-1.5 rounded-full shadow-lg badge-glow">
+          <span className="absolute top-3 right-3 flex items-center gap-1 bg-gradient-to-r from-primary-600 to-primary-700 text-white text-xs font-medium px-2.5 py-1.5 rounded-full shadow-lg">
             <FiSmartphone className="h-3 w-3" />
             {selectedCompany.name}
           </span>
         )}
 
         {/* Bottom number badge */}
-        <span className="absolute bottom-3 left-1/2 -translate-x-1/2 bg-black/80 backdrop-blur-sm text-white text-sm font-bold px-3 py-1.5 rounded-full shadow-lg selection-ring">
+        <span className="absolute bottom-3 left-1/2 -translate-x-1/2 bg-black/80 backdrop-blur-sm text-white text-sm font-bold px-3 py-1.5 rounded-full shadow-lg">
           {String(index + 1).padStart(2, '0')}
         </span>
 
         {/* Caption with model info */}
         {(image.caption || (selectedCompany && selectedModel)) && (
           <div className="absolute bottom-12 left-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-            <div className="bg-white/95 backdrop-blur-md rounded-lg px-3 py-2 text-center shadow-xl glass">
+            <div className="bg-white/95 backdrop-blur-md rounded-lg px-3 py-2 text-center shadow-xl">
               {image.caption && (
                 <p className="text-xs font-semibold text-gray-800 truncate">{image.caption}</p>
               )}
@@ -260,7 +237,7 @@ const ImageCard = ({
               e.stopPropagation();
               onDelete(image._id);
             }}
-            className="absolute top-14 right-3 bg-red-500 hover:bg-red-600 rounded-full p-2 text-white shadow-lg opacity-0 group-hover:opacity-100 transition-all duration-300 transform hover:scale-110 smooth-color"
+            className="absolute top-14 right-3 bg-red-500 hover:bg-red-600 rounded-full p-2 text-white shadow-lg opacity-0 group-hover:opacity-100 transition-all duration-300 transform hover:scale-110"
             title="Delete image"
           >
             <FiTrash2 className="w-4 h-4" />
@@ -271,15 +248,12 @@ const ImageCard = ({
   );
 };
 
-=======
->>>>>>> b80147e54a1b13d73869fd03c430eefd716ddd8b
 const CollectionPage = () => {
   const { handle } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.user);
   const isAdmin = user?.role === 'admin';
-<<<<<<< HEAD
 
   const normalizedHandle = useMemo(() => normalizeHandle(handle), [handle]);
   const fallbackCollection = useMemo(
@@ -289,12 +263,6 @@ const CollectionPage = () => {
 
   const galleryRef = useRef(null);
 
-=======
-  const normalizedHandle = useMemo(() => normalizeHandle(handle), [handle]);
-  const fallbackCollection = useMemo(() => FALLBACK_COLLECTION_MAP[normalizedHandle] || null, [normalizedHandle]);
-
-  const galleryRef = useRef(null);
->>>>>>> b80147e54a1b13d73869fd03c430eefd716ddd8b
   const [collection, setCollection] = useState(null);
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
@@ -303,7 +271,6 @@ const CollectionPage = () => {
   const [uploading, setUploading] = useState(false);
   const [savingMeta, setSavingMeta] = useState(false);
   const [creating, setCreating] = useState(false);
-<<<<<<< HEAD
   const [createDraft, setCreateDraft] = useState({
     ...emptyMeta,
     title: '',
@@ -311,11 +278,6 @@ const CollectionPage = () => {
   });
   const [selectedImage, setSelectedImage] = useState(null);
 
-=======
-  const [createDraft, setCreateDraft] = useState({ ...emptyMeta, title: '', handle: handle || '' });
-  const [selectedImage, setSelectedImage] = useState(null);
-  
->>>>>>> b80147e54a1b13d73869fd03c430eefd716ddd8b
   // Mobile company and model state
   const [companies, setCompanies] = useState([]);
   const [models, setModels] = useState([]);
@@ -325,52 +287,22 @@ const CollectionPage = () => {
   const [loadingModels, setLoadingModels] = useState(false);
   const [catalogError, setCatalogError] = useState('');
 
-<<<<<<< HEAD
   // New enhancement states
   const [searchQuery, setSearchQuery] = useState('');
   const [viewMode, setViewMode] = useState('grid'); // 'grid' or 'list'
   const [filterCategory, setFilterCategory] = useState('all'); // 'all', 'art', 'photo'
   const [lightboxImage, setLightboxImage] = useState(null);
   const [lightboxIndex, setLightboxIndex] = useState(0);
-  const [sortBy, setSortBy] = useState('default'); // 'default', 'name', jj 'recent'
+  const [sortBy, setSortBy] = useState('default'); // 'default', 'name', 'recent'
 
   const loadCollection = useCallback(async () => {
     if (!handle) return;
 
-    setCollection(null);
-    setLoading(true);
-    setError('');
-    setNotFound(false);
-    
-    try {
-      const res = await collectionAPI.getByHandle(handle);
-      const data = res.data?.data?.collection;
-      if (data) {
-        setCollection(data);
-        setNotFound(false);
-        setError('');
-        return;
-      }
-      if (fallbackCollection) {
-        setCollection(fallbackCollection);
-        setNotFound(false);
-        setError('');
-      } else {
-        setNotFound(true);
-      }
-    } catch (err) {
-      if (err.response?.status === 404) {
-=======
-  const loadCollection = useCallback(async () => {
-    if (!handle) return;
-    
-    // For admin users, try to fetch from database first to see if there's a real collection
     if (isAdmin) {
       setCollection(null);
       setLoading(true);
       setError('');
       setNotFound(false);
-      
       try {
         const res = await collectionAPI.getByHandle(handle);
         const data = res.data?.data?.collection;
@@ -380,30 +312,15 @@ const CollectionPage = () => {
           setError('');
           return;
         }
-        // If no collection found in database, fall back to fallback collection
->>>>>>> b80147e54a1b13d73869fd03c430eefd716ddd8b
         if (fallbackCollection) {
           setCollection(fallbackCollection);
           setNotFound(false);
           setError('');
         } else {
-<<<<<<< HEAD
-          setCollection(null);
-          setNotFound(true);
-        }
-      } else {
-        const message = err.response?.data?.message || err.message || 'Failed to load collection';
-        setError(message);
-        setNotFound(true);
-      }
-    } finally {
-      setLoading(false);
-=======
           setNotFound(true);
         }
       } catch (err) {
         if (err.response?.status === 404) {
-          // If no collection found in database, fall back to fallback collection
           if (fallbackCollection) {
             setCollection(fallbackCollection);
             setNotFound(false);
@@ -421,46 +338,56 @@ const CollectionPage = () => {
         setLoading(false);
       }
     } else {
-      // For non-admin users, continue with existing fallback-first logic
-      const hasFallback = Boolean(fallbackCollection);
-
-      if (hasFallback) {
-        setCollection(fallbackCollection);
-        setNotFound(false);
-        setError('');
-        setLoading(false);
-      } else {
-        setCollection(null);
-        setLoading(true);
-        setError('');
-        setNotFound(false);
-      }
-
-      // Only try to fetch from API if no fallback exists
-      if (!hasFallback) {
-        try {
-          const res = await collectionAPI.getByHandle(handle);
-          const data = res.data?.data?.collection;
-          if (data) {
-            setCollection(data);
+      // Always try API first for non-admin users
+      setCollection(null);
+      setLoading(true);
+      setError('');
+      setNotFound(false);
+      
+      try {
+        const res = await collectionAPI.getByHandle(handle);
+        const data = res.data?.data?.collection;
+        if (data) {
+          setCollection(data);
+          setNotFound(false);
+          setError('');
+          return;
+        }
+        
+        // Fall back to static collection if API returns no data
+        if (fallbackCollection) {
+          setCollection(fallbackCollection);
+          setNotFound(false);
+          setError('');
+        } else {
+          setNotFound(true);
+        }
+      } catch (err) {
+        if (err.response?.status === 404) {
+          // Try fallback collection on 404
+          if (fallbackCollection) {
+            setCollection(fallbackCollection);
             setNotFound(false);
             setError('');
-            return;
-          }
-          setNotFound(true);
-        } catch (err) {
-          if (err.response?.status === 404) {
+          } else {
             setCollection(null);
             setNotFound(true);
+          }
+        } else {
+          // For other errors, try fallback as backup
+          if (fallbackCollection) {
+            setCollection(fallbackCollection);
+            setNotFound(false);
+            setError('');
           } else {
             const message = err.response?.data?.message || err.message || 'Failed to load collection';
             setError(message);
+            setNotFound(true);
           }
-        } finally {
-          setLoading(false);
         }
+      } finally {
+        setLoading(false);
       }
->>>>>>> b80147e54a1b13d73869fd03c430eefd716ddd8b
     }
   }, [handle, fallbackCollection, isAdmin]);
 
@@ -481,7 +408,6 @@ const CollectionPage = () => {
 
   const galleryImages = useMemo(() => collection?.images || [], [collection]);
   const accent = metaDraft.accentColor || '#0ea5e9';
-<<<<<<< HEAD
 
   const selectedImageUrl = useMemo(() => {
     if (!selectedImage) return '';
@@ -494,13 +420,6 @@ const CollectionPage = () => {
           selectedImage.publicUrl ||
           selectedImage.previewUrl ||
           '';
-=======
-  const selectedImageUrl = useMemo(() => {
-    if (!selectedImage) return '';
-    const source = typeof selectedImage === 'string'
-      ? selectedImage
-      : selectedImage.url || selectedImage.secure_url || selectedImage.path || selectedImage.publicUrl || selectedImage.previewUrl || '';
->>>>>>> b80147e54a1b13d73869fd03c430eefd716ddd8b
     return resolveImageUrl(source);
   }, [selectedImage]);
 
@@ -511,15 +430,11 @@ const CollectionPage = () => {
     }
     setSelectedImage((prev) => {
       if (!prev) return galleryImages[0];
-<<<<<<< HEAD
       const stillExists = galleryImages.find(
         (image) =>
           (image._id && prev?._id && image._id === prev._id) ||
           (!image._id && image.url === prev?.url)
       );
-=======
-      const stillExists = galleryImages.find((image) => (image._id && prev?._id && image._id === prev._id) || (!image._id && image.url === prev?.url));
->>>>>>> b80147e54a1b13d73869fd03c430eefd716ddd8b
       return stillExists || galleryImages[0];
     });
   }, [galleryImages]);
@@ -548,13 +463,9 @@ const CollectionPage = () => {
       }
     };
     fetchCompanies();
-<<<<<<< HEAD
     return () => {
       ignore = true;
     };
-=======
-    return () => { ignore = true; };
->>>>>>> b80147e54a1b13d73869fd03c430eefd716ddd8b
   }, []);
 
   // Fetch mobile models when company changes
@@ -565,10 +476,7 @@ const CollectionPage = () => {
       setLoadingModels(false);
       return;
     }
-<<<<<<< HEAD
 
-=======
->>>>>>> b80147e54a1b13d73869fd03c430eefd716ddd8b
     if (selectedCompany.__isFallback) {
       const fallbackModels = selectedCompany.models || [];
       setModels(fallbackModels);
@@ -576,22 +484,15 @@ const CollectionPage = () => {
       setLoadingModels(false);
       return;
     }
-<<<<<<< HEAD
 
-=======
->>>>>>> b80147e54a1b13d73869fd03c430eefd716ddd8b
     let cancelled = false;
     const fetchModels = async () => {
       try {
         setLoadingModels(true);
-<<<<<<< HEAD
         const response = await mobileAPI.getModels({
           company: selectedCompany._id,
           limit: 200
         });
-=======
-        const response = await mobileAPI.getModels({ company: selectedCompany._id, limit: 200 });
->>>>>>> b80147e54a1b13d73869fd03c430eefd716ddd8b
         const fetchedModels = response?.data?.data?.models || [];
         if (!cancelled) {
           setModels(fetchedModels);
@@ -608,7 +509,6 @@ const CollectionPage = () => {
       }
     };
     fetchModels();
-<<<<<<< HEAD
     return () => {
       cancelled = true;
     };
@@ -649,11 +549,6 @@ const CollectionPage = () => {
     return filtered;
   }, [galleryImages, searchQuery, filterCategory, sortBy]);
 
-=======
-    return () => { cancelled = true; };
-  }, [selectedCompany]);
-
->>>>>>> b80147e54a1b13d73869fd03c430eefd716ddd8b
   const handleMetaChange = (event) => {
     const { name, value } = event.target;
     setMetaDraft((prev) => ({ ...prev, [name]: value }));
@@ -662,7 +557,6 @@ const CollectionPage = () => {
   const handleArtworkSelect = (image) => {
     setSelectedImage(image);
     if (!collection) return;
-<<<<<<< HEAD
     const rawToken =
       image?._id ||
       image?.publicId ||
@@ -674,11 +568,6 @@ const CollectionPage = () => {
     const nextUrl = token
       ? `/collection/${handle}/gallery?imageId=${token}`
       : `/collection/${handle}/gallery`;
-=======
-    const rawToken = image?._id || image?.publicId || image?.url || image?.path || image?.secure_url || image?.caption;
-    const token = rawToken ? slugifyId(rawToken) : '';
-    const nextUrl = token ? `/collection/${handle}/gallery?imageId=${token}` : `/collection/${handle}/gallery`;
->>>>>>> b80147e54a1b13d73869fd03c430eefd716ddd8b
     navigate(nextUrl, { state: { selectedImage: image } });
   };
 
@@ -712,15 +601,10 @@ const CollectionPage = () => {
   const handleUploadImages = async (event) => {
     const files = Array.from(event.target.files || []);
     if (!files.length || !collection?._id) return;
-<<<<<<< HEAD
 
     const formData = new FormData();
     files.forEach((file) => formData.append('images', file));
 
-=======
-    const formData = new FormData();
-    files.forEach((file) => formData.append('images', file));
->>>>>>> b80147e54a1b13d73869fd03c430eefd716ddd8b
     setUploading(true);
     try {
       await collectionAPI.adminAddImages(collection._id, formData);
@@ -738,10 +622,7 @@ const CollectionPage = () => {
     if (!collection?._id) return;
     const confirmed = window.confirm('Remove this image from the collection?');
     if (!confirmed) return;
-<<<<<<< HEAD
 
-=======
->>>>>>> b80147e54a1b13d73869fd03c430eefd716ddd8b
     try {
       await collectionAPI.adminRemoveImage(collection._id, imageId);
       toast.success('Image removed');
@@ -762,10 +643,7 @@ const CollectionPage = () => {
       toast.error('Title is required');
       return;
     }
-<<<<<<< HEAD
 
-=======
->>>>>>> b80147e54a1b13d73869fd03c430eefd716ddd8b
     setCreating(true);
     try {
       await collectionAPI.adminCreate({
@@ -786,16 +664,11 @@ const CollectionPage = () => {
 
   const handleDeleteCollection = async () => {
     if (!collection?._id) return;
-<<<<<<< HEAD
     const confirmed = window.confirm(
       'Delete this entire collection? This cannot be undone.'
     );
     if (!confirmed) return;
 
-=======
-    const confirmed = window.confirm('Delete this entire collection? This cannot be undone.');
-    if (!confirmed) return;
->>>>>>> b80147e54a1b13d73869fd03c430eefd716ddd8b
     try {
       await collectionAPI.adminDelete(collection._id);
       toast.success('Collection deleted');
@@ -806,7 +679,6 @@ const CollectionPage = () => {
     }
   };
 
-<<<<<<< HEAD
   const handleZoomImage = (image) => {
     const index = filteredImages.findIndex((img) => 
       (img._id && image._id && img._id === image._id) || 
@@ -830,23 +702,17 @@ const CollectionPage = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50 smooth-color">
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="text-center">
-          <div className="inline-block loading-spinner rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
+          <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
           <p className="mt-4 text-gray-600 font-medium">Loading collection...</p>
         </div>
       </div>
-=======
-  if (loading) {
-    return (
-      <div className="min-h-[60vh] flex items-center justify-center text-gray-600">Loading collection...</div>
->>>>>>> b80147e54a1b13d73869fd03c430eefd716ddd8b
     );
   }
 
   if (notFound && !isAdmin) {
     return (
-<<<<<<< HEAD
       <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
         <div className="text-center max-w-md">
           <div className="text-6xl mb-4">🎨</div>
@@ -867,17 +733,6 @@ const CollectionPage = () => {
             >
               Back home
             </Link>
-=======
-      <div className="min-h-[60vh] flex flex-col items-center justify-center text-center px-4">
-        <div className="bg-white rounded-3xl shadow-xl px-10 py-12 max-w-lg">
-          <p className="text-3xl font-semibold text-gray-900">Collection not found</p>
-          <p className="text-gray-600 mt-3">
-            We could not find this collection. Please pick another theme from the library.
-          </p>
-          <div className="mt-6 flex flex-wrap gap-4 justify-center">
-            <Link to="/themes" className="px-6 py-3 rounded-full bg-primary-600 text-white font-semibold">Browse Themes</Link>
-            <Link to="/" className="px-6 py-3 rounded-full bg-gray-100 text-gray-900 font-semibold">Back home</Link>
->>>>>>> b80147e54a1b13d73869fd03c430eefd716ddd8b
           </div>
         </div>
       </div>
@@ -886,7 +741,6 @@ const CollectionPage = () => {
 
   if (notFound && isAdmin) {
     return (
-<<<<<<< HEAD
       <div className="min-h-screen bg-gray-50 px-4 py-12">
         <div className="max-w-2xl mx-auto">
           <div className="bg-white rounded-3xl shadow-xl p-8">
@@ -975,42 +829,6 @@ const CollectionPage = () => {
               </button>
             </form>
           </div>
-=======
-      <div className="max-w-3xl mx-auto px-4 py-16">
-        <div className="bg-white rounded-3xl shadow-xl p-8">
-          <div className="flex items-center gap-3 text-gray-500 text-sm uppercase tracking-[0.4em]">
-            <FiImage />
-            COLLECTOR
-          </div>
-          <h1 className="text-3xl font-semibold text-gray-900 mt-4">Create a new collection</h1>
-          <p className="text-gray-600 mt-2">No collection exists for handle "{handle}". You can create one below.</p>
-          <form className="mt-6 space-y-4" onSubmit={handleCreateCollection}>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Title</label>
-              <input name="title" value={createDraft.title} onChange={handleCreateChange} className="w-full border rounded-xl px-4 py-2" placeholder="Marble Edition" />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Handle / URL</label>
-              <input name="handle" value={createDraft.handle} onChange={handleCreateChange} className="w-full border rounded-xl px-4 py-2" placeholder="1" />
-              <p className="text-xs text-gray-500 mt-1">Full URL: http://localhost:3000/collection/{createDraft.handle || handle}</p>
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Tagline</label>
-              <input name="tagline" value={createDraft.tagline} onChange={handleCreateChange} className="w-full border rounded-xl px-4 py-2" placeholder="Luxury swirls, golden streaks" />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
-              <textarea name="description" value={createDraft.description} onChange={handleCreateChange} rows={4} className="w-full border rounded-2xl px-4 py-3" />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Accent color</label>
-              <input type="color" name="accentColor" value={createDraft.accentColor} onChange={handleCreateChange} className="w-24 h-10 rounded" />
-            </div>
-            <button type="submit" disabled={creating} className="px-6 py-3 rounded-full bg-primary-600 text-white font-semibold">
-              {creating ? 'Creating...' : 'Create collection'}
-            </button>
-          </form>
->>>>>>> b80147e54a1b13d73869fd03c430eefd716ddd8b
         </div>
       </div>
     );
@@ -1025,8 +843,7 @@ const CollectionPage = () => {
   }
 
   return (
-<<<<<<< HEAD
-    <div className="bg-gray-50 min-h-screen pb-16 page-transition stagger-children">
+    <div className="bg-gray-50 min-h-screen pb-16">
       {/* Lightbox */}
       {lightboxImage && (
         <ImageLightbox
@@ -1088,9 +905,9 @@ const CollectionPage = () => {
           {/* Main content */}
           <div className="lg:col-span-3 space-y-6">
             {/* Collection header */}
-            <div className="bg-white rounded-3xl shadow-xl p-8 gradient-border">
+            <div className="bg-white rounded-3xl shadow-xl p-8">
               <p className="uppercase text-xs tracking-[0.4em] text-gray-400 mb-2">Collection</p>
-              <h1 className="text-4xl font-bold text-gray-900 gradient-text">{collection.title}</h1>
+              <h1 className="text-4xl font-bold text-gray-900">{collection.title}</h1>
               {collection.tagline && (
                 <p className="text-lg text-gray-600 mt-2">{collection.tagline}</p>
               )}
@@ -1100,7 +917,7 @@ const CollectionPage = () => {
             </div>
 
             {/* Search and filters */}
-            <div className="bg-white rounded-2xl shadow-lg p-4 glass">
+            <div className="bg-white rounded-2xl shadow-lg p-4">
               <div className="flex flex-col sm:flex-row gap-3">
                 {/* Search */}
                 <div className="flex-1 relative">
@@ -1110,7 +927,7 @@ const CollectionPage = () => {
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     placeholder="Search by caption..."
-                    className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent search-input"
+                    className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                   />
                   {searchQuery && (
                     <button
@@ -1149,49 +966,10 @@ const CollectionPage = () => {
                       onChange={handleUploadImages}
                       disabled={uploading}
                     />
-=======
-    <div className="bg-gray-50 min-h-screen pb-16">
-      <div className="border-b bg-white">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-6 flex items-center gap-3 text-sm text-gray-500">
-          <Link to="/themes" className="flex items-center gap-2 text-primary-600 font-semibold">
-            <FiArrowLeft className="h-4 w-4" />
-            Themes
-          </Link>
-          <span>/</span>
-          <span className="text-gray-900 font-semibold">{collection.title}</span>
-        </div>
-      </div>
-
-      <section className="w-full px-0 mt-10">
-        <div className="space-y-6">
-          <div ref={galleryRef} className="bg-white rounded-4xl shadow-xl p-8">
-            <p className="uppercase text-xs tracking-[0.4em] text-gray-400">Collection</p>
-            {/* <h1 className="text-4xl font-semibold text-gray-900 mt-3">{collection.title}</h1> */}
-            {/* {collection.tagline && (
-              <p className="text-lg text-gray-600 mt-3">{collection.tagline}</p>
-            )} */}
-            {/* {collection.description && (
-              <p className="text-gray-600 mt-4 leading-relaxed">{collection.description}</p>
-            )} */}
-
-            <div className="mt-8">
-              <div className="flex items-center justify-between m-10">
-                {/* <div>
-                  <p className="text-sm text-gray-500 uppercase tracking-[0.4em]">Step 1</p>
-                  <h2 className="text-2xl font-semibold text-gray-900">Image board</h2>
-                  <p className="text-sm text-gray-500 mt-1">Tap any artwork to move it into the builder below.</p>
-                </div> */}
-                {isAdmin && (
-                  <label className="inline-flex items-center gap-2 px-4 py-2 rounded-full border cursor-pointer text-sm font-semibold" style={{ borderColor: accent, color: accent }}>
-                    <FiUpload />
-                    {uploading ? 'Uploading...' : 'Upload images'}
-                    <input type="file" className="hidden" multiple accept="image/*" onChange={handleUploadImages} disabled={uploading} />
->>>>>>> b80147e54a1b13d73869fd03c430eefd716ddd8b
                   </label>
                 )}
               </div>
 
-<<<<<<< HEAD
               {/* Results count */}
               <p className="text-sm text-gray-500 mt-3">
                 Showing {filteredImages.length} of {galleryImages.length} images
@@ -1199,7 +977,7 @@ const CollectionPage = () => {
             </div>
 
             {/* Gallery */}
-            <div ref={galleryRef} className="bg-white rounded-3xl shadow-xl p-6 card-hover glass">
+            <div ref={galleryRef} className="bg-white rounded-3xl shadow-xl p-6">
               {filteredImages.length === 0 ? (
                 <div className="border-2 border-dashed border-gray-300 rounded-2xl p-16 text-center">
                   <FiImage className="w-16 h-16 text-gray-300 mx-auto mb-4" />
@@ -1214,38 +992,36 @@ const CollectionPage = () => {
                 </div>
               ) : (
                 <div
-                  className={`${
+                  className={
                     viewMode === 'grid'
                       ? 'grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4'
                       : 'space-y-4'
-                  } stagger-children`}
+                  }
                 >
                   {filteredImages.map((image, index) => {
-                    const gridItemClass = `grid-item ${index < 8 ? `grid-item:nth-child(${index + 1})` : ''}`;
                     const isChosen =
                       selectedImage &&
                       ((image._id && selectedImage._id === image._id) ||
                         (!image._id && selectedImage.url === image.url));
 
                     return (
-                      <div key={image._id || image.publicId || image.url} className={gridItemClass}>
-                        <ImageCard
-                          image={image}
-                          index={galleryImages.findIndex((img) => 
-                            (img._id && image._id && img._id === image._id) || 
-                            (!img._id && img.url === image.url)
-                          )}
-                          isSelected={isChosen}
-                          onSelect={handleArtworkSelect}
-                          onDelete={handleRemoveImage}
-                          onZoom={handleZoomImage}
-                          collection={collection}
-                          isAdmin={isAdmin}
-                          selectedCompany={selectedCompany}
-                          selectedModel={selectedModel}
-                          accent={accent}
-                        />
-                      </div>
+                      <ImageCard
+                        key={image._id || image.publicId || image.url}
+                        image={image}
+                        index={galleryImages.findIndex((img) => 
+                          (img._id && image._id && img._id === image._id) || 
+                          (!img._id && img.url === image.url)
+                        )}
+                        isSelected={isChosen}
+                        onSelect={handleArtworkSelect}
+                        onDelete={handleRemoveImage}
+                        onZoom={handleZoomImage}
+                        collection={collection}
+                        isAdmin={isAdmin}
+                        selectedCompany={selectedCompany}
+                        selectedModel={selectedModel}
+                        accent={accent}
+                      />
                     );
                   })}
                 </div>
@@ -1256,7 +1032,7 @@ const CollectionPage = () => {
           {/* Sidebar */}
           <div className="lg:col-span-1 space-y-6">
             {/* Device selector */}
-            <div className="bg-white rounded-2xl shadow-lg p-5 sticky top-24 glass">
+            <div className="bg-white rounded-2xl shadow-lg p-5 sticky top-24">
               <div className="flex items-center gap-2 mb-4">
                 <FiSmartphone className="w-5 h-5 text-primary-600" />
                 <h3 className="text-lg font-semibold text-gray-900">Select Device</h3>
@@ -1322,7 +1098,7 @@ const CollectionPage = () => {
                         }));
                         toast.success('Added to cart!');
                       }}
-                      className="w-full py-3 rounded-xl font-semibold text-white shadow-lg hover:shadow-xl transition-all transform hover:scale-[1.02] button-press"
+                      className="w-full py-3 rounded-xl font-semibold text-white shadow-lg hover:shadow-xl transition-all transform hover:scale-[1.02]"
                       style={{ backgroundColor: accent }}
                     >
                       Add to Cart · ₹{COLLECTION_CASE_PRICE}
@@ -1334,7 +1110,7 @@ const CollectionPage = () => {
 
             {/* Admin panel */}
             {isAdmin && (
-              <div className="bg-white rounded-2xl shadow-lg p-5 glass">
+              <div className="bg-white rounded-2xl shadow-lg p-5">
                 <div className="flex items-center gap-2 mb-4">
                   <div className="w-2 h-2 rounded-full bg-green-500"></div>
                   <h3 className="text-sm font-semibold text-gray-900">ADMIN PANEL</h3>
@@ -1407,179 +1183,6 @@ const CollectionPage = () => {
           </div>
         </div>
       </div>
-=======
-              {/* Mobile Company & Model Selector */}
-             
-{/*    start  */}
-           {galleryImages.length === 0 ? (
-  <div className="border border-dashed rounded-xl p-10 text-center text-gray-500">
-    No images yet. {isAdmin ? 'Upload your first shot to bring this page to life.' : 'Please check back soon.'}
-  </div>
-) : (
-  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 w-full">
-    {galleryImages.map((image, index) => {
-      const key = image._id || image.publicId || image.url;
-
-      const tileSrc = resolveImageUrl(
-        image.url ||
-        image.secure_url ||
-        image.path ||
-        image.publicUrl ||
-        ''
-      );
-
-      const isChosen =
-        selectedImage &&
-        ((image._id && selectedImage._id === image._id) ||
-          (!image._id && selectedImage.url === image.url));
-
-      return (
-        <button
-          key={key}
-          type="button"
-          onClick={() => handleArtworkSelect(image)}
-          className={`relative group rounded-2xl overflow-hidden border transition
-            ${isChosen
-              ? 'border-primary-500 ring-2 ring-primary-200'
-              : 'border-gray-200 hover:border-primary-300'}
-          `}
-        >
-          <div className="relative w-full aspect-[3/4] bg-gray-50">
-
-            {/* Image */}
-            <div className="absolute inset-0 flex items-center justify-center p-2">
-              <img
-                src={tileSrc}
-                alt={image.caption || collection.title}
-                className="max-w-full max-h-full object-contain"
-                loading="lazy"
-              />
-            </div>
-
-            {/* Selected badge */}
-            {isChosen && (
-              <span className="absolute top-3 left-3 flex items-center gap-1
-                               bg-white/90 text-primary-600 text-xs font-semibold
-                               px-3 py-1 rounded-full">
-                <FiCheckCircle className="h-4 w-4" />
-                Selected
-              </span>
-            )}
-
-            {/* Mobile Company & Model Badge */}
-            {selectedCompany && selectedModel && (
-              <span className="absolute top-3 right-3 flex items-center gap-1
-                               bg-primary-600 text-white text-xs font-medium
-                               px-2 py-1 rounded-full shadow-sm">
-                <FiSmartphone className="h-3 w-3" />
-                {selectedCompany.name}
-              </span>
-            )}
-
-            {/* 🔢 Bottom unique number */}
-            <span className="absolute bottom-3 left-1/2 -translate-x-1/2
-                             bg-black/80 text-white text-xs font-semibold
-                             px-3 py-1 rounded-full">
-              {String(index + 1).padStart(2, '0')}
-            </span>
-
-            {/* Caption with model info */}
-            {(image.caption || (selectedCompany && selectedModel)) && (
-              <div className="absolute bottom-10 left-2 right-2">
-                <div className="bg-white/90 backdrop-blur-sm rounded-lg px-2 py-1 text-center">
-                  {image.caption && (
-                    <p className="text-xs font-medium text-gray-800 truncate">{image.caption}</p>
-                  )}
-                  {selectedCompany && selectedModel && (
-                    <p className="text-xs text-gray-600 truncate">{selectedModel.name}</p>
-                  )}
-                </div>
-              </div>
-            )}
-
-            {/* Delete button (admin only) */}
-            {isAdmin && (
-              <span
-                role="button"
-                tabIndex={0}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleRemoveImage(image._id);
-                }}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    handleRemoveImage(image._id);
-                  }
-                }}
-                className="absolute top-10 right-3 bg-white/90 rounded-full p-2
-                           text-red-600 shadow opacity-0
-                           group-hover:opacity-100 transition"
-                title="Delete image"
-              >
-                <FiTrash2 />
-              </span>
-            )}
-
-          </div>
-        </button>
-      );
-    })}
-  </div>
-)}
-
-{/*    end  */}
-
-
-
-
-
-            </div>
-          </div>
-
-
-
-
-        </div>
-
-        {isAdmin && (
-          <aside className="bg-white rounded-4xl shadow-xl p-6 space-y-6">
-            <div>
-              <p className="text-xs uppercase tracking-[0.3em] text-gray-500">Admin tools</p>
-              <h3 className="text-xl font-semibold text-gray-900 mt-2">Collection settings</h3>
-            </div>
-            <form className="space-y-4" onSubmit={handleMetaSave}>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Title</label>
-                <input name="title" value={metaDraft.title} onChange={handleMetaChange} className="w-full border rounded-xl px-4 py-2" />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Tagline</label>
-                <input name="tagline" value={metaDraft.tagline} onChange={handleMetaChange} className="w-full border rounded-xl px-4 py-2" />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
-                <textarea name="description" value={metaDraft.description} onChange={handleMetaChange} rows={4} className="w-full border rounded-2xl px-4 py-3" />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Accent color</label>
-                <input type="color" name="accentColor" value={metaDraft.accentColor} onChange={handleMetaChange} className="w-24 h-10 rounded" />
-              </div>
-              <button type="submit" className="w-full rounded-full py-3 font-semibold text-white" style={{ backgroundColor: accent }} disabled={savingMeta}>
-                {savingMeta ? 'Saving...' : 'Save changes'}
-              </button>
-            </form>
-            <div className="pt-4 border-t">
-              <p className="text-sm text-gray-500 mb-2">Danger zone</p>
-              <button type="button" onClick={handleDeleteCollection} className="w-full flex items-center justify-center gap-2 rounded-full border border-red-200 text-red-600 py-2 text-sm font-semibold">
-                <FiTrash2 /> Delete collection
-              </button>
-            </div>
-          </aside>
-        )}
-      </section>
->>>>>>> b80147e54a1b13d73869fd03c430eefd716ddd8b
     </div>
   );
 };

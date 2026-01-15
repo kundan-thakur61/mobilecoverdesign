@@ -5,6 +5,7 @@ import './index.css'
 import { Provider } from 'react-redux'
 import { store } from './redux/store.js'
 import { HelmetProvider } from 'react-helmet-async'
+import { AuthProvider } from './contexts/AuthContext'
 // import themeAPI from './api/themeAPI'
 
 // Load active theme from API and apply CSS variables on startup
@@ -44,7 +45,9 @@ ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <HelmetProvider>
       <Provider store={store}>
-        <App />
+        <AuthProvider>
+          <App />
+        </AuthProvider>
       </Provider>
     </HelmetProvider>
   </React.StrictMode>,

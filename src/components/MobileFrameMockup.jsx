@@ -132,7 +132,6 @@ const MobileFrameMockup = ({ selectedModel, onDesignComplete }) => {
       frameImage.src = selectedModel.images[0].url;
     } else {
       // Fallback to a generic frame if no specific frames are available
-      // For now we'll use a simple colored rectangle
       canvas.width = 300;
       canvas.height = 600;
       
@@ -178,7 +177,7 @@ const MobileFrameMockup = ({ selectedModel, onDesignComplete }) => {
         });
       };
       img.src = userImage;
-      return; // Skip the rest of the function since we're handling it here
+      return;
     }
   }, [selectedModel, userImage, transform, screenRect]);
 
@@ -217,13 +216,8 @@ const MobileFrameMockup = ({ selectedModel, onDesignComplete }) => {
             ref={canvasRef}
             className="relative bg-gray-100 border-2 border-gray-300 cursor-move select-none"
             style={{ 
-<<<<<<< HEAD
               width: selectedModel.images && selectedModel.images.length > 0 ? '100%' : '300px',
               height: selectedModel.images && selectedModel.images.length > 0 ? '100%' : '600px',
-=======
-              width: selectedModel.images && selectedModel.images.length > 0 ? 'auto' : '300px',
-              height: selectedModel.images && selectedModel.images.length > 0 ? 'auto' : '600px',
->>>>>>> b80147e54a1b13d73869fd03c430eefd716ddd8b
               maxWidth: '100%',
               maxHeight: '70vh'
             }}
@@ -314,11 +308,7 @@ const MobileFrameMockup = ({ selectedModel, onDesignComplete }) => {
             </label>
           </div>
 
-<<<<<<< HEAD
-          {/* Transform Controls kun */}
-=======
           {/* Transform Controls */}
->>>>>>> b80147e54a1b13d73869fd03c430eefd716ddd8b
           <div>
             <h3 className="text-lg font-semibold mb-4">Adjust Image</h3>
             <div className="grid grid-cols-3 gap-2 mb-4">
