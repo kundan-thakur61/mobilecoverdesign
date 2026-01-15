@@ -283,7 +283,7 @@ const Checkout = () => {
       order_id: razorpayOrderId,
       name: 'CopadMob',
       description: `Order #${order._id}`,
-      image: '/logo.png', // Add your logo
+
       handler: async function (response) {
         try {
           await paymentAPI.verifyPayment({
