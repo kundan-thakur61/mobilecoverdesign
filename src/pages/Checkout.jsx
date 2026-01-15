@@ -6,19 +6,13 @@ import { clearCart, loadCart } from '../redux/slices/cartSlice';
 import { useAuth } from '../hooks/useAuth';
 import orderAPI from '../api/orderAPI';
 import paymentAPI from '../api/paymentAPI';
-import authAPI from '../api/authAPI';
+
 import SEO from '../components/SEO';
 import { Helmet } from 'react-helmet-async';
 import { formatPrice, getProductImage } from '../utils/helpers';
 import { FiArrowLeft, FiLock, FiAlertCircle, FiCheck } from 'react-icons/fi';
 
-const UPI_APPS = [
-  { id: 'google_pay', label: 'Google Pay' },
-  { id: 'phonepe', label: 'PhonePe' },
-  { id: 'paytm', label: 'Paytm' },
-  { id: 'bhim', label: 'BHIM' },
-  { id: 'amazon_pay', label: 'Amazon Pay' },
-];
+
 
 const INDIAN_STATES = [
   'Andhra Pradesh', 'Arunachal Pradesh', 'Assam', 'Bihar', 'Chhattisgarh',
@@ -40,7 +34,7 @@ const Checkout = () => {
   const [paymentMethod, setPaymentMethod] = useState('razorpay');
   const [upiId, setUpiId] = useState('');
   const [selectedUpiApp, setSelectedUpiApp] = useState('');
-  const [saveUpi, setSaveUpi] = useState(false);
+
   const [validationErrors, setValidationErrors] = useState({});
   const [touched, setTouched] = useState({});
 
@@ -161,17 +155,7 @@ const Checkout = () => {
   };
 
   // Handle UPI ID change with validation
-  const handleUpiChange = (value) => {
-    setUpiId(value);
-    
-    if (touched.upiId) {
-      const error = validateField('upiId', value);
-      setValidationErrors(prev => ({
-        ...prev,
-        upiId: error
-      }));
-    }
-  };
+  
 
   // Mark field as touched
   const handleBlur = (field) => {
@@ -413,33 +397,10 @@ const Checkout = () => {
       };
 
       // Add UPI details if applicable
-      if (paymentMethod === 'upi') {
-        const upiAppLabel = UPI_APPS.find((app) => app.id === selectedUpiApp)?.label;
-        orderPayload.paymentDetails = {
-          upiId,
-          ...(selectedUpiApp ? { upiApp: selectedUpiApp, upiAppLabel } : {}),
-        };
-      }
+      
 
       // Save UPI to profile if requested
-      if (saveUpi && user && upiId) {
-        try {
-          await authAPI.updateProfile({ upiId });
-          localStorage.setItem('savedUpi', upiId);
-          if (selectedUpiApp) {
-            localStorage.setItem('savedUpiApp', selectedUpiApp);
-          }
-        } catch (e) {
-          console.debug('Could not save UPI', e);
-        }
-      } else if (!saveUpi) {
-        try {
-          localStorage.removeItem('savedUpi');
-          localStorage.removeItem('savedUpiApp');
-        } catch (e) {
-          console.debug('Could not remove savedUpi', e);
-        }
-      }
+     
 
       // Create order
       const createResp = await orderAPI.createOrder(orderPayload);
@@ -565,7 +526,7 @@ const Checkout = () => {
                         className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition ${
                           validationErrors.name && touched.name ? 'border-red-500' : 'border-gray-300'
                         }`}
-                        placeholder="John Doe"
+                        placeholder=""
                       />
                       {validationErrors.name && touched.name && (
                         <p className="mt-1 text-sm text-red-600 flex items-center gap-1">
@@ -587,7 +548,7 @@ const Checkout = () => {
                         className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition ${
                           validationErrors.phone && touched.phone ? 'border-red-500' : 'border-gray-300'
                         }`}
-                        placeholder="9876543210"
+                        placeholder="9100000000"
                         maxLength="10"
                       />
                       {validationErrors.phone && touched.phone && (
@@ -650,7 +611,7 @@ const Checkout = () => {
                         className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition ${
                           validationErrors.city && touched.city ? 'border-red-500' : 'border-gray-300'
                         }`}
-                        placeholder="Mumbai"
+                        placeholder=""
                       />
                       {validationErrors.city && touched.city && (
                         <p className="mt-1 text-sm text-red-600 flex items-center gap-1">
@@ -697,7 +658,7 @@ const Checkout = () => {
                         className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition ${
                           validationErrors.postalCode && touched.postalCode ? 'border-red-500' : 'border-gray-300'
                         }`}
-                        placeholder="400001"
+                        placeholder=""
                         maxLength="6"
                       />
                       {validationErrors.postalCode && touched.postalCode && (
@@ -731,107 +692,18 @@ const Checkout = () => {
                       <div className="font-medium">Pay Online (Recommended)</div>
                       <div className="text-sm text-gray-500">Cards, UPI, Wallets, Net Banking</div>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <img src="/visa.svg" alt="Visa" className="h-6" />
-                      <img src="/mastercard.svg" alt="Mastercard" className="h-6" />
-                      <img src="/upi.svg" alt="UPI" className="h-6" />
-                    </div>
+                    
                   </label>
                   
                   {/* UPI Direct */}
-                  <label className={`flex items-center gap-3 cursor-pointer p-4 border-2 rounded-lg transition ${
-                    paymentMethod === 'upi' ? 'border-primary-600 bg-primary-50' : 'border-gray-200 hover:bg-gray-50'
-                  }`}>
-                    <input 
-                      type="radio" 
-                      name="pm" 
-                      checked={paymentMethod === 'upi'} 
-                      onChange={() => setPaymentMethod('upi')}
-                      className="w-4 h-4 text-primary-600"
-                    />
-                    <div className="flex-1">
-                      <div className="font-medium">UPI Payment</div>
-                      <div className="text-sm text-gray-500">Pay using your UPI ID</div>
-                    </div>
-                    <img src="/upi.svg" alt="UPI" className="h-8" />
-                  </label>
+                  
                   
                   {/* Cash on Delivery */}
-                  <label className={`flex items-center gap-3 cursor-pointer p-4 border-2 rounded-lg transition ${
-                    paymentMethod === 'cod' ? 'border-primary-600 bg-primary-50' : 'border-gray-200 hover:bg-gray-50'
-                  }`}>
-                    <input 
-                      type="radio" 
-                      name="pm" 
-                      checked={paymentMethod === 'cod'} 
-                      onChange={() => setPaymentMethod('cod')}
-                      className="w-4 h-4 text-primary-600"
-                    />
-                    <div className="flex-1">
-                      <div className="font-medium">Cash on Delivery</div>
-                      <div className="text-sm text-gray-500">Pay when your order arrives</div>
-                    </div>
-                    <span className="text-xs bg-yellow-100 text-yellow-800 px-2 py-1 rounded">₹50 Fee</span>
-                  </label>
+                  
                 </div>
 
                 {/* UPI Specific Fields */}
-                {paymentMethod === 'upi' && (
-                  <div className="mt-6 pt-6 border-t space-y-4">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
-                        UPI ID <span className="text-red-500">*</span>
-                      </label>
-                      <input
-                        type="text"
-                        value={upiId}
-                        onChange={(e) => handleUpiChange(e.target.value)}
-                        onBlur={() => handleBlur('upiId')}
-                        placeholder="yourname@paytm"
-                        className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition ${
-                          validationErrors.upiId && touched.upiId ? 'border-red-500' : 'border-gray-300'
-                        }`}
-                      />
-                      {validationErrors.upiId && touched.upiId && (
-                        <p className="mt-1 text-sm text-red-600 flex items-center gap-1">
-                          <FiAlertCircle className="w-4 h-4" />
-                          {validationErrors.upiId}
-                        </p>
-                      )}
-                    </div>
-                    
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
-                        UPI App <span className="text-gray-400">(Optional)</span>
-                      </label>
-                      <select
-                        value={selectedUpiApp}
-                        onChange={(e) => setSelectedUpiApp(e.target.value)}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
-                      >
-                        <option value="">Select UPI App</option>
-                        {UPI_APPS.map(app => (
-                          <option key={app.id} value={app.id}>{app.label}</option>
-                        ))}
-                      </select>
-                    </div>
-                    
-                    {user && (
-                      <div className="flex items-center">
-                        <input
-                          type="checkbox"
-                          id="saveUpi"
-                          checked={saveUpi}
-                          onChange={(e) => setSaveUpi(e.target.checked)}
-                          className="w-4 h-4 text-primary-600 rounded focus:ring-2 focus:ring-primary-500"
-                        />
-                        <label htmlFor="saveUpi" className="ml-2 text-sm text-gray-700">
-                          Save UPI ID for future orders
-                        </label>
-                      </div>
-                    )}
-                  </div>
-                )}
+                
               </div>
 
               {/* Place Order Button */}
@@ -851,7 +723,7 @@ const Checkout = () => {
                 ) : (
                   <>
                     <FiLock className="w-5 h-5" />
-                    <span>Place Order • {formatPrice(total)}</span>
+                    <span>Place Order </span>
                   </>
                 )}
               </button>
