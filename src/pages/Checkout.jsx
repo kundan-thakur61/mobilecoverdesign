@@ -769,9 +769,7 @@ const Checkout = () => {
                           {item.product?.brand} • {item.product?.model}
                           {(item.product?.design?.meta?.material || item.product?.material) && ` • ${item.product?.design?.meta?.material || item.product?.material}`}
                         </p>
-                        <p className="font-semibold text-sm mt-1">
-                          {formatPrice((Number(item.variant?.price || item.price) || 0) * (Number(item.quantity) || 1))}
-                        </p>
+                        
                       </div>
                     </div>
                   ))}
@@ -783,36 +781,13 @@ const Checkout = () => {
                     <span className="font-medium">{formatPrice(subtotal)}</span>
                   </div>
                   
-                  <div className="flex justify-between text-sm">
-                    <span className="text-gray-600">Shipping</span>
-                    <span className="font-medium">
-                      {shippingCost === 0 ? (
-                        <span className="text-green-600">FREE</span>
-                      ) : (
-                        formatPrice(shippingCost)
-                      )}
-                    </span>
-                  </div>
                   
-                  {shippingCost > 0 && subtotal < 500 && (
-                    <div className="text-xs text-gray-500 bg-yellow-50 p-2 rounded">
-                      Add {formatPrice(500 - subtotal)} more for FREE shipping
-                    </div>
-                  )}
                   
-                  {paymentMethod === 'cod' && (
-                    <div className="flex justify-between text-sm">
-                      <span className="text-gray-600">COD Charges</span>
-                      <span className="font-medium">{formatPrice(50)}</span>
-                    </div>
-                  )}
+                 
                   
-                  <div className="flex justify-between font-bold text-lg pt-3 border-t">
-                    <span>Total</span>
-                    <span className="text-primary-600">
-                      {formatPrice(total + (paymentMethod === 'cod' ? 50 : 0))}
-                    </span>
-                  </div>
+                 
+                  
+                  
                 </div>
 
                 {/* Promo Code Section */}

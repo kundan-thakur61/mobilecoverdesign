@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { FiShoppingCart, FiUser, FiMenu, FiX, FiSearch, FiHeart } from 'react-icons/fi';
+import { FiShoppingCart, FiUser, FiMenu, FiX, FiSearch, FiHeart, FiTruck } from 'react-icons/fi';
 import { logout } from '../redux/slices/authSlice';
 import { selectCartItemCount } from '../redux/slices/cartSlice';
 import { selectWishlistCount } from '../redux/slices/wishlistSlice';
@@ -132,6 +132,17 @@ const Header = () => {
 
             {/* User Actions */}
             <div className="flex items-center gap-2 sm:gap-4">
+              {/* Track Order */}
+              <Link 
+                to="/track-order" 
+                className="p-1.5 sm:p-2 text-gray-700 hover:text-primary-600 transition-colors hidden sm:block" 
+                onClick={closeMenu}
+                aria-label="Track your order"
+                title="Track Order"
+              >
+                <FiTruck className="w-5 h-5 sm:w-6 sm:h-6" aria-hidden="true" />
+              </Link>
+
               {/* Cart */}
               <Link 
                 to="/cart" 
@@ -284,6 +295,15 @@ const Header = () => {
                 >
                   Customize
                 </Link>
+                <Link 
+                  to="/track-order" 
+                  className="px-4 py-3 text-gray-700 hover:bg-gray-50 hover:text-primary-600 font-medium active:bg-gray-100 transition-colors flex items-center gap-2" 
+                  onClick={closeMenu}
+                >
+                  <FiTruck className="w-5 h-5" aria-hidden="true" />
+                  Track Order
+                </Link>
+
                 {isAuthenticated && (
                   <>
                     <Link 

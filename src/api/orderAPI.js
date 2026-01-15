@@ -36,6 +36,11 @@ const orderAPI = {
     return axiosClient.put(`/orders/${id}/cancel`, { reason });
   },
 
+  // Track order
+  trackOrder: (params) => {
+    return axiosClient.get('/orders/track', { params });
+  },
+
   // Admin endpoints
   getAllOrders: (params) => {
     return axiosClient.get('/admin/orders', { params });

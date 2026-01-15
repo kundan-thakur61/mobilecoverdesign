@@ -1,14 +1,14 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import PropTypes from "prop-types";
 import { Helmet } from "react-helmet-async";
-import { formatPrice } from "../utils/helpers";
+import { formatPrice, resolveImageUrl } from "../utils/helpers";
 import { io } from "socket.io-client";
 
 /* ---------------------------
    Small presentational pieces
    --------------------------- */
-const ProductItem = ({ item }) => {
-  const [imageSrc, setImageSrc] = useState(item.image || "/placeholder-image.svg");
+const ProductItem = ({ item, onImageClick }) => {
+  const [imageSrc, setImageSrc] = useState(resolveImageUrl(item.image) || "/placeholder-image.svg");
 
   const handleImageError = () => {
     setImageSrc("/placeholder-image.svg");
@@ -22,11 +22,12 @@ const ProductItem = ({ item }) => {
       <img
         src={imageSrc}
         alt={altText}
-        className="w-20 h-20 sm:w-16 sm:h-16 object-cover rounded mx-auto sm:mx-0"
+        className="w-20 h-20 sm:w-16 sm:h-16 object-cover rounded mx-auto sm:mx-0 cursor-pointer hover:ring-2 hover:ring-purple-400 transition-all"
         loading="lazy"
         width="80"
         height="80"
         onError={handleImageError}
+        onClick={() => onImageClick?.(imageSrc)}
       />
       <div className="flex-1 text-center sm:text-left">
         <h4 className="font-medium text-gray-900">{item.title}</h4>
@@ -66,6 +67,7 @@ ProductItem.propTypes = {
     price: PropTypes.number,
     quantity: PropTypes.number,
   }).isRequired,
+  onImageClick: PropTypes.func,
 };
 
 const TimelineStep = ({ index, step, isCompleted, isCurrent, formatDate }) => (
@@ -143,6 +145,7 @@ function OrderTracking({ order, onCancel, onChat }) {
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [selectedImage, setSelectedImage] = useState(null);
 
   // keep local tracking data in sync when prop changes
   useEffect(() => {
@@ -456,7 +459,7 @@ function OrderTracking({ order, onCancel, onChat }) {
 
           <div className="space-y-4 bg-gray-50 rounded-lg p-4">
             {(trackingData.items || []).map((itm, idx) => (
-              <ProductItem key={itm.id || `item-${idx}`} item={itm} />
+              <ProductItem key={itm.id || `item-${idx}`} item={itm} onImageClick={setSelectedImage} />
             ))}
 
             {/* Order Total */}
@@ -589,6 +592,33 @@ function OrderTracking({ order, onCancel, onChat }) {
               </svg>
               Last updated: {formatDate(trackingData.lastUpdated)}
             </p>
+          </div>
+        )}
+
+        {/* Image Modal */}
+        {selectedImage && (
+          <div 
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4"
+            onClick={() => setSelectedImage(null)}
+            style={{ animation: 'fadeIn 0.3s ease-out' }}
+          >
+            <div className="relative max-w-4xl max-h-[90vh] w-full">
+              <button
+                onClick={() => setSelectedImage(null)}
+                className="absolute -top-12 right-0 text-white hover:text-gray-300 transition-colors"
+                aria-label="Close image"
+              >
+                <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+              <img
+                src={selectedImage}
+                alt="Product preview"
+                className="w-full h-full object-contain rounded-2xl shadow-2xl"
+                onClick={(e) => e.stopPropagation()}
+              />
+            </div>
           </div>
         )}
       </div>

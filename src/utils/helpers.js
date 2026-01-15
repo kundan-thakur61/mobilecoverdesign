@@ -52,12 +52,14 @@ export const formatDate = (date) => {
 
 // Generate order number
 export const generateOrderNumber = (id) => {
-  return `ORD-${id.slice(-8).toUpperCase()}`;
+  if (!id) return 'ORD-UNKNOWN';
+  return `ORD-${String(id).slice(-8).toUpperCase()}`;
 };
 
 // Generate custom order number
 export const generateCustomOrderNumber = (id) => {
-  return `CUST-${id.slice(-8).toUpperCase()}`;
+  if (!id) return 'CUST-UNKNOWN';
+  return `CUST-${String(id).slice(-8).toUpperCase()}`;
 };
 
 // Debounce function

@@ -43,6 +43,7 @@ const Collection = lazy(() => import('./pages/collection.jsx'));
 const GalleryImagePage = lazy(() => import('./pages/GalleryImagePage.jsx'));
 const CategoryPage = lazy(() => import('./pages/CategoryPage'));
 const MobileFrameDesigner = lazy(() => import('./pages/MobileFrameDesigner'));
+const TrackOrder = lazy(() => import('./pages/TrackOrder'));
 
 // Support pages - lazy loaded
 const ShippingPolicy = lazy(() => import('./pages/ShippingPolicy.jsx'));
@@ -150,8 +151,7 @@ function App() {
         { path: 'theme', element: <Navigate to="/themes" replace /> },
         { path: 'collection/:handle', element: <LazyPage><Collection /></LazyPage> },
         { path: 'collection/:handle/gallery', element: <LazyPage><GalleryImagePage /></LazyPage> },
-
-        
+        { path: 'track-order', element: <LazyPage><TrackOrder /></LazyPage> },
 
 // Support pages
         { path: 'privacy-policy', element: <LazyPage><PrivacyPolicy /></LazyPage> },
