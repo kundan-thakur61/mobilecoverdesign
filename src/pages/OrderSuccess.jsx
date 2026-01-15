@@ -1,48 +1,64 @@
-import { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useState, useEffect, useCallback } from 'react';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 import orderAPI from '../api/orderAPI';
 
 const OrderSuccess = () => {
   const { orderId } = useParams();
   const navigate = useNavigate();
-  const [order, setOrder] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [paymentStatus, setPaymentStatus] = useState(null);
+  const location = useLocation();
+
+  const [order, setOrder] = useState(location.state?.order || null);
+  const [loading, setLoading] = useState(!location.state?.order);
+  const [paymentStatus, setPaymentStatus] = useState(
+    location.state?.order?.payment?.status || null
+  );
   const [isRefreshing, setIsRefreshing] = useState(false);
 
   // Fetch payment status
-  const fetchPaymentStatus = async () => {
+  const fetchPaymentStatus = useCallback(async (isInitialFetch = false) => {
     if (!orderId) return;
-    
-    try {
+
+    if (isInitialFetch) {
+      setLoading(true);
+    } else {
       setIsRefreshing(true);
+    }
+
+    try {
       const response = await orderAPI.getOrderById(orderId);
       const orderData = response.data?.data || response.data;
-      
+
       setOrder(orderData);
-      setPaymentStatus(orderData.paymentStatus || 'pending');
+      setPaymentStatus(orderData.payment?.status || 'pending');
     } catch (err) {
       console.error('Failed to fetch order:', err);
-      toast.error('Failed to load order details');
+      if (isInitialFetch) {
+        toast.error('Failed to load order details');
+      }
     } finally {
+      if (isInitialFetch) {
+        setLoading(false);
+      }
       setIsRefreshing(false);
-      setLoading(false);
     }
-  };
+  }, [orderId]);
 
   useEffect(() => {
-    fetchPaymentStatus();
-    
-    // Poll for payment status updates
-    const interval = setInterval(() => {
-      if (paymentStatus === 'pending') {
-        fetchPaymentStatus();
-      }
-    }, 5000);
+    if (!order) {
+      fetchPaymentStatus(true);
+    }
+  }, [orderId, order, fetchPaymentStatus]);
 
-    return () => clearInterval(interval);
-  }, [orderId, paymentStatus]);
+  useEffect(() => {
+    if (paymentStatus === 'pending' || paymentStatus === 'processing') {
+      const interval = setInterval(() => {
+        fetchPaymentStatus(false);
+      }, 5000);
+
+      return () => clearInterval(interval);
+    }
+  }, [paymentStatus, fetchPaymentStatus]);
 
   if (loading) {
     return (
@@ -73,7 +89,7 @@ const OrderSuccess = () => {
     );
   }
 
-  const isSuccess = paymentStatus === 'paid' || paymentStatus === 'completed';
+  const isSuccess = paymentStatus === 'paid';
   const isPending = paymentStatus === 'pending' || paymentStatus === 'processing';
 
   return (
@@ -107,7 +123,7 @@ const OrderSuccess = () => {
           </p>
           
           <p className={`mb-8 ${
-            isSuccess ? 'text-green-600' : 
+            isSuccess ? 'text-green-600' :
             isPending ? 'text-yellow-600' : 
             'text-red-600'
           }`}>
@@ -119,7 +135,7 @@ const OrderSuccess = () => {
           {isPending && (
             <div className="mb-8">
               <button
-                onClick={fetchPaymentStatus}
+                onClick={() => fetchPaymentStatus(false)}
                 disabled={isRefreshing}
                 className="bg-yellow-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-yellow-700 disabled:opacity-50 transition flex items-center gap-2 mx-auto"
               >

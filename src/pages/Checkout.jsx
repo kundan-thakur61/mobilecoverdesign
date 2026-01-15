@@ -312,7 +312,7 @@ const Checkout = () => {
           dispatch(clearCart());
           localStorage.removeItem('savedShipping'); // Clear after successful order
           toast.success('Payment successful! Your order is confirmed.');
-          navigate(`/order-success/${order._id}`);
+          navigate(`/order-success/${order._id}`, { state: { order } });
         } catch (err) {
           console.error('Payment verification error:', err);
           
@@ -462,7 +462,7 @@ const Checkout = () => {
         dispatch(clearCart());
         localStorage.removeItem('savedShipping');
         toast.success('Order placed successfully!');
-        navigate(`/order-success/${order._id}`);
+        navigate(`/order-success/${order._id}`, { state: { order } });
       }
     } catch (err) {
       console.error('Checkout error:', err);
