@@ -39,6 +39,7 @@ const OptimizedImage = memo(({
   src,
   alt = '',
   className = '',
+  imgClassName = '',
   width,
   height,
   fallback = '/frames/frame-1-fixed.svg',
@@ -126,10 +127,11 @@ const OptimizedImage = memo(({
           decoding="async"
           onLoad={handleLoad}
           onError={handleError}
-          className={`
-            w-full h-full object-cover transition-opacity duration-300
-            ${isLoaded ? 'opacity-100' : 'opacity-0'}
-          `}
+          className={
+            `w-full h-full object-cover transition-opacity duration-300 ${
+              isLoaded ? 'opacity-100' : 'opacity-0'
+            } ${imgClassName}`
+          }
           {...props}
         />
       )}

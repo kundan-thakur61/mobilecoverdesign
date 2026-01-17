@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
+import OptimizedImage from '../components/OptimizedImage';
 
-const PremiumCard = ({ image, title, subtitle, badge, delay }) => {
+const PremiumCard = ({ image, title, subtitle, badge, delay, priority = false }) => {
   const [isHovered, setIsHovered] = useState(false);
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const cardRef = useRef(null);
@@ -30,11 +31,14 @@ const PremiumCard = ({ image, title, subtitle, badge, delay }) => {
       <div className="relative ">
         {/* Image container with parallax */}
         <div className="relative ">
-          <img
+          <OptimizedImage
             src={image}
             alt={title}
-            className="w-full h-full object-cover "
-            
+            priority={priority}
+            loading={priority ? 'eager' : 'lazy'}
+            fetchPriority={priority ? 'high' : 'auto'}
+            sizes="(min-width: 1024px) 45vw, 90vw"
+            className="w-full h-full"
           />
 
           {/* Gradient overlay */}
@@ -118,6 +122,7 @@ function PremiumCardSection() {
               subtitle="Explore 1000+ professionally crafted designs across anime, sports, nature, and abstract categories"
               badge="🎨 1000+ Designs"
               delay={0}
+              priority
             />
           </Link>
           

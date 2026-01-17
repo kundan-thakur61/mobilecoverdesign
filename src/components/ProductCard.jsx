@@ -5,6 +5,7 @@ import { addToWishlist, removeFromWishlist } from '../redux/slices/wishlistSlice
 import { toast } from 'react-toastify';
 import { FiShoppingCart, FiEye, FiStar, FiHeart } from 'react-icons/fi';
 import { formatPrice, getProductImage, isInStock } from '../utils/helpers';
+import OptimizedImage from './OptimizedImage';
 
 import { selectWishlistItems } from '../redux/slices/wishlistSlice';
 
@@ -40,11 +41,15 @@ const ProductCard = ({ product }) => {
     <Link to={`/products/${product._id}`} className="block bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-lg transition-shadow duration-300 group" style={{ textDecoration: 'none' }}>
       {/* Product Image */}
       <div className="relative aspect-square overflow-hidden bg-gray-100 cursor-pointer">
-        <img
+        <OptimizedImage
           src={productImage}
           alt={product.title}
-          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+          width={400}
+          height={400}
+          sizes="(min-width: 1024px) 25vw, (min-width: 768px) 33vw, 50vw"
           loading="lazy"
+          className="w-full h-full"
+          imgClassName="group-hover:scale-105 transition-transform duration-300"
         />
         
         {/* Overlay Actions */}

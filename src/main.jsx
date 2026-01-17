@@ -6,6 +6,10 @@ import { Provider } from 'react-redux'
 import { store } from './redux/store.js'
 import { HelmetProvider } from 'react-helmet-async'
 import { AuthProvider } from './contexts/AuthContext'
+import { initSentry } from './utils/sentry'
+
+// Initialize Sentry for error tracking
+initSentry()
 // import themeAPI from './api/themeAPI'
 
 // Load active theme from API and apply CSS variables on startup
