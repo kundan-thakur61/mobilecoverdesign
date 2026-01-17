@@ -86,6 +86,7 @@ const RAW_FALLBACK_COLLECTIONS = [
       { url: ONE, caption: 'Starlit stems' }
     ]
   },
+  // add new
   {
     handle: 'Aesthetic Theme',
     aliases: ['6'],

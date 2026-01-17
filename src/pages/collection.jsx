@@ -159,7 +159,7 @@ const ImageCard = ({
           }
         }}
       >
-        {/* Loading skeleton */}
+        {/* Loading skeletonhjh */}
         {!isLoaded && (
           <div className="absolute inset-0 bg-gray-200 animate-pulse" />
         )}
