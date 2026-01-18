@@ -115,9 +115,9 @@ function App() {
 
   const Layout = () => (
     <ErrorBoundary>
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen app-shell">
         <Header />
-        <main className="pt-16 pb-16 md:pb-0">
+        <main className="pt-16 pb-16 md:pb-0 app-content">
           <Outlet />
         </main>
         <Footer />

@@ -1,14 +1,14 @@
 /* src/data/fallbackCollections.js */
 
 // Cloudinary Image Constants
-const ONE = "https://res.cloudinary.com/dwmytphop/image/upload/v1766311083/ONE_wwadwu.png";
-const TWO = "https://res.cloudinary.com/dwmytphop/image/upload/v1766311084/TWO_w7vuj3.png";
-const THREE = "https://res.cloudinary.com/dwmytphop/image/upload/v1766311084/THREE_hhcx1t.png";
-const FOUR = "https://res.cloudinary.com/dwmytphop/image/upload/v1766311083/FOUR_x4ebda.png";
-const FIVE = "https://res.cloudinary.com/dwmytphop/image/upload/v1766311083/FIVE_g4ndly.png";
-const SIX = "https://res.cloudinary.com/dwmytphop/image/upload/v1766311083/SIX_hhibvm.png";
-const SEVEN = "https://res.cloudinary.com/dwmytphop/image/upload/v1766311084/SEVEN_g0ijic.png";
-const EIGHT = "https://res.cloudinary.com/dwmytphop/image/upload/v1768041552/football_1_1_ytbqal.png";
+const ONE    ="https://res.cloudinary.com/dwmytphop/image/upload/v1768711385/krishna_click_pxhyip.png  "
+const TWO    ="https://res.cloudinary.com/dwmytphop/image/upload/v1768711388/anima_click_js3jqo.png  "
+const THREE  ="https://res.cloudinary.com/dwmytphop/image/upload/v1768711386/marbal_click_kgcidi.png  "
+const FOUR   ="https://res.cloudinary.com/dwmytphop/image/upload/v1768711373/cricketer_click_oejwbo.png  "
+const FIVE   ="https://res.cloudinary.com/dwmytphop/image/upload/v1768711371/cute_click_x7zdpj.png  "
+const SIX    ="https://res.cloudinary.com/dwmytphop/image/upload/v1768711387/aesthetic_click_iv0268.png  "
+const SEVEN  ="https://res.cloudinary.com/dwmytphop/image/upload/v1768711386/flower_click_efvhzs.png  "
+const EIGHT  ="https://res.cloudinary.com/dwmytphop/image/upload/v1768710304/Football_click_xgcnsy.png  "
 
 
 const slugify = (value = '') => value
@@ -24,7 +24,7 @@ const RAW_FALLBACK_COLLECTIONS = [
 
     handle: 'Krishna Theme',
     aliases: ['1'],
-    title: 'Dreamy Pastels',
+    title:'GOD  Krishna ',
     tagline: 'Soft gradients with a glassy sheen.',
     accentColor: '#f472b6',
     heroImage: ONE,
@@ -37,8 +37,8 @@ const RAW_FALLBACK_COLLECTIONS = [
   {
     handle: 'Anime Theme',
     aliases: ['2'],
-    title: 'Custom Studio',
-    tagline: 'Upload-ready canvases with guide layers.',
+    title:'Anime Theme',
+       tagline: 'Upload-ready canvases with guide layers.',
     accentColor: '#22d3ee',
     heroImage: TWO,
     description: 'A flexible canvas pack with high-contrast grids and masking overlays for quick mockups.',
@@ -50,8 +50,8 @@ const RAW_FALLBACK_COLLECTIONS = [
   {
     handle: 'Marble Theme',
     aliases: ['3'],
-    title: 'Gilded Marble',
-    tagline: 'Luxe streaks dipped in gold foil.',
+    title:'Marble Theme',
+       tagline: 'Luxe streaks dipped in gold foil.',
     accentColor: '#fbbf24',
     heroImage: THREE,
     description: 'Deep charcoal slabs with molten gold veins and cloudy lilac smoke drifting over the edges.',
@@ -63,8 +63,8 @@ const RAW_FALLBACK_COLLECTIONS = [
   {
     handle: 'Cricketer Theme',
     aliases: ['4'],
-    title: 'Quotes Club',
-    tagline: 'Statement typography for bold covers.',
+  title:'Cricketer Theme',
+   tagline: 'Statement typography for bold covers.',
     accentColor: '#fb7185',
     heroImage: FOUR,
     description: 'Punchy serif phrases with halftone shadows and grainy spray textures for maximum impact.',
@@ -76,8 +76,8 @@ const RAW_FALLBACK_COLLECTIONS = [
   {
     handle: 'Cute Theme',
     aliases: ['5'],
-    title: 'Midnight Bloom',
-    tagline: 'Inky botanicals with electric outlines.',
+    title:'Cute Theme',
+        tagline: 'Inky botanicals with electric outlines.',
     accentColor: '#38bdf8',
     heroImage: FIVE,
     description: 'Botanical sketches glowing against a cobalt gradient with scattered star dust.',
@@ -90,7 +90,7 @@ const RAW_FALLBACK_COLLECTIONS = [
   {
     handle: 'Aesthetic Theme',
     aliases: ['6'],
-    title: 'Aurora Pulse',
+  title:'Aesthetic Theme',
     tagline: 'Northern lights reimagined as waveforms.',
     accentColor: '#34d399',
     heroImage: SIX,
@@ -103,8 +103,8 @@ const RAW_FALLBACK_COLLECTIONS = [
   {
     handle: 'Flower Theme',
     aliases: ['7'],
-    title: 'Cosmic Doodles',
-    tagline: 'Playful scribbles floating in zero-g.',
+    title:'Flower Theme',
+        tagline: 'Playful scribbles floating in zero-g.',
     accentColor: '#c084fc',
     heroImage: SEVEN,
     description: 'Marker-style doodles orbiting pastel planets, perfect for custom case freestyles.',
@@ -116,7 +116,8 @@ const RAW_FALLBACK_COLLECTIONS = [
   {
     handle: 'Footballer Theme',
     aliases: ['8'],
-    title: 'Football Frenzy',
+    title:'Footballer Theme',
+
     tagline: 'Soccer-inspired designs with dynamic patterns.',
     accentColor: '#22c55e',
     heroImage: EIGHT,

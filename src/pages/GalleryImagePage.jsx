@@ -34,14 +34,14 @@ const slugifyId = (value) => {
 const materialOptions = [
   {
     id: 'matte',
-    price: 199,
+    price: 1,
     label: 'Glossy Metal',
     blurb: 'Smooth aur shiny look. Strong & durable',
     features: ['Scratch resistant', 'Smooth finish', 'Slim profile']
   },
   {
     id: 'gloss',
-    price: 249,
+    price: 1,
     label: 'Glossy Metal + Gel',
     blurb: 'Extra shine. 3D premium protection',
     features: ['Enhanced grip', '3D protection', 'Premium finish']

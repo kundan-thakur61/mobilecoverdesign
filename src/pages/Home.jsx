@@ -1,32 +1,16 @@
-import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import OptimizedImage from '../components/OptimizedImage';
 
-const PremiumCard = ({ image, title, subtitle, badge, delay, priority = false }) => {
-  const [isHovered, setIsHovered] = useState(false);
-  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
-  const cardRef = useRef(null);
+const PremiumCard = ({ image, title,  priority = false }) => {
+  // const [ setIsHovered] = useState(false);
+ 
 
-  const handleMouseMove = (e) => {
-    if (!cardRef.current) return;
-    const rect = cardRef.current.getBoundingClientRect();
-    const x = (e.clientX - rect.left) / rect.width;
-    const y = (e.clientY - rect.top) / rect.height;
-    setMousePos({ x, y });
-  };
+
+ 
 
   return (
-    <div
-      ref={cardRef}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-      onMouseMove={handleMouseMove}
-      className={`group relative overflow-hidden rounded-3xl cursor-pointer animate-fade-in-up`}
-      // style={{ animationDelay: `${delay}ms` }}
-    >
-      {/* Gradient border effect */}
-      <div className="absolute inset-0 bg-gradient-to-br from-purple-500 via-pink-500 to-blue-500 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl"></div>
-
+    <div>
+      
       {/* Main card container */}
       <div className="relative ">
         {/* Image container with parallax */}
@@ -36,29 +20,12 @@ const PremiumCard = ({ image, title, subtitle, badge, delay, priority = false })
             alt={title}
             priority={priority}
             loading={priority ? 'eager' : 'lazy'}
-            fetchPriority={priority ? 'high' : 'auto'}
+            fetchpriority={priority ? 'high' : 'auto'}
             sizes="(min-width: 1024px) 45vw, 90vw"
             className="w-full h-full"
           />
 
-          {/* Gradient overlay */}
-          <div className="absolute "></div>
-
-          {/* Animated shine effect */}
-          <div
-            className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-            style={{
-              background: `radial-gradient(circle at ${mousePos.x * 100}% ${mousePos.y * 100}%, rgba(255,255,255,0.2), transparent 50%)`
-            }}
-          ></div>
-
-          {/* Badge */}
-          
-
-          {/* Content overlay */}
-          
-
-          {/* Floating particles */}
+         
           
         </div>
 
@@ -75,8 +42,6 @@ const PremiumCard = ({ image, title, subtitle, badge, delay, priority = false })
 };
 
 function PremiumCardSection() {
-  const [activeCard, setActiveCard] = useState(null);
-
   return (
     <section className="py-20 bg-gradient-to-b from-white via-purple-50/30 to-white relative overflow-hidden">
       {/* Animated background elements */}
@@ -94,14 +59,14 @@ function PremiumCardSection() {
             </span>
           </div>
           
-          <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-6 leading-tight">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-6 leading-tight">
             Two Ways to Get Your
             <span className="block bg-gradient-to-r from-purple-600 via-pink-600 to-blue-600 text-transparent bg-clip-text">
               Perfect Mobile Cover
             </span>
           </h2>
           
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+          <p className="text-base sm:text-lg md:text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
             Choose from thousands of pre-designed themes or create your own custom phone case with our easy-to-use design tool
           </p>
 
@@ -117,7 +82,7 @@ function PremiumCardSection() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12">
           <Link to="/themes">
             <PremiumCard
-              image="https://res.cloudinary.com/dwmytphop/image/upload/v1766311084/main_background_theame_ni9f5a.png"
+              image="https://res.cloudinary.com/dwmytphop/image/upload/v1768711372/mobile_click_l7zefk.png"
               title="Pre-Designed Themes"
               subtitle="Explore 1000+ professionally crafted designs across anime, sports, nature, and abstract categories"
               badge="🎨 1000+ Designs"
@@ -128,7 +93,7 @@ function PremiumCardSection() {
           
           <Link to="/customizer">
             <PremiumCard
-              image="https://res.cloudinary.com/dwmytphop/image/upload/v1766311082/Customised_theam_ghg4jm.png"
+              image="https://res.cloudinary.com/dwmytphop/image/upload/v1768711372/customised_click_xjmrjx.png"
               title="Custom Design"
               subtitle="Upload your photos and create a one-of-a-kind mobile cover with our advanced design editor"
               badge="✨ Your Photos"
@@ -266,7 +231,7 @@ function PremiumHero() {
                 </span>
               </div>
               
-              <h1 className="text-5xl md:text-7xl font-bold leading-tight">
+              <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold leading-tight">
                 <span className="inline-block animate-slide-in-left bg-clip-text text-transparent bg-gradient-to-r from-white to-blue-200">
                   Create Custom
                 </span>
@@ -280,7 +245,7 @@ function PremiumHero() {
                 </span>
               </h1>
               
-              <p className="text-xl text-white/90 max-w-lg animate-fade-in animation-delay-600 leading-relaxed">
+              <p className="text-base sm:text-lg md:text-xl text-white/90 max-w-lg animate-fade-in animation-delay-600 leading-relaxed">
                 Design personalized phone cases with your photos. Premium quality printing for all phone models. Fast delivery across India.
               </p>
               
@@ -288,7 +253,7 @@ function PremiumHero() {
                 {/* Design Your Cover */}
                 <a
                   href="/customizer"
-                  className="group inline-flex items-center justify-center bg-gradient-to-r from-yellow-400 to-yellow-500 text-gray-900 px-8 py-4 rounded-xl font-bold text-lg hover:from-yellow-300 hover:to-yellow-400 transition-all duration-300 shadow-2xl hover:shadow-yellow-400/50 hover:scale-105 transform"
+                  className="group inline-flex items-center justify-center bg-gradient-to-r from-yellow-400 to-yellow-500 text-gray-900 px-8 py-4 rounded-xl font-semibold text-base sm:text-lg hover:from-yellow-300 hover:to-yellow-400 transition-all duration-300 shadow-2xl hover:shadow-yellow-400/50 hover:scale-105 transform"
                 >
                   <span>Design Your Cover</span>
                   <svg
@@ -309,7 +274,7 @@ function PremiumHero() {
                 {/* Browse Designs */}
                 <a
                   href="/products"
-                  className="inline-flex items-center justify-center bg-white/10 backdrop-blur-md text-white px-8 py-4 rounded-xl font-semibold text-lg hover:bg-white/20 transition-all duration-300 border-2 border-white/30 hover:border-white/50 hover:scale-105 transform"
+                  className="inline-flex items-center justify-center bg-white/10 backdrop-blur-md text-white px-8 py-4 rounded-xl font-semibold text-base sm:text-lg hover:bg-white/20 transition-all duration-300 border-2 border-white/30 hover:border-white/50 hover:scale-105 transform"
                 >
                   Browse Designs
                 </a>
@@ -319,7 +284,7 @@ function PremiumHero() {
                   href="https://wa.me/7827205492?text=Hi%20%F0%9F%91%8B%20CoverGhar%20Team%2C%0A%0AI%20want%20to%20design%20a%20custom%20mobile%20cover.%0APlease%20guide%20me%20with%20designs%2C%20price%20%26%20delivery%20details%20%F0%9F%98%8A"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group inline-flex items-center justify-center bg-gradient-to-r from-green-500 to-emerald-500 text-white px-8 py-4 rounded-xl font-bold text-lg hover:from-green-400 hover:to-emerald-400 transition-all duration-300 shadow-2xl hover:shadow-green-500/50 hover:scale-105 transform"
+                  className="group inline-flex items-center justify-center bg-gradient-to-r from-green-500 to-emerald-500 text-white px-8 py-4 rounded-xl font-semibold text-base sm:text-lg hover:from-green-400 hover:to-emerald-400 transition-all duration-300 shadow-2xl hover:shadow-green-500/50 hover:scale-105 transform"
                 >
                   <svg
                     className="w-5 h-5 mr-2 group-hover:rotate-12 transition-transform"

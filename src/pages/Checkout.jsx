@@ -504,11 +504,7 @@ const Checkout = () => {
               <div className="bg-white rounded-xl shadow-sm p-6">
                 <div className="flex items-center justify-between mb-6">
                   <h2 className="text-xl font-semibold">Shipping Information</h2>
-                  {!user && (
-                    <Link to="/login" className="text-sm text-primary-600 hover:text-primary-700">
-                      Have an account? Sign in
-                    </Link>
-                  )}
+                  
                 </div>
                 
                 <form onSubmit={handleSubmit} className="space-y-4">

@@ -212,7 +212,7 @@ const Themes = () => {
                           alt={`${card.title} themed mobile covers and phone cases collection`}
                           loading="lazy"
                           onError={handleImgError}
-                          className="absolute inset-0 w-full h-full object-cover"
+                          className="absolute  object-cover"
                         />
 
                         {/* Gradient Overlay */}
