@@ -1,16 +1,32 @@
+import { useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import OptimizedImage from '../components/OptimizedImage';
 
 const PremiumCard = ({ image, title,  priority = false }) => {
   // const [ setIsHovered] = useState(false);
- 
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  const cardRef = useRef(null);
 
-
- 
+  const handleMouseMove = (e) => {
+    if (!cardRef.current) return;
+    const rect = cardRef.current.getBoundingClientRect();
+    const x = (e.clientX - rect.left) / rect.width;
+    const y = (e.clientY - rect.top) / rect.height;
+    setMousePos({ x, y });
+  };
 
   return (
-    <div>
-      
+    <div
+      ref={cardRef}
+      // onMouseEnter={() => setIsHovered(true)}
+      // onMouseLeave={() => setIsHovered(false)}
+      onMouseMove={handleMouseMove}
+      className={`group relative overflow-hidden rounded-3xl cursor-pointer animate-fade-in-up`}
+      // style={{ animationDelay: `${delay}ms` }}
+    >
+      {/* Gradient border effect */}
+      <div className="absolute inset-0 bg-gradient-to-br from-purple-500 via-pink-500 to-blue-500 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl"></div>
+
       {/* Main card container */}
       <div className="relative ">
         {/* Image container with parallax */}
@@ -20,12 +36,29 @@ const PremiumCard = ({ image, title,  priority = false }) => {
             alt={title}
             priority={priority}
             loading={priority ? 'eager' : 'lazy'}
-            fetchpriority={priority ? 'high' : 'auto'}
+            fetchPriority={priority ? 'high' : 'auto'}
             sizes="(min-width: 1024px) 45vw, 90vw"
             className="w-full h-full"
           />
 
-         
+          {/* Gradient overlay */}
+          <div className="absolute "></div>
+
+          {/* Animated shine effect */}
+          <div
+            className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+            style={{
+              background: `radial-gradient(circle at ${mousePos.x * 100}% ${mousePos.y * 100}%, rgba(255,255,255,0.2), transparent 50%)`
+            }}
+          ></div>
+
+          {/* Badge */}
+          
+
+          {/* Content overlay */}
+          
+
+          {/* Floating particles */}
           
         </div>
 
@@ -57,7 +90,7 @@ function PremiumCardSection() {
             <span className="bg-gradient-to-r from-purple-600 to-pink-600 text-transparent bg-clip-text text-sm font-bold uppercase tracking-wider">
               Choose Your Style
             </span>
-          </div>
+          </div> 
           
           <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-6 leading-tight">
             Two Ways to Get Your
@@ -78,11 +111,10 @@ function PremiumCardSection() {
           </div>
         </div>
 
-        {/* Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12">
+         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12">
           <Link to="/themes">
             <PremiumCard
-              image="https://res.cloudinary.com/dwmytphop/image/upload/v1768711372/mobile_click_l7zefk.png"
+              image="https://res.cloudinary.com/dwmytphop/image/upload/v1768802259/main_background_theame_aqmriv.png"
               title="Pre-Designed Themes"
               subtitle="Explore 1000+ professionally crafted designs across anime, sports, nature, and abstract categories"
               badge="🎨 1000+ Designs"
@@ -93,7 +125,7 @@ function PremiumCardSection() {
           
           <Link to="/customizer">
             <PremiumCard
-              image="https://res.cloudinary.com/dwmytphop/image/upload/v1768711372/customised_click_xjmrjx.png"
+              image="https://res.cloudinary.com/dwmytphop/image/upload/v1768802258/Customised_theam_my15vv.png"
               title="Custom Design"
               subtitle="Upload your photos and create a one-of-a-kind mobile cover with our advanced design editor"
               badge="✨ Your Photos"
@@ -101,6 +133,8 @@ function PremiumCardSection() {
             />
           </Link>
         </div>
+
+        
 
         {/* Bottom features strip */}
         <div className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-6 animate-fade-in animation-delay-800">
@@ -248,6 +282,30 @@ function PremiumHero() {
               <p className="text-base sm:text-lg md:text-xl text-white/90 max-w-lg animate-fade-in animation-delay-600 leading-relaxed">
                 Design personalized phone cases with your photos. Premium quality printing for all phone models. Fast delivery across India.
               </p>
+
+              {/* Cards Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12">
+          <Link to="/themes">
+            <PremiumCard
+              image="https://res.cloudinary.com/dwmytphop/image/upload/v1768802259/main_background_theame_aqmriv.png"
+              title="Pre-Designed Themes"
+              subtitle="Explore 1000+ professionally crafted designs across anime, sports, nature, and abstract categories"
+              badge="🎨 1000+ Designs"
+              delay={0}
+              priority
+            />
+          </Link>
+          
+          <Link to="/customizer">
+            <PremiumCard
+              image="https://res.cloudinary.com/dwmytphop/image/upload/v1768802258/Customised_theam_my15vv.png"
+              title="Custom Design"
+              subtitle="Upload your photos and create a one-of-a-kind mobile cover with our advanced design editor"
+              badge="✨ Your Photos"
+              delay={200}
+            />
+          </Link>
+        </div>
               
               <div className="flex flex-col sm:flex-row gap-4 animate-fade-in-up animation-delay-800">
                 {/* Design Your Cover */}

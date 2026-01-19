@@ -204,7 +204,7 @@ const Themes = () => {
                         to={`/collection/${card.handle}`}
                         onKeyDown={(e) => handleKeyDown(e, card.handle)}
                         aria-label={`Browse ${card.title} mobile cover collection`}
-                        className="group relative h-64 rounded-2xl overflow-hidden "
+                        className="relative h-full w-full "
                       >
                         {/* Image with improved alt text */}
                         <img
@@ -212,7 +212,7 @@ const Themes = () => {
                           alt={`${card.title} themed mobile covers and phone cases collection`}
                           loading="lazy"
                           onError={handleImgError}
-                          className="absolute  object-cover"
+                          className=" group-even:first-letter: marker:absolute  object-cover"
                         />
 
                         {/* Gradient Overlay */}

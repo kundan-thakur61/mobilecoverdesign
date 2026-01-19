@@ -1,14 +1,14 @@
 /* src/data/fallbackCollections.js */
 
 // Cloudinary Image Constants
-const ONE    ="https://res.cloudinary.com/dwmytphop/image/upload/v1768711385/krishna_click_pxhyip.png  "
-const TWO    ="https://res.cloudinary.com/dwmytphop/image/upload/v1768711388/anima_click_js3jqo.png  "
-const THREE  ="https://res.cloudinary.com/dwmytphop/image/upload/v1768711386/marbal_click_kgcidi.png  "
-const FOUR   ="https://res.cloudinary.com/dwmytphop/image/upload/v1768711373/cricketer_click_oejwbo.png  "
-const FIVE   ="https://res.cloudinary.com/dwmytphop/image/upload/v1768711371/cute_click_x7zdpj.png  "
-const SIX    ="https://res.cloudinary.com/dwmytphop/image/upload/v1768711387/aesthetic_click_iv0268.png  "
-const SEVEN  ="https://res.cloudinary.com/dwmytphop/image/upload/v1768711386/flower_click_efvhzs.png  "
-const EIGHT  ="https://res.cloudinary.com/dwmytphop/image/upload/v1768710304/Football_click_xgcnsy.png  "
+const ONE      =" https://res.cloudinary.com/dwmytphop/image/upload/v1768802259/ONE_txv5ba.png                   "
+const TWO      ="https://res.cloudinary.com/dwmytphop/image/upload/v1768802260/TWO_gepvkd.png                    " 
+const THREE    ="  https://res.cloudinary.com/dwmytphop/image/upload/v1768802260/THREE_kw3wqf.png                  "
+const FOUR     =" https://res.cloudinary.com/dwmytphop/image/upload/v1768802259/FOUR_sm1q8e.png                  "
+const FIVE     =" https://res.cloudinary.com/dwmytphop/image/upload/v1768802258/FIVE_zkcus7.png                   "
+const SIX      =" https://res.cloudinary.com/dwmytphop/image/upload/v1768802260/SIX_dn6eva.png                   " 
+const SEVEN    =" https://res.cloudinary.com/dwmytphop/image/upload/v1768802259/SEVEN_f20ntt.png                   "
+const EIGHT    =" https://res.cloudinary.com/dwmytphop/image/upload/v1768802941/2_zni7k8.png                   "
 
 
 const slugify = (value = '') => value
