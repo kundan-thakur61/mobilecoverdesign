@@ -189,43 +189,79 @@ const Themes = () => {
               </Link>
             </div>
 
-            <div className="bg-white/25 rounded-2xl p-3 backdrop-blur-sm">
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                {loading
-                  ? Array.from({ length: 6 }).map((_, i) => (
-                      <div
-                        key={i}
-                        className="h-64 rounded-2xl bg-gray-200 animate-pulse"
-                      />
-                    ))
-                  : cards.map((card) => (
-                      <Link
-                        key={card.id}
-                        to={`/collection/${card.handle}`}
-                        onKeyDown={(e) => handleKeyDown(e, card.handle)}
-                        aria-label={`Browse ${card.title} mobile cover collection`}
-                        className="relative h-full w-full "
-                      >
-                        {/* Image with improved alt text */}
-                        <img
-                          src={resolveImageUrl(card.image) || IMAGE_ERROR_FALLBACK}
-                          alt={`${card.title} themed mobile covers and phone cases collection`}
-                          loading="lazy"
-                          onError={handleImgError}
-                          className=" group-even:first-letter: marker:absolute  object-cover"
-                        />
+            <div className="bg-white/25 rounded-2xl p-3 ">
+  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+    {loading
+      ? Array.from({ length: 6 }).map((_, i) => (
+          <div
+            key={i}
+            className="h-64 rounded-2xl"
+          />
+        ))
+      : cards.map((card) => (
+          <Link
+            key={card.id}
+            to={`/collection/${card.handle}`}
+            onKeyDown={(e) => handleKeyDown(e, card.handle)}
+            aria-label={`Browse ${card.title} mobile cover collection`}
+            className="group relative h-64 rounded-2xl "
+          >
+            {/* Image with enhanced effects - Fixed to show full image */}
+            <img
+              src={resolveImageUrl(card.image) || IMAGE_ERROR_FALLBACK}
+              alt={`${card.title} themed mobile covers and phone cases collection`}
+              loading="lazy"
+              onError={handleImgError}
+              className="absolute inset-0 w-full h-full "
+            />
 
                         {/* Gradient Overlay */}
-                        <div className="absolute inset-0 " />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
 
                         {/* Badge */}
                         {/*  */}
 
                         {/* Text Content */}
-                        <div className="relative z-10 h-full flex flex-col justify-end p-6 text-white">
-                         
-                          
-                        </div>
+                        <div className="relative z-10 h-full flex flex-col justify-end items-end p-6 text-white">
+  <h3 
+    className="text-5xl font-black mb-2 cursor-pointer select-none"
+    style={{
+      background: 'linear-gradient(45deg, #ff0000, #ff6b00, #ffd000, #ff0000)',
+      backgroundSize: '200% 200%',
+      WebkitBackgroundClip: 'text',
+      WebkitTextFillColor: 'transparent',
+      backgroundClip: 'text',
+      textShadow: '0 0 20px rgba(255,0,0,0.5), 0 0 40px rgba(255,107,0,0.3)',
+      filter: 'drop-shadow(4px 4px 0px rgba(0,0,0,0.4)) drop-shadow(8px 8px 0px rgba(0,0,0,0.2))',
+      transform: 'perspective(800px) rotateY(-20deg) rotateX(10deg)',
+      transformStyle: 'preserve-3d',
+      animation: 'gradient 3s ease infinite, float 3s ease-in-out infinite',
+      transition: 'all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
+    }}
+    onMouseEnter={(e) => {
+      e.currentTarget.style.transform = 'perspective(800px) rotateY(0deg) rotateX(0deg) translateZ(30px) scale(1.1)';
+      e.currentTarget.style.filter = 'drop-shadow(6px 6px 0px rgba(255,0,0,0.6)) drop-shadow(12px 12px 20px rgba(255,107,0,0.4))';
+    }}
+    onMouseLeave={(e) => {
+      e.currentTarget.style.transform = 'perspective(800px) rotateY(-20deg) rotateX(10deg)';
+      e.currentTarget.style.filter = 'drop-shadow(4px 4px 0px rgba(0,0,0,0.4)) drop-shadow(8px 8px 0px rgba(0,0,0,0.2))';
+    }}
+  >
+    ✨ Click Here ✨
+  </h3>
+  
+  <style jsx>{`
+    @keyframes gradient {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+    }
+    
+    @keyframes float {
+      0%, 100% { transform: perspective(800px) rotateY(-20deg) rotateX(10deg) translateY(0px); }
+      50% { transform: perspective(800px) rotateY(-20deg) rotateX(10deg) translateY(-10px); }
+    }
+  `}</style>
+</div>
 
                         {/* Hover Effect Border */}
                         {/* <div className="absolute inset-0 border-4 border-primary-500 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity" /> */}
