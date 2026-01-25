@@ -8,7 +8,9 @@ const __dirname = path.dirname(__filename);
 
 // Configuration
 const SITE_URL = process.env.VITE_SITE_URL || 'https://www.coverghar.in';
-const API_URL = process.env.VITE_BACKEND_URL || 'http://localhost:4000'; // Default to local backend
+// Default to production backend if env var is missing (Node doesn't load .env by default)
+const API_URL = process.env.VITE_BACKEND_URL || 'https://api.coverghar.in';
+
 
 const staticRoutes = [
   { url: '/', changefreq: 'daily', priority: '1.0' },
