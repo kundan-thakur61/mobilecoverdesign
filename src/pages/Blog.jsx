@@ -6,30 +6,30 @@ const Blog = () => {
   const blogPosts = [
     {
       id: 1,
-      title: "Top 10 Mobile Cover Trends for 2025",
-      excerpt: "Discover the latest mobile cover trends that are taking over the smartphone accessory market in 2025.",
-      date: "2025-01-15",
-      readTime: "5 min read",
-      category: "Trends",
-      slug: "mobile-cover-trends-2025"
+      title: "5 Personalized Gift Ideas Under ₹500 for Your Best Friend",
+      excerpt: "Finding a thoughtful gift doesn't have to break the bank. Customized gifts add a personal touch that shows you care.",
+      date: "2025-01-26",
+      readTime: "4 min read",
+      category: "Gift Guide",
+      slug: "personalized-gift-ideas-under-500"
     },
     {
       id: 2,
-      title: "How to Choose the Perfect Mobile Cover for Your Lifestyle",
-      excerpt: "A comprehensive guide to selecting the right mobile cover based on your daily activities and preferences.",
-      date: "2025-01-10",
-      readTime: "7 min read",
-      category: "Guide",
-      slug: "choose-perfect-mobile-cover"
+      title: "Hard Case vs Soft Case: Which is Better for Your iPhone?",
+      excerpt: "Should you go for a rigid Hard Case or a flexible Soft Silicone case? Let's break down the pros and cons.",
+      date: "2025-01-25",
+      readTime: "5 min read",
+      category: "Product Guide",
+      slug: "hard-case-vs-soft-case-iphone"
     },
     {
       id: 3,
-      title: "Custom Mobile Covers: Express Yourself with Personalized Designs",
-      excerpt: "Learn how custom mobile covers can reflect your personality and create unique smartphone accessories.",
-      date: "2025-01-05",
-      readTime: "6 min read",
-      category: "Customization",
-      slug: "custom-mobile-covers-guide"
+      title: "Trending Anime Phone Case Designs for 2026",
+      excerpt: "Anime culture has exploded in India. Here are the top trends in manga panels and character designs we are seeing for 2026.",
+      date: "2025-01-20",
+      readTime: "3 min read",
+      category: "Trends",
+      slug: "trending-anime-phone-case-designs-2026"
     },
     {
       id: 4,
@@ -66,51 +66,6 @@ const Blog = () => {
       readTime: "4 min read",
       category: "Care",
       slug: "mobile-cover-care-guide"
-    },
-    {
-      id: 8,
-      title: "Designer Mobile Covers: Luxury Meets Technology",
-      excerpt: "Explore high-end designer mobile covers that combine fashion with smartphone protection.",
-      date: "2025-03-01",
-      readTime: "7 min read",
-      category: "Designer",
-      slug: "designer-mobile-covers"
-    },
-    {
-      id: 9,
-      title: "Mobile Photography: Best Cases for Content Creators",
-      excerpt: "Find mobile covers optimized for photographers and content creators with camera protection.",
-      date: "2025-03-05",
-      readTime: "6 min read",
-      category: "Photography",
-      slug: "mobile-photography-cases"
-    },
-    {
-      id: 10,
-      title: "Sustainable Mobile Covers: Eco-Friendly Options for Conscious Consumers",
-      excerpt: "Discover eco-friendly mobile cover options made from recycled materials.",
-      date: "2025-03-10",
-      readTime: "5 min read",
-      category: "Sustainability",
-      slug: "sustainable-mobile-covers"
-    },
-    {
-      id: 11,
-      title: "Mobile Cover Materials Guide: Which One is Right for You?",
-      excerpt: "Comprehensive guide to different mobile cover materials and their benefits.",
-      date: "2025-03-15",
-      readTime: "8 min read",
-      category: "Guide",
-      slug: "mobile-cover-materials-guide"
-    },
-    {
-      id: 12,
-      title: "Gaming Mobile Covers: For the Ultimate Gaming Experience",
-      excerpt: "Explore mobile covers designed specifically for gamers with enhanced grip and style.",
-      date: "2025-03-20",
-      readTime: "6 min read",
-      category: "Gaming",
-      slug: "gaming-mobile-covers"
     }
   ];
 

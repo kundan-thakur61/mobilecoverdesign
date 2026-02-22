@@ -22,7 +22,7 @@ const PrivacyPolicy = () => {
       />
       <div className="max-w-4xl mx-auto px-4 py-8 space-y-8">
         <div>
-          <h3 className="text-xl font-bold mb-2">🔐 Privacy Policy</h3>
+          <h1 className="text-2xl font-bold mb-2">🔐 Privacy Policy</h1>
           <p className="text-gray-700">
             At Cover Ghar, we value your privacy and are committed to protecting your personal information. This Privacy Policy explains how we collect, use, and safeguard your data when you visit or make a purchase from our website.
           </p>

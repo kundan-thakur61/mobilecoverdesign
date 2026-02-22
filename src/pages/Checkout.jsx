@@ -477,41 +477,41 @@ const Checkout = () => {
         description="Complete your purchase securely"
         url="/checkout"
       />
-      <div className="min-h-screen bg-gray-50 py-8">
-        <div className="max-w-6xl mx-auto px-4">
+      <div className="min-h-screen bg-gray-50 py-4 sm:py-6 lg:py-8 pb-24 lg:pb-8">
+        <div className="max-w-6xl mx-auto px-3 sm:px-4">
           {/* Header */}
-          <div className="flex items-center justify-between mb-8">
+          <div className="flex items-center justify-between mb-4 sm:mb-6 lg:mb-8">
             <Link 
               to="/cart" 
-              className="flex items-center gap-2 text-gray-600 hover:text-gray-900 transition"
+              className="flex items-center gap-1 sm:gap-2 text-gray-600 hover:text-gray-900 transition min-h-[44px] px-2"
             >
-              <FiArrowLeft className="w-5 h-5" />
-              Back to Cart
+              <FiArrowLeft className="w-4 h-4 sm:w-5 sm:h-5" />
+              <span className="text-sm sm:text-base">Back to Cart</span>
             </Link>
             
-            <div className="flex items-center gap-2 text-sm text-gray-600">
-              <FiLock className="w-4 h-4" />
-              <span>Secure Checkout</span>
+            <div className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm text-gray-600">
+              <FiLock className="w-3 h-3 sm:w-4 sm:h-4" />
+              <span className="hidden sm:inline">Secure Checkout</span>
+              <span className="sm:hidden">Secure</span>
             </div>
           </div>
 
-          <h1 className="text-3xl font-bold text-gray-900 mb-8">Checkout</h1>
+          <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mb-4 sm:mb-6 lg:mb-8">Checkout</h1>
         
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
             {/* Shipping & Payment Form */}
-            <div className="lg:col-span-2 space-y-6">
+            <div className="lg:col-span-2 space-y-4 sm:space-y-6">
               {/* Shipping Information */}
-              <div className="bg-white rounded-xl shadow-sm p-6">
-                <div className="flex items-center justify-between mb-6">
-                  <h2 className="text-xl font-semibold">Shipping Information</h2>
-                  
+              <div className="bg-white rounded-lg sm:rounded-xl shadow-sm p-4 sm:p-6">
+                <div className="flex items-center justify-between mb-4 sm:mb-6">
+                  <h2 className="text-lg sm:text-xl font-semibold">Shipping Information</h2>
                 </div>
                 
-                <form onSubmit={handleSubmit} className="space-y-4">
+                <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-4">
                   {/* Name and Phone */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                      <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
                         Full Name <span className="text-red-500">*</span>
                       </label>
                       <input
@@ -519,21 +519,21 @@ const Checkout = () => {
                         value={shipping.name}
                         onChange={(e) => handleInputChange('name', e.target.value)}
                         onBlur={() => handleBlur('name')}
-                        className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition ${
+                        className={`w-full px-3 py-2.5 sm:py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition text-base min-h-[44px] ${
                           validationErrors.name && touched.name ? 'border-red-500' : 'border-gray-300'
                         }`}
-                        placeholder=""
+                        placeholder="Enter your name"
                       />
                       {validationErrors.name && touched.name && (
-                        <p className="mt-1 text-sm text-red-600 flex items-center gap-1">
-                          <FiAlertCircle className="w-4 h-4" />
+                        <p className="mt-1 text-xs sm:text-sm text-red-600 flex items-center gap-1">
+                          <FiAlertCircle className="w-3 h-3 sm:w-4 sm:h-4" />
                           {validationErrors.name}
                         </p>
                       )}
                     </div>
                     
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                      <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
                         Phone Number <span className="text-red-500">*</span>
                       </label>
                       <input
@@ -541,15 +541,15 @@ const Checkout = () => {
                         value={shipping.phone}
                         onChange={(e) => handleInputChange('phone', e.target.value.replace(/\D/g, '').slice(0, 10))}
                         onBlur={() => handleBlur('phone')}
-                        className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition ${
+                        className={`w-full px-3 py-2.5 sm:py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition text-base min-h-[44px] ${
                           validationErrors.phone && touched.phone ? 'border-red-500' : 'border-gray-300'
                         }`}
                         placeholder="9100000000"
                         maxLength="10"
                       />
                       {validationErrors.phone && touched.phone && (
-                        <p className="mt-1 text-sm text-red-600 flex items-center gap-1">
-                          <FiAlertCircle className="w-4 h-4" />
+                        <p className="mt-1 text-xs sm:text-sm text-red-600 flex items-center gap-1">
+                          <FiAlertCircle className="w-3 h-3 sm:w-4 sm:h-4" />
                           {validationErrors.phone}
                         </p>
                       )}
@@ -558,7 +558,7 @@ const Checkout = () => {
 
                   {/* Address Line 1 */}
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                    <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
                       Address Line 1 <span className="text-red-500">*</span>
                     </label>
                     <input
@@ -566,14 +566,14 @@ const Checkout = () => {
                       value={shipping.address1}
                       onChange={(e) => handleInputChange('address1', e.target.value)}
                       onBlur={() => handleBlur('address1')}
-                      className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition ${
+                      className={`w-full px-3 py-2.5 sm:py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition text-base min-h-[44px] ${
                         validationErrors.address1 && touched.address1 ? 'border-red-500' : 'border-gray-300'
                       }`}
                       placeholder="House/Flat no., Building name, Street"
                     />
                     {validationErrors.address1 && touched.address1 && (
-                      <p className="mt-1 text-sm text-red-600 flex items-center gap-1">
-                        <FiAlertCircle className="w-4 h-4" />
+                      <p className="mt-1 text-xs sm:text-sm text-red-600 flex items-center gap-1">
+                        <FiAlertCircle className="w-3 h-3 sm:w-4 sm:h-4" />
                         {validationErrors.address1}
                       </p>
                     )}
@@ -581,22 +581,22 @@ const Checkout = () => {
 
                   {/* Address Line 2 */}
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                    <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
                       Address Line 2 <span className="text-gray-400">(Optional)</span>
                     </label>
                     <input
                       type="text"
                       value={shipping.address2}
                       onChange={(e) => handleInputChange('address2', e.target.value)}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                      className="w-full px-3 py-2.5 sm:py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition text-base min-h-[44px]"
                       placeholder="Landmark, Area"
                     />
                   </div>
 
                   {/* City, State, Postal Code */}
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                      <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
                         City <span className="text-red-500">*</span>
                       </label>
                       <input
@@ -604,28 +604,28 @@ const Checkout = () => {
                         value={shipping.city}
                         onChange={(e) => handleInputChange('city', e.target.value)}
                         onBlur={() => handleBlur('city')}
-                        className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition ${
+                        className={`w-full px-3 py-2.5 sm:py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition text-base min-h-[44px] ${
                           validationErrors.city && touched.city ? 'border-red-500' : 'border-gray-300'
                         }`}
-                        placeholder=""
+                        placeholder="City"
                       />
                       {validationErrors.city && touched.city && (
-                        <p className="mt-1 text-sm text-red-600 flex items-center gap-1">
-                          <FiAlertCircle className="w-4 h-4" />
+                        <p className="mt-1 text-xs sm:text-sm text-red-600 flex items-center gap-1">
+                          <FiAlertCircle className="w-3 h-3 sm:w-4 sm:h-4" />
                           {validationErrors.city}
                         </p>
                       )}
                     </div>
                     
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                      <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
                         State <span className="text-red-500">*</span>
                       </label>
                       <select
                         value={shipping.state}
                         onChange={(e) => handleInputChange('state', e.target.value)}
                         onBlur={() => handleBlur('state')}
-                        className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition ${
+                        className={`w-full px-3 py-2.5 sm:py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition text-base min-h-[44px] ${
                           validationErrors.state && touched.state ? 'border-red-500' : 'border-gray-300'
                         }`}
                       >
@@ -635,15 +635,15 @@ const Checkout = () => {
                         ))}
                       </select>
                       {validationErrors.state && touched.state && (
-                        <p className="mt-1 text-sm text-red-600 flex items-center gap-1">
-                          <FiAlertCircle className="w-4 h-4" />
+                        <p className="mt-1 text-xs sm:text-sm text-red-600 flex items-center gap-1">
+                          <FiAlertCircle className="w-3 h-3 sm:w-4 sm:h-4" />
                           {validationErrors.state}
                         </p>
                       )}
                     </div>
                     
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                      <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
                         PIN Code <span className="text-red-500">*</span>
                       </label>
                       <input
@@ -651,15 +651,15 @@ const Checkout = () => {
                         value={shipping.postalCode}
                         onChange={(e) => handleInputChange('postalCode', e.target.value.replace(/\D/g, '').slice(0, 6))}
                         onBlur={() => handleBlur('postalCode')}
-                        className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition ${
+                        className={`w-full px-3 py-2.5 sm:py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition text-base min-h-[44px] ${
                           validationErrors.postalCode && touched.postalCode ? 'border-red-500' : 'border-gray-300'
                         }`}
-                        placeholder=""
+                        placeholder="PIN"
                         maxLength="6"
                       />
                       {validationErrors.postalCode && touched.postalCode && (
-                        <p className="mt-1 text-sm text-red-600 flex items-center gap-1">
-                          <FiAlertCircle className="w-4 h-4" />
+                        <p className="mt-1 text-xs sm:text-sm text-red-600 flex items-center gap-1">
+                          <FiAlertCircle className="w-3 h-3 sm:w-4 sm:h-4" />
                           {validationErrors.postalCode}
                         </p>
                       )}
@@ -669,12 +669,12 @@ const Checkout = () => {
               </div>
 
               {/* Payment Method */}
-              <div className="bg-white rounded-xl shadow-sm p-6">
-                <h2 className="text-xl font-semibold mb-6">Payment Method</h2>
+              <div className="bg-white rounded-lg sm:rounded-xl shadow-sm p-4 sm:p-6">
+                <h2 className="text-lg sm:text-xl font-semibold mb-4 sm:mb-6">Payment Method</h2>
                 
-                <div className="space-y-3">
+                <div className="space-y-2 sm:space-y-3">
                   {/* Razorpay */}
-                  <label className={`flex items-center gap-3 cursor-pointer p-4 border-2 rounded-lg transition ${
+                  <label className={`flex items-center gap-2 sm:gap-3 cursor-pointer p-3 sm:p-4 border-2 rounded-lg transition min-h-[44px] ${
                     paymentMethod === 'razorpay' ? 'border-primary-600 bg-primary-50' : 'border-gray-200 hover:bg-gray-50'
                   }`}>
                     <input 
@@ -685,10 +685,9 @@ const Checkout = () => {
                       className="w-4 h-4 text-primary-600"
                     />
                     <div className="flex-1">
-                      <div className="font-medium">Pay Online (Recommended)</div>
-                      <div className="text-sm text-gray-500">Cards, UPI, Wallets, Net Banking</div>
+                      <div className="font-medium text-sm sm:text-base">Pay Online (Recommended)</div>
+                      <div className="text-xs sm:text-sm text-gray-500">Cards, UPI, Wallets, Net Banking</div>
                     </div>
-                    
                   </label>
                   
                   {/* UPI Direct */}

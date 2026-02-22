@@ -2,6 +2,7 @@ import React, { useState, useRef, useCallback } from 'react';
 
 const FrameCustomizer = ({ selectedModel, onSave }) => {
   const [userImage, setUserImage] = useState(null);
+  // x/y are normalized offsets relative to SCREEN_RECT width/height (so preview can scale responsively)
   const [transform, setTransform] = useState({ x: 0, y: 0, scale: 1 });
   const [isDragging, setIsDragging] = useState(false);
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
@@ -9,6 +10,24 @@ const FrameCustomizer = ({ selectedModel, onSave }) => {
 
   // Screen rectangle for the phone frame (adjust based on your frame images)
   const SCREEN_RECT = { left: 20, top: 80, width: 260, height: 440 };
+
+  const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
+
+  const getScreenRectPx = useCallback(() => {
+    const el = canvasRef.current;
+    if (!el) return null;
+    const rect = el.getBoundingClientRect();
+    const leftPct = SCREEN_RECT.left / 300;
+    const topPct = SCREEN_RECT.top / 600;
+    const widthPct = SCREEN_RECT.width / 300;
+    const heightPct = SCREEN_RECT.height / 600;
+    return {
+      left: rect.width * leftPct,
+      top: rect.height * topPct,
+      width: rect.width * widthPct,
+      height: rect.height * heightPct,
+    };
+  }, []);
 
   const handleImageUpload = useCallback((e) => {
     const file = e.target.files[0];
@@ -22,20 +41,40 @@ const FrameCustomizer = ({ selectedModel, onSave }) => {
     }
   }, []);
 
-  const handleMouseDown = useCallback((e) => {
+  const handlePointerDown = useCallback((e) => {
     if (!userImage) return;
+    const rectPx = getScreenRectPx();
+    if (!rectPx) return;
+
+    e.preventDefault();
     setIsDragging(true);
-    setDragStart({ x: e.clientX - transform.x, y: e.clientY - transform.y });
-  }, [userImage, transform]);
+    try {
+      e.currentTarget.setPointerCapture?.(e.pointerId);
+    } catch {
+      // ignore
+    }
 
-  const handleMouseMove = useCallback((e) => {
+    setDragStart({
+      x: e.clientX - (transform.x * rectPx.width),
+      y: e.clientY - (transform.y * rectPx.height),
+    });
+  }, [userImage, transform, getScreenRectPx]);
+
+  const handlePointerMove = useCallback((e) => {
     if (!isDragging || !userImage) return;
-    const newX = e.clientX - dragStart.x;
-    const newY = e.clientY - dragStart.y;
-    setTransform(prev => ({ ...prev, x: newX, y: newY }));
-  }, [isDragging, dragStart, userImage]);
+    const rectPx = getScreenRectPx();
+    if (!rectPx) return;
 
-  const handleMouseUp = useCallback(() => {
+    const newX = (e.clientX - dragStart.x) / rectPx.width;
+    const newY = (e.clientY - dragStart.y) / rectPx.height;
+    setTransform(prev => ({
+      ...prev,
+      x: clamp(newX, -2, 2),
+      y: clamp(newY, -2, 2),
+    }));
+  }, [isDragging, dragStart, userImage, getScreenRectPx]);
+
+  const handlePointerUp = useCallback(() => {
     setIsDragging(false);
   }, []);
 
@@ -73,7 +112,7 @@ const FrameCustomizer = ({ selectedModel, onSave }) => {
           ctx.save();
           ctx.translate(SCREEN_RECT.left + SCREEN_RECT.width / 2, SCREEN_RECT.top + SCREEN_RECT.height / 2);
           ctx.scale(transform.scale, transform.scale);
-          ctx.translate(transform.x, transform.y);
+          ctx.translate(transform.x * SCREEN_RECT.width, transform.y * SCREEN_RECT.height);
           ctx.drawImage(userImg, -userImg.width / 2, -userImg.height / 2);
           ctx.restore();
 
@@ -129,7 +168,7 @@ const FrameCustomizer = ({ selectedModel, onSave }) => {
           ctx.save();
           ctx.translate(SCREEN_RECT.left + SCREEN_RECT.width / 2, SCREEN_RECT.top + SCREEN_RECT.height / 2);
           ctx.scale(transform.scale, transform.scale);
-          ctx.translate(transform.x, transform.y);
+          ctx.translate(transform.x * SCREEN_RECT.width, transform.y * SCREEN_RECT.height);
           ctx.drawImage(userImg, -userImg.width / 2, -userImg.height / 2);
           ctx.restore();
 
@@ -180,11 +219,13 @@ const FrameCustomizer = ({ selectedModel, onSave }) => {
         <div className="flex justify-center">
           <div
             ref={canvasRef}
-            className="relative w-[300px] h-[600px] bg-gray-100 border-2 border-gray-300 cursor-move select-none"
-            onMouseDown={handleMouseDown}
-            onMouseMove={handleMouseMove}
-            onMouseUp={handleMouseUp}
-            onMouseLeave={handleMouseUp}
+            className="relative w-full max-w-[320px] sm:max-w-[360px] md:max-w-[420px] bg-gray-100 border-2 border-gray-300 select-none touch-none cursor-grab active:cursor-grabbing"
+            style={{ aspectRatio: '1 / 2', maxHeight: '70vh' }}
+            onPointerDown={handlePointerDown}
+            onPointerMove={handlePointerMove}
+            onPointerUp={handlePointerUp}
+            onPointerCancel={handlePointerUp}
+            onPointerLeave={handlePointerUp}
           >
             {/* User Image */}
             {userImage && (
@@ -195,7 +236,7 @@ const FrameCustomizer = ({ selectedModel, onSave }) => {
                 style={{
                   left: '50%',
                   top: '50%',
-                  transform: `translate(-50%, -50%) scale(${transform.scale}) translate(${transform.x}px, ${transform.y}px)`,
+                  transform: `translate(-50%, -50%) scale(${transform.scale}) translate(${transform.x * 100}%, ${transform.y * 100}%)`,
                   transformOrigin: 'center center',
                   maxWidth: 'none',
                   maxHeight: 'none',
@@ -237,20 +278,20 @@ const FrameCustomizer = ({ selectedModel, onSave }) => {
             <div className="grid grid-cols-2 gap-2 mb-4">
               <button
                 onClick={zoomIn}
-                className="p-3 bg-blue-500 text-white rounded hover:bg-blue-600"
+                className="p-3 bg-blue-500 text-white rounded hover:bg-blue-600 min-h-[44px]"
               >
                 Zoom In
               </button>
               <button
                 onClick={zoomOut}
-                className="p-3 bg-blue-500 text-white rounded hover:bg-blue-600"
+                className="p-3 bg-blue-500 text-white rounded hover:bg-blue-600 min-h-[44px]"
               >
                 Zoom Out
               </button>
             </div>
             <button
               onClick={fitToFrame}
-              className="w-full p-3 bg-gray-500 text-white rounded hover:bg-gray-600"
+              className="w-full p-3 bg-gray-500 text-white rounded hover:bg-gray-600 min-h-[44px]"
             >
               Fit to Frame
             </button>
@@ -262,13 +303,13 @@ const FrameCustomizer = ({ selectedModel, onSave }) => {
             <div className="space-y-2">
               <button
                 onClick={exportAsPNG}
-                className="w-full p-3 bg-green-500 text-white rounded hover:bg-green-600"
+                className="w-full p-3 bg-green-500 text-white rounded hover:bg-green-600 min-h-[44px]"
               >
                 Download PNG
               </button>
               <button
                 onClick={sendToBackend}
-                className="w-full p-3 bg-purple-500 text-white rounded hover:bg-purple-600"
+                className="w-full p-3 bg-purple-500 text-white rounded hover:bg-purple-600 min-h-[44px]"
               >
                 Send to Backend
               </button>

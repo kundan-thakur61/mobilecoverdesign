@@ -1,15 +1,24 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App.jsx'
+import './critical.css' // Critical CSS for FCP
 import './index.css'
 import { Provider } from 'react-redux'
 import { store } from './redux/store.js'
 import { HelmetProvider } from 'react-helmet-async'
 import { AuthProvider } from './contexts/AuthContext'
-import { initSentry } from './utils/sentry'
-
-// Initialize Sentry for error tracking
-initSentry()
+// Delay Sentry initialization to not block initial render/FCP
+if (typeof window !== 'undefined') {
+  if ('requestIdleCallback' in window) {
+    requestIdleCallback(() => {
+      import('./utils/sentry').then(({ initSentry }) => initSentry());
+    });
+  } else {
+    setTimeout(() => {
+      import('./utils/sentry').then(({ initSentry }) => initSentry());
+    }, 3000);
+  }
+}
 // import themeAPI from './api/themeAPI'
 
 // Load active theme from API and apply CSS variables on startup

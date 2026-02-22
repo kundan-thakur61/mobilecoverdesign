@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { 
   FiArrowLeft, 
@@ -22,8 +22,8 @@ import collectionAPI from '../api/collectionAPI';
 import mobileAPI from '../api/mobileAPI';
 import { FALLBACK_COLLECTION_MAP } from '../data/fallbackCollections';
 import { FALLBACK_MOBILE_COMPANIES } from '../data/fallbackMobileCompanies';
-import { addToCart } from '../redux/slices/cartSlice';
-import { resolveImageUrl, formatPrice } from '../utils/helpers';
+import { resolveImageUrl } from '../utils/helpers';
+import SEO from '../components/SEO';
 
 const emptyMeta = {
   title: '',
@@ -49,7 +49,7 @@ const normalizeHandle = (value = '') => (
     .replace(/^-+|-+$/g, '')
 );
 
-// Image Lightbox Component
+// Image Lightbox Component - Mobile Optimized
 const ImageLightbox = ({ image, collection, onClose, onNext, onPrev, currentIndex, totalCount }) => {
   const imgSrc = resolveImageUrl(
     image?.url || image?.secure_url || image?.path || image?.publicUrl || ''
@@ -67,20 +67,20 @@ const ImageLightbox = ({ image, collection, onClose, onNext, onPrev, currentInde
 
   return (
     <div 
-      className="fixed inset-0 bg-black/95 z-50 flex items-center justify-center p-4"
+      className="fixed inset-0 bg-black/95 z-50 flex items-center justify-center p-2 sm:p-4"
       onClick={onClose}
     >
       <button
         onClick={onClose}
-        className="absolute top-4 right-4 text-white hover:text-gray-300 transition z-10"
+        className="absolute top-2 right-2 sm:top-4 sm:right-4 text-white hover:text-gray-300 transition z-10 p-2 min-h-[44px] min-w-[44px] flex items-center justify-center"
       >
-        <FiX className="w-8 h-8" />
+        <FiX className="w-6 h-6 sm:w-8 sm:h-8" />
       </button>
 
       {onPrev && (
         <button
           onClick={(e) => { e.stopPropagation(); onPrev(); }}
-          className="absolute left-4 top-1/2 -translate-y-1/2 text-white hover:text-gray-300 transition text-4xl"
+          className="absolute left-1 sm:left-4 top-1/2 -translate-y-1/2 text-white hover:text-gray-300 transition text-2xl sm:text-4xl p-2 sm:p-4 min-h-[44px] min-w-[44px] flex items-center justify-center"
         >
           ‹
         </button>
@@ -89,25 +89,25 @@ const ImageLightbox = ({ image, collection, onClose, onNext, onPrev, currentInde
       {onNext && (
         <button
           onClick={(e) => { e.stopPropagation(); onNext(); }}
-          className="absolute right-4 top-1/2 -translate-y-1/2 text-white hover:text-gray-300 transition text-4xl"
+          className="absolute right-1 sm:right-4 top-1/2 -translate-y-1/2 text-white hover:text-gray-300 transition text-2xl sm:text-4xl p-2 sm:p-4 min-h-[44px] min-w-[44px] flex items-center justify-center"
         >
           ›
         </button>
       )}
 
       <div 
-        className="max-w-6xl max-h-[90vh] flex flex-col items-center"
+        className="max-w-6xl max-h-[90vh] flex flex-col items-center w-full"
         onClick={(e) => e.stopPropagation()}
       >
         <img
           src={imgSrc}
           alt={image?.caption || collection?.title}
-          className="max-w-full max-h-[80vh] object-contain rounded-lg shadow-2xl"
+          className="max-w-full max-h-[70vh] sm:max-h-[80vh] object-contain rounded-lg shadow-2xl"
         />
         {image?.caption && (
-          <p className="text-white mt-4 text-lg">{image.caption}</p>
+          <p className="text-white mt-2 sm:mt-4 text-sm sm:text-lg text-center px-4">{image.caption}</p>
         )}
-        <p className="text-gray-400 text-sm mt-2">
+        <p className="text-gray-400 text-xs sm:text-sm mt-1 sm:mt-2">
           {currentIndex + 1} / {totalCount}
         </p>
       </div>
@@ -115,7 +115,7 @@ const ImageLightbox = ({ image, collection, onClose, onNext, onPrev, currentInde
   );
 };
 
-// Enhanced Image Card Component
+// Enhanced Image Card Component - Mobile Optimized
 const ImageCard = ({ 
   image, 
   index, 
@@ -126,23 +126,20 @@ const ImageCard = ({
   collection,
   isAdmin,
   selectedCompany,
-  selectedModel,
-  accent
+  selectedModel
 }) => {
   const [isLoaded, setIsLoaded] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
-
-  const key = image._id || image.publicId || image.url;
   const tileSrc = resolveImageUrl(
     image.url || image.secure_url || image.path || image.publicUrl || ''
   );
 
   return (
     <div
-      className={`relative group rounded-2xl overflow-hidden border transition-all duration-300 transform ${
+      className={`relative group rounded-xl sm:rounded-2xl overflow-hidden border transition-all duration-300 transform ${
         isSelected 
-          ? 'border-primary-500 ring-4 ring-primary-200 scale-[1.02] shadow-xl' 
-          : 'border-gray-200 hover:border-primary-300 hover:shadow-lg hover:scale-[1.01]'
+          ? 'border-primary-500 ring-2 sm:ring-4 ring-primary-200 scale-[1.01] sm:scale-[1.02] shadow-xl' 
+          : 'border-gray-200 hover:border-primary-300 hover:shadow-lg hover:scale-[1.005] sm:hover:scale-[1.01]'
       }`}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
@@ -159,13 +156,13 @@ const ImageCard = ({
           }
         }}
       >
-        {/* Loading skeletonhjh */}
+        {/* Loading skeleton */}
         {!isLoaded && (
           <div className="absolute inset-0 bg-gray-200 animate-pulse" />
         )}
 
         {/* Image */}
-        <div className="absolute inset-0 flex items-center justify-center p-2">
+        <div className="absolute inset-0 flex items-center justify-center p-1.5 sm:p-2">
           <img
             src={tileSrc}
             alt={image.caption || collection.title}
@@ -177,54 +174,52 @@ const ImageCard = ({
           />
         </div>
 
-        {/* Hover overlay */}
-        {isHovered && (
-          <div className="absolute inset-0 bg-black/20 backdrop-blur-[2px] transition-all duration-300">
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex gap-2">
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onZoom(image);
-                }}
-                className="bg-white/90 hover:bg-white p-3 rounded-full shadow-lg transition"
-                title="View full size"
-              >
-                <FiMaximize2 className="w-5 h-5 text-gray-800" />
-              </button>
-            </div>
+        {/* Hover/Touch overlay */}
+        <div className="absolute inset-0 bg-black/20 backdrop-blur-[2px] transition-all duration-300 opacity-0 group-hover:opacity-100 sm:opacity-0 sm:group-hover:opacity-100">
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex gap-2">
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                onZoom(image);
+              }}
+              className="bg-white/90 hover:bg-white p-2 sm:p-3 rounded-full shadow-lg transition min-h-[44px] min-w-[44px] flex items-center justify-center"
+              title="View full size"
+            >
+              <FiMaximize2 className="w-4 h-4 sm:w-5 sm:h-5 text-gray-800" />
+            </button>
           </div>
-        )}
+        </div>
 
         {/* Selected badge */}
         {isSelected && (
-          <span className="absolute top-3 left-3 flex items-center gap-1.5 bg-white/95 text-primary-600 text-xs font-bold px-3 py-1.5 rounded-full shadow-lg backdrop-blur-sm animate-in fade-in slide-in-from-top-2 duration-300">
-            <FiCheckCircle className="h-4 w-4" />
+          <span className="absolute top-2 left-2 sm:top-3 sm:left-3 flex items-center gap-1 sm:gap-1.5 bg-white/95 text-primary-600 text-[10px] sm:text-xs font-bold px-2 py-1 sm:px-3 sm:py-1.5 rounded-full shadow-lg backdrop-blur-sm animate-in fade-in slide-in-from-top-2 duration-300">
+            <FiCheckCircle className="h-3 w-3 sm:h-4 sm:w-4" />
             Selected
           </span>
         )}
 
         {/* Mobile Company Badge */}
         {selectedCompany && selectedModel && (
-          <span className="absolute top-3 right-3 flex items-center gap-1 bg-gradient-to-r from-primary-600 to-primary-700 text-white text-xs font-medium px-2.5 py-1.5 rounded-full shadow-lg">
-            <FiSmartphone className="h-3 w-3" />
-            {selectedCompany.name}
+          <span className="absolute top-2 right-2 sm:top-3 sm:right-3 flex items-center gap-0.5 sm:gap-1 bg-gradient-to-r from-primary-600 to-primary-700 text-white text-[10px] sm:text-xs font-medium px-2 py-1 sm:px-2.5 sm:py-1.5 rounded-full shadow-lg">
+            <FiSmartphone className="h-2.5 w-2.5 sm:h-3 sm:w-3" />
+            <span className="truncate max-w-[60px] sm:max-w-none">{selectedCompany.name}</span>
           </span>
         )}
 
         {/* Bottom number badge */}
-        <span className="absolute bottom-3 left-1/2 -translate-x-1/2 bg-black/80 backdrop-blur-sm text-white text-sm font-bold px-3 py-1.5 rounded-full shadow-lg">
+        <span className="absolute bottom-2 left-1/2 -translate-x-1/2 bg-black/80 backdrop-blur-sm text-white text-[10px] sm:text-sm font-bold px-2 py-1 sm:px-3 sm:py-1.5 rounded-full shadow-lg">
           {String(index + 1).padStart(2, '0')}
         </span>
 
         {/* Caption with model info */}
         {(image.caption || (selectedCompany && selectedModel)) && (
-          <div className="absolute bottom-12 left-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-            <div className="bg-white/95 backdrop-blur-md rounded-lg px-3 py-2 text-center shadow-xl">
+          <div className="absolute bottom-10 sm:bottom-12 left-1 right-1 sm:left-2 sm:right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+            <div className="bg-white/95 backdrop-blur-md rounded-lg px-2 py-1.5 sm:px-3 sm:py-2 text-center shadow-xl">
               {image.caption && (
-                <p className="text-xs font-semibold text-gray-800 truncate">{image.caption}</p>
+                <p className="text-[10px] sm:text-xs font-semibold text-gray-800 truncate">{image.caption}</p>
               )}
               {selectedCompany && selectedModel && (
-                <p className="text-xs text-gray-600 truncate mt-0.5">{selectedModel.name}</p>
+                <p className="text-[10px] sm:text-xs text-gray-600 truncate mt-0.5">{selectedModel.name}</p>
               )}
             </div>
           </div>
@@ -237,10 +232,10 @@ const ImageCard = ({
               e.stopPropagation();
               onDelete(image._id);
             }}
-            className="absolute top-14 right-3 bg-red-500 hover:bg-red-600 rounded-full p-2 text-white shadow-lg opacity-0 group-hover:opacity-100 transition-all duration-300 transform hover:scale-110"
+            className="absolute top-10 sm:top-14 right-2 sm:right-3 bg-red-500 hover:bg-red-600 rounded-full p-1.5 sm:p-2 text-white shadow-lg opacity-0 group-hover:opacity-100 transition-all duration-300 transform hover:scale-110 min-h-[32px] min-w-[32px] sm:min-h-[36px] sm:min-w-[36px] flex items-center justify-center"
             title="Delete image"
           >
-            <FiTrash2 className="w-4 h-4" />
+            <FiTrash2 className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
           </button>
         )}
       </div>
@@ -251,7 +246,6 @@ const ImageCard = ({
 const CollectionPage = () => {
   const { handle } = useParams();
   const navigate = useNavigate();
-  const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.user);
   const isAdmin = user?.role === 'admin';
 
@@ -279,18 +273,18 @@ const CollectionPage = () => {
   const [selectedImage, setSelectedImage] = useState(null);
 
   // Mobile company and model state
-  const [companies, setCompanies] = useState([]);
-  const [models, setModels] = useState([]);
-  const [selectedCompany, setSelectedCompany] = useState(null);
+  const [_companies, setCompanies] = useState([]);
+  const [_models, setModels] = useState([]);
+  const [selectedCompany, _setSelectedCompany] = useState(null);
   const [selectedModel, setSelectedModel] = useState(null);
-  const [loadingCompanies, setLoadingCompanies] = useState(true);
-  const [loadingModels, setLoadingModels] = useState(false);
-  const [catalogError, setCatalogError] = useState('');
+  const [_loadingCompanies, setLoadingCompanies] = useState(true);
+  const [_loadingModels, setLoadingModels] = useState(false);
+  const [_catalogError, setCatalogError] = useState('');
 
   // New enhancement states
   const [searchQuery, setSearchQuery] = useState('');
   const [viewMode, setViewMode] = useState('grid'); // 'grid' or 'list'
-  const [filterCategory, setFilterCategory] = useState('all'); // 'all', 'art', 'photo'
+  const [filterCategory] = useState('all'); // 'all', 'art', 'photo'
   const [lightboxImage, setLightboxImage] = useState(null);
   const [lightboxIndex, setLightboxIndex] = useState(0);
   const [sortBy, setSortBy] = useState('default'); // 'default', 'name', 'recent'
@@ -408,20 +402,6 @@ const CollectionPage = () => {
 
   const galleryImages = useMemo(() => collection?.images || [], [collection]);
   const accent = metaDraft.accentColor || '#0ea5e9';
-
-  const selectedImageUrl = useMemo(() => {
-    if (!selectedImage) return '';
-    const source =
-      typeof selectedImage === 'string'
-        ? selectedImage
-        : selectedImage.url ||
-          selectedImage.secure_url ||
-          selectedImage.path ||
-          selectedImage.publicUrl ||
-          selectedImage.previewUrl ||
-          '';
-    return resolveImageUrl(source);
-  }, [selectedImage]);
 
   useEffect(() => {
     if (!galleryImages.length) {
@@ -569,18 +549,6 @@ const CollectionPage = () => {
       ? `/collection/${handle}/gallery?imageId=${token}`
       : `/collection/${handle}/gallery`;
     navigate(nextUrl, { state: { selectedImage: image } });
-  };
-
-  const handleCompanySelect = (event) => {
-    const companyId = event.target.value;
-    const company = companies.find((item) => item._id === companyId) || null;
-    setSelectedCompany(company);
-  };
-
-  const handleModelSelect = (event) => {
-    const modelId = event.target.value;
-    const model = models.find((item) => item._id === modelId) || null;
-    setSelectedModel(model);
   };
 
   const handleMetaSave = async (event) => {
@@ -842,8 +810,43 @@ const CollectionPage = () => {
     );
   }
 
+  // Build SEO schema for this collection
+  const collectionSchema = collection ? {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    "name": `${collection.title || handle} Mobile Covers`,
+    "description": collection.description || `Shop ${collection.title || handle} themed mobile covers for all phone brands at CoverGhar.`,
+    "url": `https://www.coverghar.in/collection/${normalizedHandle}`,
+    "mainEntity": {
+      "@type": "ItemList",
+      "numberOfItems": filteredImages?.length || 0,
+      "itemListElement": (filteredImages || []).slice(0, 20).map((img, idx) => ({
+        "@type": "ListItem",
+        "position": idx + 1,
+        "url": `https://www.coverghar.in/collection/${normalizedHandle}`,
+        "name": img.alt || img.title || `${collection.title} Design ${idx + 1}`,
+        "image": resolveImageUrl(img?.url || img?.secure_url || img?.path || img?.publicUrl || '')
+      }))
+    }
+  } : null;
+
+  const seoTitle = collection
+    ? `${collection.title} Mobile Covers | Phone Cases — CoverGhar`
+    : `${handle} Mobile Covers | CoverGhar`;
+  const seoDescription = collection?.description
+    || `Shop ${collection?.title || handle} themed mobile covers for all phone brands. Premium printed phone cases starting ₹199 with fast delivery across India.`;
+
   return (
     <div className="bg-gray-50 min-h-screen pb-16">
+      <SEO
+        title={seoTitle}
+        description={seoDescription}
+        keywords={`${collection?.title || handle} mobile cover, ${collection?.title || handle} phone case, ${collection?.title || handle} back cover, themed phone cases India, CoverGhar`}
+        url={`/collection/${normalizedHandle}`}
+        type="website"
+        schema={collectionSchema}
+      />
+
       {/* Lightbox */}
       {lightboxImage && (
         <ImageLightbox
@@ -859,105 +862,109 @@ const CollectionPage = () => {
 
       {/* Header */}
       <div className="border-b bg-white shadow-sm sticky top-0 z-30">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-3 text-sm text-gray-500">
+        <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 py-3 sm:py-4 flex items-center justify-between">
+          <div className="flex items-center gap-2 sm:gap-3 text-xs sm:text-sm text-gray-500 min-w-0">
             <Link
               to="/themes"
-              className="flex items-center gap-2 text-primary-600 font-semibold hover:text-primary-700 transition"
+              className="flex items-center gap-1 sm:gap-2 text-primary-600 font-semibold hover:text-primary-700 transition min-h-[44px] min-w-[44px] sm:min-h-0 sm:min-w-0"
             >
-              <FiArrowLeft className="h-4 w-4" />
-              Themes
+              <FiArrowLeft className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+              <span className="hidden sm:inline">Themes</span>
             </Link>
-            <span>/</span>
-            <span className="text-gray-900 font-semibold">{collection.title}</span>
+            <span className="hidden sm:inline">/</span>
+            <span className="text-gray-900 font-semibold truncate max-w-[50vw] sm:max-w-[45vw] md:max-w-none text-xs sm:text-sm">{collection.title}</span>
           </div>
 
           {/* View mode toggle */}
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1 sm:gap-2">
             <button
+              type="button"
               onClick={() => setViewMode('grid')}
-              className={`p-2 rounded-lg transition ${
+              className={`p-2 rounded-lg transition min-h-[44px] min-w-[44px] sm:min-h-0 sm:min-w-0 flex items-center justify-center ${
                 viewMode === 'grid'
                   ? 'bg-primary-100 text-primary-700'
                   : 'text-gray-600 hover:bg-gray-100'
               }`}
               title="Grid view"
             >
-              <FiGrid className="w-5 h-5" />
+              <FiGrid className="w-4 h-4 sm:w-5 sm:h-5" />
             </button>
             <button
+              type="button"
               onClick={() => setViewMode('list')}
-              className={`p-2 rounded-lg transition ${
+              className={`p-2 rounded-lg transition min-h-[44px] min-w-[44px] sm:min-h-0 sm:min-w-0 flex items-center justify-center ${
                 viewMode === 'list'
                   ? 'bg-primary-100 text-primary-700'
                   : 'text-gray-600 hover:bg-gray-100'
               }`}
               title="List view"
             >
-              <FiList className="w-5 h-5" />
+              <FiList className="w-4 h-4 sm:w-5 sm:h-5" />
             </button>
           </div>
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 mt-8">
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+      <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 mt-4 sm:mt-6 lg:mt-8">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 sm:gap-6">
           {/* Main content */}
-          <div className="lg:col-span-3 space-y-6">
+          <div className="lg:col-span-3 space-y-4 sm:space-y-6">
             {/* Collection header */}
-            <div className="bg-white rounded-3xl shadow-xl p-8">
-              <p className="uppercase text-xs tracking-[0.4em] text-gray-400 mb-2">Collection</p>
-              <h1 className="text-4xl font-bold text-gray-900">{collection.title}</h1>
+            <div className="bg-white rounded-2xl sm:rounded-3xl shadow-lg sm:shadow-xl p-4 sm:p-5 md:p-8">
+              <p className="uppercase text-[10px] sm:text-xs tracking-[0.2em] sm:tracking-[0.4em] text-gray-400 mb-1 sm:mb-2">Collection</p>
+              <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900">{collection.title}</h1>
               {collection.tagline && (
-                <p className="text-lg text-gray-600 mt-2">{collection.tagline}</p>
+                <p className="text-sm sm:text-base md:text-lg text-gray-600 mt-1 sm:mt-2">{collection.tagline}</p>
               )}
               {collection.description && (
-                <p className="text-gray-600 mt-4 leading-relaxed">{collection.description}</p>
+                <p className="text-gray-600 mt-2 sm:mt-4 text-sm sm:text-base leading-relaxed">{collection.description}</p>
               )}
             </div>
 
             {/* Search and filters */}
-            <div className="bg-white rounded-2xl shadow-lg p-4">
-              <div className="flex flex-col sm:flex-row gap-3">
-                {/* Search */}
-                <div className="flex-1 relative">
-                  <FiSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
-                  <input
-                    type="text"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    placeholder="Search by caption..."
-                    className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-                  />
-                  {searchQuery && (
-                    <button
-                      onClick={() => setSearchQuery('')}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
-                    >
-                      <FiX className="w-4 h-4" />
-                    </button>
-                  )}
+            <div className="bg-white rounded-xl sm:rounded-2xl shadow-md sm:shadow-lg p-3 sm:p-4">
+              <div className="flex flex-col gap-3">
+                <div className="flex flex-col sm:flex-row gap-3">
+                  {/* Search */}
+                  <div className="flex-1 relative">
+                    <FiSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4 sm:w-5 sm:h-5" />
+                    <input
+                      type="text"
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      placeholder="Search by caption..."
+                      className="w-full pl-9 sm:pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg sm:rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent text-sm sm:text-base min-h-[44px]"
+                    />
+                    {searchQuery && (
+                      <button
+                        onClick={() => setSearchQuery('')}
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 p-1"
+                      >
+                        <FiX className="w-4 h-4" />
+                      </button>
+                    )}
+                  </div>
+
+                  {/* Sort */}
+                  <select
+                    value={sortBy}
+                    onChange={(e) => setSortBy(e.target.value)}
+                    className="px-3 sm:px-4 py-2.5 border border-gray-300 rounded-lg sm:rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent text-sm sm:text-base min-h-[44px]"
+                  >
+                    <option value="default">Default order</option>
+                    <option value="name">By name</option>
+                    <option value="recent">Most recent</option>
+                  </select>
                 </div>
 
-                {/* Sort */}
-                <select
-                  value={sortBy}
-                  onChange={(e) => setSortBy(e.target.value)}
-                  className="px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-                >
-                  <option value="default">Default order</option>
-                  <option value="name">By name</option>
-                  <option value="recent">Most recent</option>
-                </select>
-
-                {/* Upload button (admin) */}
+                {/* Upload button (admin) - Full width on mobile */}
                 {isAdmin && (
                   <label
-                    className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border-2 cursor-pointer font-semibold hover:bg-gray-50 transition"
+                    className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg sm:rounded-xl border-2 cursor-pointer font-semibold hover:bg-gray-50 transition min-h-[44px] text-sm sm:text-base"
                     style={{ borderColor: accent, color: accent }}
                   >
                     <FiUpload className="w-4 h-4" />
-                    {uploading ? 'Uploading...' : 'Upload'}
+                    {uploading ? 'Uploading...' : 'Upload Images'}
                     <input
                       type="file"
                       className="hidden"
@@ -971,21 +978,21 @@ const CollectionPage = () => {
               </div>
 
               {/* Results count */}
-              <p className="text-sm text-gray-500 mt-3">
+              <p className="text-xs sm:text-sm text-gray-500 mt-2 sm:mt-3">
                 Showing {filteredImages.length} of {galleryImages.length} images
               </p>
             </div>
 
             {/* Gallery */}
-            <div ref={galleryRef} className="bg-white rounded-3xl shadow-xl p-6">
+            <div ref={galleryRef} className="bg-white rounded-2xl sm:rounded-3xl shadow-lg sm:shadow-xl p-3 sm:p-4 md:p-6">
               {filteredImages.length === 0 ? (
-                <div className="border-2 border-dashed border-gray-300 rounded-2xl p-16 text-center">
-                  <FiImage className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-                  <p className="text-gray-500 text-lg font-medium">
+                <div className="border-2 border-dashed border-gray-300 rounded-xl sm:rounded-2xl p-8 sm:p-12 md:p-16 text-center">
+                  <FiImage className="w-10 h-10 sm:w-12 md:w-16 md:h-16 text-gray-300 mx-auto mb-3 sm:mb-4" />
+                  <p className="text-gray-500 text-sm sm:text-base md:text-lg font-medium">
                     {searchQuery ? 'No images match your search' : 'No images yet'}
                   </p>
                   {isAdmin && !searchQuery && (
-                    <p className="text-gray-400 text-sm mt-2">
+                    <p className="text-gray-400 text-xs sm:text-sm mt-2">
                       Upload your first images to bring this collection to life.
                     </p>
                   )}
@@ -998,7 +1005,7 @@ const CollectionPage = () => {
                       : 'space-y-4'
                   }
                 >
-                  {filteredImages.map((image, index) => {
+                  {filteredImages.map((image) => {
                     const isChosen =
                       selectedImage &&
                       ((image._id && selectedImage._id === image._id) ||
@@ -1020,7 +1027,6 @@ const CollectionPage = () => {
                         isAdmin={isAdmin}
                         selectedCompany={selectedCompany}
                         selectedModel={selectedModel}
-                        accent={accent}
                       />
                     );
                   })}

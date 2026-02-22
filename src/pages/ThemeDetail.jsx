@@ -4,6 +4,8 @@ import { Link, useParams } from 'react-router-dom';
 import { FiArrowLeft, FiStar, FiFeather } from 'react-icons/fi';
 import { getThemeBySlug } from '../data/themeCollections';
 import themeAPI from '../api/themeAPI';
+import SEO from '../components/SEO';
+import Breadcrumb from '../components/Breadcrumb';
 
 const gradientOverlay = (accent) => ({
   background: `linear-gradient(135deg, ${accent} 0%, rgba(255,255,255,0) 70%)`,
@@ -121,18 +123,54 @@ const ThemeDetail = () => {
   const theme = normalizedTheme;
   const frameUrl = theme.mobileModel?.images?.[0]?.url;
 
+  const themeSchema = {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    "name": `${theme.name} Mobile Covers`,
+    "description": theme.description || `Shop ${theme.name} themed mobile covers at CoverGhar`,
+    "url": `https://www.coverghar.in/themes/${slug}`,
+    "breadcrumb": {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.coverghar.in/" },
+        { "@type": "ListItem", "position": 2, "name": "Themes", "item": "https://www.coverghar.in/themes" },
+        { "@type": "ListItem", "position": 3, "name": theme.name }
+      ]
+    },
+    ...(theme.products?.length > 0 && {
+      "mainEntity": {
+        "@type": "ItemList",
+        "numberOfItems": theme.products.length,
+        "itemListElement": theme.products.map((p, i) => ({
+          "@type": "ListItem",
+          "position": i + 1,
+          "name": p.title || `${theme.name} Design ${i + 1}`,
+          "url": `https://www.coverghar.in/themes/${slug}`
+        }))
+      }
+    })
+  };
+
+  const breadcrumbItems = [
+    { name: 'Home', url: '/' },
+    { name: 'Themes', url: '/themes' },
+    { name: theme.name },
+  ];
+
   return (
     <div className="bg-gray-50 min-h-screen pb-16">
+      <SEO
+        title={`${theme.name} Mobile Covers | Designer Phone Cases — CoverGhar`}
+        description={theme.description || `Shop ${theme.name} themed mobile covers for all phone brands. Premium printed phone cases starting ₹199 with fast delivery.`}
+        keywords={`${theme.name} mobile cover, ${theme.name} phone case, ${theme.name} back cover, designer phone cases, CoverGhar`}
+        url={`/themes/${slug}`}
+        image={theme.posterImage ? resolveImageUrl(theme.posterImage) : undefined}
+        type="website"
+        schema={themeSchema}
+      />
       <div className="border-b bg-white">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-6 flex items-center gap-3 text-sm text-gray-500">
-          <Link to="/" className="flex items-center gap-2 text-primary-600 font-semibold">
-            <FiArrowLeft className="h-4 w-4" />
-            Back home
-          </Link>
-          <span>/</span>
-          <span>Themes</span>
-          <span>/</span>
-          <span className="text-gray-900 font-semibold">{theme.name}</span>
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-6">
+          <Breadcrumb items={breadcrumbItems} />
         </div>
       </div>
 

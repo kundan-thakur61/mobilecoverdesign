@@ -1,5 +1,10 @@
 User-agent: *
 Allow: /
+Allow: /blog/
+Allow: /products/
+Allow: /themes/
+Allow: /collection/
+Allow: /category/
 Disallow: /admin/
 Disallow: /cart
 Disallow: /checkout
@@ -10,5 +15,12 @@ Disallow: /my-designs
 Disallow: /custom-designs
 Disallow: /login
 Disallow: /signup
+
+# Crawl-delay for polite crawling
+User-agent: AhrefsBot
+Crawl-delay: 10
+
+User-agent: SemrushBot
+Crawl-delay: 10
 
 Sitemap: https://www.coverghar.in/sitemap.xml

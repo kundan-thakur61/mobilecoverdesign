@@ -106,7 +106,7 @@ export const getStatusColor = (status) => {
 // Truncate text
 export const truncateText = (text, maxLength) => {
   if (text.length <= maxLength) return text;
-  return text.substr(0, maxLength) + '...';
+  return text.substring(0, maxLength) + '...';
 };
 
 // Calculate discount percentage
@@ -239,7 +239,7 @@ export const copyToClipboard = async (text) => {
 
 // Generate random ID
 export const generateId = () => {
-  return Math.random().toString(36).substr(2, 9);
+  return Math.random().toString(36).substring(2, 11);
 };
 
 // Local storage helpers

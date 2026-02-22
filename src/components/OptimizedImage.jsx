@@ -7,136 +7,156 @@ import { useState, useRef, useEffect, memo } from 'react';
  * - Lazy loading with Intersection Observer
  * - Blur placeholder during load
  * - Error fallback handling
- * - WebP/AVIF format support detection
+ * - WebP/AVIF format support via Cloudinary auto format
  * - Responsive srcSet generation for Cloudinary images
+ * - fetchpriority="high" for LCP images
+ * - Explicit width/height & aspect-ratio to prevent CLS
  */
 
 const PLACEHOLDER_BLUR = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiB2aWV3Qm94PSIwIDAgMTAwIDEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZjNmNGY2Ii8+PC9zdmc+';
 
 // Cloudinary transformation helpers
-const getCloudinaryUrl = (url, width, format = 'auto') => {
-  if (!url || !url.includes('cloudinary.com')) return url;
-  
-  // Parse Cloudinary URL and add transformations
-  const parts = url.split('/upload/');
-  if (parts.length !== 2) return url;
-  
-  const transforms = `f_${format},q_auto,w_${width},c_limit`;
-  return `${parts[0]}/upload/${transforms}/${parts[1]}`;
+const getCloudinaryUrl = (url, width, format = 'auto', quality = 'auto') => {
+    if (!url || !url.includes('cloudinary.com')) return url;
+
+    // Parse Cloudinary URL and add transformations
+    const parts = url.split('/upload/');
+    if (parts.length !== 2) return url;
+
+    const transforms = `f_${format},q_${quality},w_${width},c_limit`;
+    return `${parts[0]}/upload/${transforms}/${parts[1]}`;
 };
 
 // Generate srcSet for responsive images
 const generateSrcSet = (url) => {
-  if (!url || !url.includes('cloudinary.com')) return '';
-  
-  const widths = [320, 640, 768, 1024, 1280];
-  return widths
-    .map(w => `${getCloudinaryUrl(url, w)} ${w}w`)
-    .join(', ');
+    if (!url || !url.includes('cloudinary.com')) return '';
+
+    const widths = [320, 480, 640, 768, 1024, 1280];
+    return widths
+        .map(w => `${getCloudinaryUrl(url, w)} ${w}w`)
+        .join(', ');
+};
+
+// Generate a low-quality placeholder URL from Cloudinary
+const getLQIP = (url) => {
+    if (!url || !url.includes('cloudinary.com')) return PLACEHOLDER_BLUR;
+    const parts = url.split('/upload/');
+    if (parts.length !== 2) return PLACEHOLDER_BLUR;
+    return `${parts[0]}/upload/f_auto,q_10,w_40,e_blur:500/${parts[1]}`;
 };
 
 const OptimizedImage = memo(({
-  src,
-  alt = '',
-  className = '',
-  imgClassName = '',
-  width,
-  height,
-  fallback = '/frames/frame-1-fixed.svg',
-  loading = 'lazy',
-  priority = false,
-  sizes = '100vw',
-  onLoad,
-  onError,
-  ...props
+    src,
+    alt = '',
+    className = '',
+    imgClassName = '',
+    width,
+    height,
+    aspectRatio,
+    fallback = '/frames/frame-1-fixed.svg',
+    loading = 'lazy',
+    priority = false,
+    fetchPriority,
+    sizes = '(min-width: 1024px) 50vw, 100vw',
+    onLoad,
+    onError,
+    ...props
 }) => {
-  const [isLoaded, setIsLoaded] = useState(false);
-  const [hasError, setHasError] = useState(false);
-  const [isInView, setIsInView] = useState(priority);
-  const imgRef = useRef(null);
+    const [isLoaded, setIsLoaded] = useState(priority);
+    const [hasError, setHasError] = useState(false);
+    const [isInView, setIsInView] = useState(priority);
+    const imgRef = useRef(null);
 
-  // Intersection Observer for lazy loading
-  useEffect(() => {
-    if (priority || loading !== 'lazy') {
-      setIsInView(true);
-      return;
-    }
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
+    // Intersection Observer for lazy loading
+    useEffect(() => {
+        if (priority || loading !== 'lazy') {
             setIsInView(true);
-            observer.disconnect();
-          }
-        });
-      },
-      {
-        rootMargin: '50px', // Start loading 50px before entering viewport
-        threshold: 0.01,
-      }
-    );
+            return;
+        }
 
-    if (imgRef.current) {
-      observer.observe(imgRef.current);
+        const observer = new IntersectionObserver(
+            (entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        setIsInView(true);
+                        observer.disconnect();
+                    }
+                });
+            },
+            {
+                rootMargin: '200px', // Start loading 200px before entering viewport
+                threshold: 0.01,
+            }
+        );
+
+        if (imgRef.current) {
+            observer.observe(imgRef.current);
+        }
+
+        return () => observer.disconnect();
+    }, [priority, loading]);
+
+    const handleLoad = (e) => {
+        setIsLoaded(true);
+        onLoad?.(e);
+    };
+
+    const handleError = (e) => {
+        setHasError(true);
+        onError?.(e);
+    };
+
+    const imageSrc = hasError ? fallback : src;
+    const srcSet = !hasError ? generateSrcSet(src) : '';
+
+    // Compute container style to prevent CLS
+    const containerStyle = {};
+    if (width) containerStyle.width = width;
+    if (height) containerStyle.height = height;
+    if (aspectRatio && !height) {
+        containerStyle.aspectRatio = aspectRatio;
     }
 
-    return () => observer.disconnect();
-  }, [priority, loading]);
-
-  const handleLoad = (e) => {
-    setIsLoaded(true);
-    onLoad?.(e);
-  };
-
-  const handleError = (e) => {
-    setHasError(true);
-    onError?.(e);
-  };
-
-  const imageSrc = hasError ? fallback : src;
-  const srcSet = !hasError ? generateSrcSet(src) : '';
-
-  return (
-    <div
-      ref={imgRef}
-      className={`relative overflow-hidden ${className}`}
-      style={{ width, height }}
-    >
-      {/* Placeholder/skeleton */}
-      {!isLoaded && (
+    return (
         <div
-          className="absolute inset-0 bg-gray-100 animate-pulse"
-          style={{
-            backgroundImage: `url(${PLACEHOLDER_BLUR})`,
-            backgroundSize: 'cover',
-          }}
-        />
-      )}
+            ref={imgRef}
+            className={`relative overflow-hidden ${className}`}
+            style={containerStyle}
+        >
+            {/* Placeholder/skeleton - prevents CLS */}
+            {!isLoaded && (
+                <div
+                    className="absolute inset-0 bg-gray-100 animate-pulse"
+                    style={{
+                        backgroundImage: `url(${PLACEHOLDER_BLUR})`,
+                        backgroundSize: 'cover',
+                    }}
+                />
+            )}
 
-      {/* Actual image */}
-      {isInView && (
-        <img
-          src={imageSrc}
-          srcSet={srcSet || undefined}
-          sizes={sizes}
-          alt={alt}
-          width={width}
-          height={height}
-          loading={priority ? 'eager' : 'lazy'}
-          decoding="async"
-          onLoad={handleLoad}
-          onError={handleError}
-          className={
-            `w-full h-full object-cover transition-opacity duration-300 ${
-              isLoaded ? 'opacity-100' : 'opacity-0'
-            } ${imgClassName}`
-          }
-          {...props}
-        />
-      )}
-    </div>
-  );
+            {/* Actual image */}
+            {isInView && (
+                <img
+                    src={imageSrc}
+                    srcSet={srcSet || undefined}
+                    sizes={sizes}
+                    alt={alt}
+                    width={width || undefined}
+                    height={height || undefined}
+                    loading={priority ? 'eager' : 'lazy'}
+                    decoding={priority ? 'sync' : 'async'}
+                    fetchpriority={fetchPriority || (priority ? 'high' : undefined)}
+                    onLoad={handleLoad}
+                    onError={handleError}
+                    className={
+                        `w-full h-full object-cover transition-opacity duration-300 ${isLoaded ? 'opacity-100' : 'opacity-0'
+                        } ${imgClassName}`
+                    }
+                    {...props}
+                />
+            )}
+        </div>
+    );
 });
 
 OptimizedImage.displayName = 'OptimizedImage';
@@ -144,4 +164,4 @@ OptimizedImage.displayName = 'OptimizedImage';
 export default OptimizedImage;
 
 // Export utility functions for use elsewhere
-export { getCloudinaryUrl, generateSrcSet };
+export { getCloudinaryUrl, generateSrcSet, getLQIP };

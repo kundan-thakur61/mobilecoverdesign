@@ -59,6 +59,9 @@ const Header = () => {
                 className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg"
                 width="40"
                 height="40"
+                loading="eager"
+                fetchpriority="high"
+                decoding="async"
               />
               <span className="text-lg sm:text-xl font-bold text-gray-900">
                 COVER GHAR

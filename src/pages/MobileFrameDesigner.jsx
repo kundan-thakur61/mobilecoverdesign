@@ -28,6 +28,7 @@ import { toast } from 'react-toastify';
 import mobileAPI from '../api/mobileAPI';
 import MobileFrameMockup from '../components/MobileFrameMockup';
 import Loader from '../components/Loader';
+import SEO from '../components/SEO';
 
 // Design History Item Component
 const DesignHistoryItem = ({ design, onLoad, onDelete, onDuplicate }) => {
@@ -550,14 +551,21 @@ const MobileFrameDesigner = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      <SEO
+        title="Design Your Custom Mobile Cover Online | CoverGhar Frame Designer"
+        description="Use our free Mobile Frame Designer to create custom phone covers. Upload your photo, choose your phone model, and preview your personalized mobile case design."
+        keywords="custom mobile cover designer, design phone case online, personalized mobile cover, custom phone case maker, CoverGhar designer"
+        url="/design"
+        type="website"
+      />
       {/* Header */}
       <header className="bg-white shadow-sm sticky top-0 z-40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">Mobile Frame Designer</h1>
+              <h1 className="text-2xl font-bold text-gray-900">Design Your Custom Mobile Cover</h1>
               <p className="text-sm text-gray-500 mt-1">
-                Professional frame mockup generator with advanced tools
+                Upload your design and preview it on any phone model
               </p>
             </div>
             

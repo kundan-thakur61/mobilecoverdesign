@@ -4,25 +4,45 @@ import {
   Outlet,
   Navigate,
 } from 'react-router-dom';
-import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 import { useEffect, lazy, Suspense } from 'react';
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getUserProfile, logout } from './redux/slices/authSlice';
 import { fetchWishlist } from './redux/slices/wishlistSlice';
 import { PageLoader } from './components/Loader';
-import { initErrorSuppression } from './utils/errorSuppression';
-import { runDevelopmentChecks } from './utils/devChecks';
 import ErrorBoundary from './components/ErrorBoundary';
+
+// Lazy load non-critical utilities
+const ToastContainerLazy = lazy(() =>
+  import('react-toastify').then(mod => {
+    // Load CSS on demand
+    import('react-toastify/dist/ReactToastify.css');
+    return { default: mod.ToastContainer };
+  })
+);
 
 // Layout components - loaded immediately for shell
 import Header from './components/Header';
-import Footer from './components/Footer';
 import BottomNav from './components/BottomNav';
+
+// Footer is below the fold - lazy load it
+const Footer = lazy(() => import('./components/Footer'));
 
 // Critical pages - loaded immediately
 import Home from './pages/Home';
+
+// Defer error suppression & dev checks to idle time
+if (typeof window !== 'undefined') {
+  const initNonCritical = () => {
+    import('./utils/errorSuppression').then(m => m.initErrorSuppression());
+    import('./utils/devChecks').then(m => m.runDevelopmentChecks());
+  };
+  if ('requestIdleCallback' in window) {
+    requestIdleCallback(initNonCritical);
+  } else {
+    setTimeout(initNonCritical, 2000);
+  }
+}
 
 // Lazy loaded pages - code splitting for faster initial load
 const Products = lazy(() => import('./pages/Products'));
@@ -44,6 +64,8 @@ const GalleryImagePage = lazy(() => import('./pages/GalleryImagePage.jsx'));
 const CategoryPage = lazy(() => import('./pages/CategoryPage'));
 const MobileFrameDesigner = lazy(() => import('./pages/MobileFrameDesigner'));
 const TrackOrder = lazy(() => import('./pages/TrackOrder'));
+const Blog = lazy(() => import('./pages/Blog'));
+const BlogPost = lazy(() => import('./pages/BlogPost'));
 
 // Support pages - lazy loaded
 const ShippingPolicy = lazy(() => import('./pages/ShippingPolicy.jsx'));
@@ -72,17 +94,93 @@ const LazyPage = ({ children }) => (
   </Suspense>
 );
 
+// Layout component defined outside App to prevent re-creation
+const Layout = () => (
+  <ErrorBoundary>
+    <div className="min-h-screen app-shell">
+      <Header />
+      <main className="pt-16 pb-16 md:pb-0 app-content">
+        <Outlet />
+      </main>
+      <Suspense fallback={<div className="h-64 bg-gray-900" />}>
+        <Footer />
+      </Suspense>
+      <BottomNav />
+      <Suspense fallback={null}>
+        <ToastContainerLazy
+          position="top-right"
+          autoClose={3000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="light"
+        />
+      </Suspense>
+    </div>
+  </ErrorBoundary>
+);
+
+// Router created ONCE at module level (not on every render)
+const router = createBrowserRouter([
+  {
+    path: '/',
+    element: <Layout />,
+    children: [
+      { index: true, element: <Home /> },
+      { path: 'products', element: <LazyPage><Products /></LazyPage> },
+      { path: 'products/:id', element: <LazyPage><ProductDetails /></LazyPage> },
+      { path: 'themes', element: <LazyPage><Themes /></LazyPage> },
+      { path: 'themes/:slug', element: <LazyPage><ThemeDetail /></LazyPage> },
+      { path: 'theme', element: <Navigate to="/themes" replace /> },
+      { path: 'collection/:handle', element: <LazyPage><Collection /></LazyPage> },
+      { path: 'collection/:handle/gallery', element: <LazyPage><GalleryImagePage /></LazyPage> },
+      { path: 'category/:category', element: <LazyPage><CategoryPage /></LazyPage> },
+      { path: 'track-order', element: <LazyPage><TrackOrder /></LazyPage> },
+      { path: 'blog', element: <LazyPage><Blog /></LazyPage> },
+      { path: 'blog/:slug', element: <LazyPage><BlogPost /></LazyPage> },
+      { path: 'privacy-policy', element: <LazyPage><PrivacyPolicy /></LazyPage> },
+      { path: 'terms-conditions', element: <LazyPage><TermsConditions /></LazyPage> },
+      { path: 'returns-refunds', element: <LazyPage><ReturnsAndRefunds /></LazyPage> },
+      { path: 'shipping-policy', element: <LazyPage><ShippingPolicy /></LazyPage> },
+      { path: 'cart', element: <LazyPage><Cart /></LazyPage> },
+      { path: 'login', element: <LazyPage><Login /></LazyPage> },
+      { path: 'register', element: <Navigate to="/" replace /> },
+      { path: 'customizer', element: <LazyPage><CustomMobilePage /></LazyPage> },
+      { path: 'customizer/:slug', element: <LazyPage><CustomMobilePage /></LazyPage> },
+      { path: 'custom-mobile', element: <LazyPage><CustomMobilePage /></LazyPage> },
+      { path: 'custom-mobile/:slug', element: <LazyPage><CustomMobilePage /></LazyPage> },
+      { path: 'mobile-frame-designer', element: <LazyPage><MobileFrameDesigner /></LazyPage> },
+      { path: 'order-success/:id', element: <LazyPage><OrderSuccess /></LazyPage> },
+      { path: 'checkout', element: <LazyPage><Checkout /></LazyPage> },
+      { path: 'profile', element: <ProtectedRoute><LazyPage><Profile /></LazyPage></ProtectedRoute> },
+      { path: 'orders', element: <ProtectedRoute><LazyPage><Orders /></LazyPage></ProtectedRoute> },
+      { path: 'wishlist', element: <ProtectedRoute><LazyPage><Wishlist /></LazyPage></ProtectedRoute> },
+      { path: 'my-designs', element: <ProtectedRoute><LazyPage><MyDesigns /></LazyPage></ProtectedRoute> },
+      { path: 'custom-designs', element: <ProtectedRoute><LazyPage><MyDesigns /></LazyPage></ProtectedRoute> },
+      { path: 'admin', element: <AdminRoute><LazyPage><AdminDashboard /></LazyPage></AdminRoute> },
+      { path: 'admin/products', element: <AdminRoute><LazyPage><AdminProducts /></LazyPage></AdminRoute> },
+      { path: 'admin/mobile/:type?', element: <AdminRoute><LazyPage><AdminMobileManagement /></LazyPage></AdminRoute> },
+      { path: 'admin/themes', element: <AdminRoute><LazyPage><AdminThemes /></LazyPage></AdminRoute> },
+      { path: 'admin/users', element: <AdminRoute><LazyPage><AdminUsers /></LazyPage></AdminRoute> },
+      { path: 'admin/custom-orders', element: <AdminRoute><LazyPage><AdminCustomOrders /></LazyPage></AdminRoute> },
+      { path: 'admin/shipments', element: <AdminRoute><LazyPage><AdminShipments /></LazyPage></AdminRoute> },
+      { path: 'custom-orders', element: <ProtectedRoute><LazyPage><CustomOrders /></LazyPage></ProtectedRoute> },
+    ],
+  },
+]);
+
 function App() {
   const dispatch = useDispatch();
   const token = useSelector((state) => state.auth.token);
   const user = useSelector((state) => state.auth.user);
   const loading = useSelector((state) => state.auth.loading);
 
-  // Initialize error suppression on app start
-  useEffect(() => {
-    initErrorSuppression();
-    runDevelopmentChecks();
-  }, []);
+  // Non-critical init is handled at module level via requestIdleCallback
+  // (error suppression & dev checks)
 
   // On first mount, if a token exists but user isn't loaded yet, fetch profile
   useEffect(() => {
@@ -112,134 +210,6 @@ function App() {
   if (token && loading && !user) {
     return <PageLoader />;
   }
-
-  const Layout = () => (
-    <ErrorBoundary>
-      <div className="min-h-screen app-shell">
-        <Header />
-        <main className="pt-16 pb-16 md:pb-0 app-content">
-          <Outlet />
-        </main>
-        <Footer />
-        <BottomNav />
-        <ToastContainer
-          position="top-right"
-          autoClose={3000}
-          hideProgressBar={false}
-          newestOnTop={false}
-          closeOnClick
-          rtl={false}
-          pauseOnFocusLoss
-          draggable
-          pauseOnHover
-          theme="light"
-        />
-      </div>
-    </ErrorBoundary>
-  );
-
-  const router = createBrowserRouter([
-    {
-      path: '/',
-      element: <Layout />,
-      children: [
-        { index: true, element: <Home /> },
-        { path: 'products', element: <LazyPage><Products /></LazyPage> },
-        { path: 'products/:id', element: <LazyPage><ProductDetails /></LazyPage> },
-        { path: 'themes', element: <LazyPage><Themes /></LazyPage> },
-        { path: 'themes/:slug', element: <LazyPage><ThemeDetail /></LazyPage> },
-        { path: 'theme', element: <Navigate to="/themes" replace /> },
-        { path: 'collection/:handle', element: <LazyPage><Collection /></LazyPage> },
-        { path: 'collection/:handle/gallery', element: <LazyPage><GalleryImagePage /></LazyPage> },
-        { path: 'track-order', element: <LazyPage><TrackOrder /></LazyPage> },
-
-// Support pages
-        { path: 'privacy-policy', element: <LazyPage><PrivacyPolicy /></LazyPage> },
-        { path: 'terms-conditions', element: <LazyPage><TermsConditions /></LazyPage> },
-        { path: 'returns-refunds', element: <LazyPage><ReturnsAndRefunds /></LazyPage> },
-        { path: 'shipping-policy', element: <LazyPage><ShippingPolicy /></LazyPage> },
-
-
-        { path: 'cart', element: <LazyPage><Cart /></LazyPage> },
-        { path: 'login', element: <LazyPage><Login /></LazyPage> },
-        { path: 'register', element: <Navigate to="/" replace /> },
-        { path: 'customizer', element: <LazyPage><CustomMobilePage /></LazyPage> },
-        { path: 'customizer/:slug', element: <LazyPage><CustomMobilePage /></LazyPage> },
-        { path: 'custom-mobile', element: <LazyPage><CustomMobilePage /></LazyPage> },
-        { path: 'custom-mobile/:slug', element: <LazyPage><CustomMobilePage /></LazyPage> },
-        { path: 'mobile-frame-designer', element: <LazyPage><MobileFrameDesigner /></LazyPage> },
-        { path: 'order-success/:id', element: <LazyPage><OrderSuccess /></LazyPage> },
-
-        { path: 'checkout', element: <LazyPage><Checkout /></LazyPage> },
-        { path: 'profile', element: (
-          <ProtectedRoute>
-            <LazyPage><Profile /></LazyPage>
-          </ProtectedRoute>
-        ) },
-        { path: 'orders', element: (
-          <ProtectedRoute>
-            <LazyPage><Orders /></LazyPage>
-          </ProtectedRoute>
-        ) },
-        { path: 'wishlist', element: (
-          <ProtectedRoute>
-            <LazyPage><Wishlist /></LazyPage>
-          </ProtectedRoute>
-        ) },
-        { path: 'my-designs', element: (
-          <ProtectedRoute>
-            <LazyPage><MyDesigns /></LazyPage>
-          </ProtectedRoute>
-        ) },
-        { path: 'custom-designs', element: (
-          <ProtectedRoute>
-            <LazyPage><MyDesigns /></LazyPage>
-          </ProtectedRoute>
-        ) },
-
-        { path: 'admin', element: (
-          <AdminRoute>
-            <LazyPage><AdminDashboard /></LazyPage>
-          </AdminRoute>
-        ) },
-        { path: 'admin/products', element: (
-          <AdminRoute>
-            <LazyPage><AdminProducts /></LazyPage>
-          </AdminRoute>
-        ) },
-        { path: 'admin/mobile/:type?', element: (
-          <AdminRoute>
-            <LazyPage><AdminMobileManagement /></LazyPage>
-          </AdminRoute>
-        ) },
-        { path: 'admin/themes', element: (
-          <AdminRoute>
-            <LazyPage><AdminThemes /></LazyPage>
-          </AdminRoute>
-        ) },
-        { path: 'admin/users', element: (
-          <AdminRoute>
-            <LazyPage><AdminUsers /></LazyPage>
-          </AdminRoute>
-        ) },
-        { path: 'admin/custom-orders', element: (
-          <AdminRoute>
-            <LazyPage><AdminCustomOrders /></LazyPage>
-          </AdminRoute>
-        ) },
-        { path: 'admin/shipments', element: (
-          <AdminRoute>
-            <LazyPage><AdminShipments /></LazyPage>
-          </AdminRoute>
-        ) },
-        { path: 'custom-orders', element: (
-          <ProtectedRoute>
-            <LazyPage><CustomOrders /></LazyPage>
-          </ProtectedRoute>
-        ) },
-      ],
-    },
-  ]);
 
   return (
     <RouterProvider router={router} future={{ v7_startTransition: true, v7_relativeSplatPath: true }} />

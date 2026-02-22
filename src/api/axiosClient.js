@@ -13,7 +13,10 @@ if (API_BASE_URL.startsWith('http') && !API_BASE_URL.endsWith('/api')) {
 
 const axiosClient = axios.create({
   baseURL: API_BASE_URL,
-
+  timeout: 15000, // 15s timeout to prevent hanging requests
+  headers: {
+    'Accept': 'application/json',
+  },
 });
 
 // re

@@ -114,14 +114,14 @@ const Themes = () => {
       <SEO
         title="Mobile Cover Themes & Collections | Designer Phone Cases - CoverGhar"
         description="Browse 100+ curated mobile cover themes - anime, nature, abstract, minimalist designs. Premium quality custom phone cases for iPhone, Samsung, OnePlus. Shop themed collections now!"
-        keywords="mobile cover themes, phone case collections, designer mobile covers, anime phone cases, themed mobile covers India, custom phone case designs, trending mobile covers, aesthetic phone cases"
+        keywords="mobile cover themes, phone case collections, designer mobile covers, anime phone cases, themed mobile covers India, custom phone case designs, aesthetic phone cases, hard cases, soft silicone covers, glass mobile covers"
         url="/themes"
         schema={themesSchema}
       />
-      
+
       <section className="min-h-screen bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-          
+
           {/* Breadcrumb Navigation */}
           <nav aria-label="Breadcrumb" className="mb-6">
             <ol className="flex items-center space-x-2 text-sm text-gray-600">
@@ -138,7 +138,7 @@ const Themes = () => {
           </nav>
 
           {/* Hero Section with SEO Content */}
-          <div className="bg-gradient-to-br from-primary-600 to-primary-800 rounded-2xl shadow-lg p-8 mb-12 text-white">
+          <div className="bg-gradient-to-br from-primary-600 to-primary-800 rounded-2xl shadow-lg p-5 sm:p-8 mb-12 text-white">
             <div className="max-w-4xl">
               <h1 className="text-3xl md:text-4xl font-bold mb-4">
                 Mobile Cover Themes & Designer Collections
@@ -169,7 +169,7 @@ const Themes = () => {
             </div>
           </div>
 
-{/* Theme Collections Grid */}
+          {/* Theme Collections Grid */}
           <div className="mb-12">
             <div className="flex items-center justify-between mb-6">
               <div>
@@ -178,7 +178,7 @@ const Themes = () => {
                   {cards.length} unique collections available for all phone models
                 </p>
               </div>
-              <Link 
+              <Link
                 to="/customizer"
                 className="hidden md:inline-flex items-center gap-2 bg-primary-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-primary-700 transition-colors"
               >
@@ -190,67 +190,67 @@ const Themes = () => {
             </div>
 
             <div className="bg-white/25 rounded-2xl p-3 ">
-  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-    {loading
-      ? Array.from({ length: 6 }).map((_, i) => (
-          <div
-            key={i}
-            className="h-64 rounded-2xl"
-          />
-        ))
-      : cards.map((card) => (
-          <Link
-            key={card.id}
-            to={`/collection/${card.handle}`}
-            onKeyDown={(e) => handleKeyDown(e, card.handle)}
-            aria-label={`Browse ${card.title} mobile cover collection`}
-            className="group relative h-64 rounded-2xl "
-          >
-            {/* Image with enhanced effects - Fixed to show full image */}
-            <img
-              src={resolveImageUrl(card.image) || IMAGE_ERROR_FALLBACK}
-              alt={`${card.title} themed mobile covers and phone cases collection`}
-              loading="lazy"
-              onError={handleImgError}
-              className="absolute inset-0 w-full h-full "
-            />
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {loading
+                  ? Array.from({ length: 6 }).map((_, i) => (
+                    <div
+                      key={i}
+                      className="h-64 rounded-2xl"
+                    />
+                  ))
+                  : cards.map((card) => (
+                    <Link
+                      key={card.id}
+                      to={`/collection/${card.handle}`}
+                      onKeyDown={(e) => handleKeyDown(e, card.handle)}
+                      aria-label={`Browse ${card.title} mobile cover collection`}
+                      className="group relative h-64 rounded-2xl overflow-hidden"
+                    >
+                      {/* Image with enhanced effects - Fixed to show full image */}
+                      <img
+                        src={resolveImageUrl(card.image) || IMAGE_ERROR_FALLBACK}
+                        alt={`${card.title} themed mobile covers and phone cases collection`}
+                        loading="lazy"
+                        onError={handleImgError}
+                        className="absolute inset-0 w-full h-full object-cover"
+                      />
 
-                        {/* Gradient Overlay */}
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
+                      {/* Gradient Overlay */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
 
-                        {/* Badge */}
-                        {/*  */}
+                      {/* Badge */}
+                      {/*  */}
 
-                        {/* Text Content */}
-                        <div className="relative z-10 h-full flex flex-col justify-end items-end p-6 text-white">
-  <h3 
-    className="text-5xl font-black mb-2 cursor-pointer select-none"
-    style={{
-      background: 'linear-gradient(45deg, #ff0000, #ff6b00, #ffd000, #ff0000)',
-      backgroundSize: '200% 200%',
-      WebkitBackgroundClip: 'text',
-      WebkitTextFillColor: 'transparent',
-      backgroundClip: 'text',
-      textShadow: '0 0 20px rgba(255,0,0,0.5), 0 0 40px rgba(255,107,0,0.3)',
-      filter: 'drop-shadow(4px 4px 0px rgba(0,0,0,0.4)) drop-shadow(8px 8px 0px rgba(0,0,0,0.2))',
-      transform: 'perspective(800px) rotateY(-20deg) rotateX(10deg)',
-      transformStyle: 'preserve-3d',
-      animation: 'gradient 3s ease infinite, float 3s ease-in-out infinite',
-      transition: 'all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
-    }}
-    onMouseEnter={(e) => {
-      e.currentTarget.style.transform = 'perspective(800px) rotateY(0deg) rotateX(0deg) translateZ(30px) scale(1.1)';
-      e.currentTarget.style.filter = 'drop-shadow(6px 6px 0px rgba(255,0,0,0.6)) drop-shadow(12px 12px 20px rgba(255,107,0,0.4))';
-    }}
-    onMouseLeave={(e) => {
-      e.currentTarget.style.transform = 'perspective(800px) rotateY(-20deg) rotateX(10deg)';
-      e.currentTarget.style.filter = 'drop-shadow(4px 4px 0px rgba(0,0,0,0.4)) drop-shadow(8px 8px 0px rgba(0,0,0,0.2))';
-    }}
-  >
-    ✨ Click Here ✨
-  </h3>
-  
-  <style jsx>{`
+                      {/* Text Content */}
+                      <div className="relative z-10 h-full flex flex-col justify-end items-end p-6 text-white">
+                        <h3
+                          className="text-3xl sm:text-5xl font-black mb-2 cursor-pointer select-none"
+                          style={{
+                            background: 'linear-gradient(45deg, #ff0000, #ff6b00, #ffd000, #ff0000)',
+                            backgroundSize: '200% 200%',
+                            WebkitBackgroundClip: 'text',
+                            WebkitTextFillColor: 'transparent',
+                            backgroundClip: 'text',
+                            textShadow: '0 0 20px rgba(255,0,0,0.5), 0 0 40px rgba(255,107,0,0.3)',
+                            filter: 'drop-shadow(4px 4px 0px rgba(0,0,0,0.4)) drop-shadow(8px 8px 0px rgba(0,0,0,0.2))',
+                            transform: 'perspective(800px) rotateY(-20deg) rotateX(10deg)',
+                            transformStyle: 'preserve-3d',
+                            animation: 'gradient 3s ease infinite, float 3s ease-in-out infinite',
+                            transition: 'all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
+                          }}
+                          onMouseEnter={(e) => {
+                            e.currentTarget.style.transform = 'perspective(800px) rotateY(0deg) rotateX(0deg) translateZ(30px) scale(1.1)';
+                            e.currentTarget.style.filter = 'drop-shadow(6px 6px 0px rgba(255,0,0,0.6)) drop-shadow(12px 12px 20px rgba(255,107,0,0.4))';
+                          }}
+                          onMouseLeave={(e) => {
+                            e.currentTarget.style.transform = 'perspective(800px) rotateY(-20deg) rotateX(10deg)';
+                            e.currentTarget.style.filter = 'drop-shadow(4px 4px 0px rgba(0,0,0,0.4)) drop-shadow(8px 8px 0px rgba(0,0,0,0.2))';
+                          }}
+                        >
+                          ✨ Click Here ✨
+                        </h3>
+
+                        <style jsx>{`
     @keyframes gradient {
       0%, 100% { background-position: 0% 50%; }
       50% { background-position: 100% 50%; }
@@ -261,12 +261,12 @@ const Themes = () => {
       50% { transform: perspective(800px) rotateY(-20deg) rotateX(10deg) translateY(-10px); }
     }
   `}</style>
-</div>
+                      </div>
 
-                        {/* Hover Effect Border */}
-                        {/* <div className="absolute inset-0 border-4 border-primary-500 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity" /> */}
-                      </Link>
-                    ))}
+                      {/* Hover Effect Border */}
+                      {/* <div className="absolute inset-0 border-4 border-primary-500 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity" /> */}
+                    </Link>
+                  ))}
               </div>
             </div>
           </div>
@@ -279,7 +279,7 @@ const Themes = () => {
               <h2 className="text-2xl font-bold text-gray-900 mb-4">
                 Discover Themed Mobile Covers for Every Style
               </h2>
-              
+
               <p className="text-gray-700 mb-4">
                 Our curated collection of themed mobile covers brings together the best designs across multiple categories. Whether you're an anime enthusiast, nature lover, or minimalist design appreciator, our themed collections offer high-quality prints with premium smartphone protection.
               </p>
@@ -287,7 +287,7 @@ const Themes = () => {
               <h3 className="text-xl font-semibold text-gray-900 mb-3 mt-6">
                 Popular Theme Categories
               </h3>
-              
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 my-6">
                 <div className="bg-gray-50 rounded-lg p-4">
                   <h4 className="font-semibold text-gray-900 mb-2">🎌 Anime & Manga Covers</h4>
@@ -318,7 +318,7 @@ const Themes = () => {
               <h3 className="text-xl font-semibold text-gray-900 mb-3 mt-6">
                 Why Choose CoverGhar Themed Collections?
               </h3>
-              
+
               <ul className="space-y-2 text-gray-700">
                 <li className="flex items-start gap-2">
                   <span className="text-primary-600 mt-1">✓</span>
@@ -361,14 +361,14 @@ const Themes = () => {
             </div>
           </div>
 
-          
+
 
           {/* FAQ Section for Themes */}
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8 mb-12">
             <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">
               Frequently Asked Questions About Themed Mobile Covers
             </h2>
-            
+
             <div className="space-y-4 max-w-3xl mx-auto">
               <details className="group">
                 <summary className="flex items-center justify-between cursor-pointer list-none p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
@@ -400,7 +400,7 @@ const Themes = () => {
 
               <details className="group">
                 <summary className="flex items-center justify-between cursor-pointer list-none p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
-                  <span className="font-semibold text-gray-900">How often are new themes added?</span>
+                  <span className="font-semibold text-gray-900">Do you have Hard Cases and Soft Silicone covers?</span>
                   <span className="text-primary-600 group-open:rotate-180 transition-transform">
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
@@ -408,7 +408,7 @@ const Themes = () => {
                   </span>
                 </summary>
                 <p className="mt-3 px-4 text-gray-600">
-                  We add new themed designs weekly based on trending styles, seasonal themes, and customer requests. Follow us on social media to stay updated with the latest additions to our collections.
+                  Yes, we offer multiple material options including durable <strong>Hard Cases</strong> (polycarbonate), flexible <strong>Soft Silicone</strong> covers, and premium <strong>Glass Mobile Covers</strong>. You can choose the material that best suits your style and protection needs.
                 </p>
               </details>
 

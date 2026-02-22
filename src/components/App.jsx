@@ -30,7 +30,7 @@ const App = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       <header className="bg-white shadow-sm">
-        <div className="max-w-6xl mx-auto px-6 py-4">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-4">
           <h1 className="text-2xl font-bold text-gray-900">Mobile Cover Customizer</h1>
           {currentStep === 'customize' && (
             <button

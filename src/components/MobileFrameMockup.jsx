@@ -7,12 +7,14 @@ const MobileFrameMockup = ({ selectedModel, onDesignComplete }) => {
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
   const canvasRef = useRef(null);
 
-  // Calculate screen rectangle based on the model's frame image
-  const [screenRect, setScreenRect] = useState({ left: 30, top: 100, width: 240, height: 400 });
+  // Keep the preview responsive while preserving the frame's intrinsic aspect ratio.
+  const [frameAspect, setFrameAspect] = useState(300 / 600);
+
+  // Screen rectangle is stored as fractions of the frame (0..1) so it scales with responsive preview sizing.
+  const [screenRect, setScreenRect] = useState({ left: 0.1, top: 100 / 600, width: 0.8, height: 400 / 600 });
 
   const calculateScreenRect = (frameWidth = 300, frameHeight = 600) => {
     // These values are approximations - adjust based on actual frame dimensions
-    const paddingPercentage = { x: 0.06, y: 0.12 }; // 6% horizontal, 12% vertical padding
     const width = frameWidth * 0.88; // 88% of frame width
     const height = frameHeight * 0.72; // 72% of frame height
     const left = (frameWidth - width) / 2;
@@ -20,6 +22,20 @@ const MobileFrameMockup = ({ selectedModel, onDesignComplete }) => {
 
     return { left, top, width, height };
   };
+
+  const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
+
+  const getScreenRectPx = useCallback(() => {
+    const el = canvasRef.current;
+    if (!el) return null;
+    const rect = el.getBoundingClientRect();
+    return {
+      left: rect.width * screenRect.left,
+      top: rect.height * screenRect.top,
+      width: rect.width * screenRect.width,
+      height: rect.height * screenRect.height,
+    };
+  }, [screenRect]);
 
   const handleImageUpload = useCallback((e) => {
     const file = e.target.files[0];
@@ -42,23 +58,40 @@ const MobileFrameMockup = ({ selectedModel, onDesignComplete }) => {
     }
   }, []);
 
-  const handleMouseDown = useCallback((e) => {
+  const handlePointerDown = useCallback((e) => {
     if (!userImage) return;
+    const rectPx = getScreenRectPx();
+    if (!rectPx) return;
+
+    e.preventDefault();
     setIsDragging(true);
-    setDragStart({ 
-      x: e.clientX - (transform.x * screenRect.width), 
-      y: e.clientY - (transform.y * screenRect.height) 
+    try {
+      e.currentTarget.setPointerCapture?.(e.pointerId);
+    } catch {
+      // ignore
+    }
+
+    setDragStart({
+      x: e.clientX - (transform.x * rectPx.width),
+      y: e.clientY - (transform.y * rectPx.height),
     });
-  }, [userImage, transform, screenRect]);
+  }, [userImage, transform, getScreenRectPx]);
 
-  const handleMouseMove = useCallback((e) => {
+  const handlePointerMove = useCallback((e) => {
     if (!isDragging || !userImage) return;
-    const newX = (e.clientX - dragStart.x) / screenRect.width;
-    const newY = (e.clientY - dragStart.y) / screenRect.height;
-    setTransform(prev => ({ ...prev, x: newX, y: newY }));
-  }, [isDragging, dragStart, userImage, screenRect]);
+    const rectPx = getScreenRectPx();
+    if (!rectPx) return;
 
-  const handleMouseUp = useCallback(() => {
+    const newX = (e.clientX - dragStart.x) / rectPx.width;
+    const newY = (e.clientY - dragStart.y) / rectPx.height;
+    setTransform(prev => ({
+      ...prev,
+      x: clamp(newX, -2, 2),
+      y: clamp(newY, -2, 2),
+    }));
+  }, [isDragging, dragStart, userImage, getScreenRectPx]);
+
+  const handlePointerUp = useCallback(() => {
     setIsDragging(false);
   }, []);
 
@@ -95,19 +128,26 @@ const MobileFrameMockup = ({ selectedModel, onDesignComplete }) => {
       const img = new Image();
       img.crossOrigin = 'anonymous';
       img.onload = () => {
+        const rectAbs = {
+          left: screenRect.left * canvas.width,
+          top: screenRect.top * canvas.height,
+          width: screenRect.width * canvas.width,
+          height: screenRect.height * canvas.height,
+        };
+
         // Calculate scaled image dimensions to maintain aspect ratio
         const aspectRatio = img.width / img.height;
-        let drawWidth = screenRect.width * transform.scale;
+        let drawWidth = rectAbs.width * transform.scale;
         let drawHeight = drawWidth / aspectRatio;
         
-        if (drawHeight > screenRect.height * transform.scale) {
-          drawHeight = screenRect.height * transform.scale;
+        if (drawHeight > rectAbs.height * transform.scale) {
+          drawHeight = rectAbs.height * transform.scale;
           drawWidth = drawHeight * aspectRatio;
         }
         
         // Calculate position to center the image and apply transforms
-        const x = screenRect.left + (screenRect.width - drawWidth) / 2 + transform.x * screenRect.width;
-        const y = screenRect.top + (screenRect.height - drawHeight) / 2 + transform.y * screenRect.height;
+        const x = rectAbs.left + (rectAbs.width - drawWidth) / 2 + transform.x * rectAbs.width;
+        const y = rectAbs.top + (rectAbs.height - drawHeight) / 2 + transform.y * rectAbs.height;
         
         // Draw the user image
         ctx.drawImage(img, x, y, drawWidth, drawHeight);
@@ -147,19 +187,26 @@ const MobileFrameMockup = ({ selectedModel, onDesignComplete }) => {
       const img = new Image();
       img.crossOrigin = 'anonymous';
       img.onload = () => {
+        const rectAbs = {
+          left: screenRect.left * canvas.width,
+          top: screenRect.top * canvas.height,
+          width: screenRect.width * canvas.width,
+          height: screenRect.height * canvas.height,
+        };
+
         // Calculate scaled image dimensions to maintain aspect ratio
         const aspectRatio = img.width / img.height;
-        let drawWidth = screenRect.width * transform.scale;
+        let drawWidth = rectAbs.width * transform.scale;
         let drawHeight = drawWidth / aspectRatio;
         
-        if (drawHeight > screenRect.height * transform.scale) {
-          drawHeight = screenRect.height * transform.scale;
+        if (drawHeight > rectAbs.height * transform.scale) {
+          drawHeight = rectAbs.height * transform.scale;
           drawWidth = drawHeight * aspectRatio;
         }
         
         // Calculate position to center the image and apply transforms
-        const x = screenRect.left + (screenRect.width - drawWidth) / 2 + transform.x * screenRect.width;
-        const y = screenRect.top + (screenRect.height - drawHeight) / 2 + transform.y * screenRect.height;
+        const x = rectAbs.left + (rectAbs.width - drawWidth) / 2 + transform.x * rectAbs.width;
+        const y = rectAbs.top + (rectAbs.height - drawHeight) / 2 + transform.y * rectAbs.height;
         
         // Draw the user image
         ctx.drawImage(img, x, y, drawWidth, drawHeight);
@@ -214,17 +261,13 @@ const MobileFrameMockup = ({ selectedModel, onDesignComplete }) => {
         <div className="flex justify-center">
           <div
             ref={canvasRef}
-            className="relative bg-gray-100 border-2 border-gray-300 cursor-move select-none"
-            style={{ 
-              width: selectedModel.images && selectedModel.images.length > 0 ? '100%' : '300px',
-              height: selectedModel.images && selectedModel.images.length > 0 ? '100%' : '600px',
-              maxWidth: '100%',
-              maxHeight: '70vh'
-            }}
-            onMouseDown={handleMouseDown}
-            onMouseMove={handleMouseMove}
-            onMouseUp={handleMouseUp}
-            onMouseLeave={handleMouseUp}
+            className="relative w-full max-w-[320px] sm:max-w-[360px] md:max-w-[420px] lg:max-w-[480px] bg-gray-100 border-2 border-gray-300 select-none touch-none cursor-grab active:cursor-grabbing"
+            style={{ aspectRatio: `${frameAspect}`, maxHeight: '70vh' }}
+            onPointerDown={handlePointerDown}
+            onPointerMove={handlePointerMove}
+            onPointerUp={handlePointerUp}
+            onPointerCancel={handlePointerUp}
+            onPointerLeave={handlePointerUp}
           >
             {/* Phone Frame Overlay - use the first frame from the model */}
             {selectedModel.images && selectedModel.images.length > 0 ? (
@@ -234,14 +277,17 @@ const MobileFrameMockup = ({ selectedModel, onDesignComplete }) => {
                 className="absolute inset-0 w-full h-full object-contain pointer-events-none"
                 style={{ zIndex: 1 }}
                 onLoad={(e) => {
-                  // Update canvas dimensions to match the loaded image
                   const img = e.target;
-                  canvasRef.current.style.width = `${img.naturalWidth}px`;
-                  canvasRef.current.style.height = `${img.naturalHeight}px`;
-                  
-                  // Update the screen rectangle based on the actual image dimensions
-                  const newScreenRect = calculateScreenRect(img.naturalWidth, img.naturalHeight);
-                  setScreenRect(newScreenRect);
+                  if (img?.naturalWidth && img?.naturalHeight) {
+                    setFrameAspect(img.naturalWidth / img.naturalHeight);
+                    const newScreenRectAbs = calculateScreenRect(img.naturalWidth, img.naturalHeight);
+                    setScreenRect({
+                      left: newScreenRectAbs.left / img.naturalWidth,
+                      top: newScreenRectAbs.top / img.naturalHeight,
+                      width: newScreenRectAbs.width / img.naturalWidth,
+                      height: newScreenRectAbs.height / img.naturalHeight,
+                    });
+                  }
                 }}
               />
             ) : (
@@ -260,10 +306,10 @@ const MobileFrameMockup = ({ selectedModel, onDesignComplete }) => {
               <div 
                 className="absolute pointer-events-none"
                 style={{
-                  left: `${screenRect.left}px`,
-                  top: `${screenRect.top}px`,
-                  width: `${screenRect.width}px`,
-                  height: `${screenRect.height}px`,
+                  left: `${screenRect.left * 100}%`,
+                  top: `${screenRect.top * 100}%`,
+                  width: `${screenRect.width * 100}%`,
+                  height: `${screenRect.height * 100}%`,
                   overflow: 'hidden',
                   zIndex: 2
                 }}
@@ -311,22 +357,22 @@ const MobileFrameMockup = ({ selectedModel, onDesignComplete }) => {
           {/* Transform Controls */}
           <div>
             <h3 className="text-lg font-semibold mb-4">Adjust Image</h3>
-            <div className="grid grid-cols-3 gap-2 mb-4">
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 mb-4">
               <button
                 onClick={zoomIn}
-                className="p-3 bg-blue-500 text-white rounded hover:bg-blue-600"
+                className="p-3 bg-blue-500 text-white rounded hover:bg-blue-600 min-h-[44px]"
               >
                 Zoom In
               </button>
               <button
                 onClick={zoomOut}
-                className="p-3 bg-blue-500 text-white rounded hover:bg-blue-600"
+                className="p-3 bg-blue-500 text-white rounded hover:bg-blue-600 min-h-[44px]"
               >
                 Zoom Out
               </button>
               <button
                 onClick={resetPosition}
-                className="p-3 bg-gray-500 text-white rounded hover:bg-gray-600"
+                className="p-3 bg-gray-500 text-white rounded hover:bg-gray-600 min-h-[44px]"
               >
                 Reset
               </button>
@@ -344,7 +390,7 @@ const MobileFrameMockup = ({ selectedModel, onDesignComplete }) => {
                   userImage 
                     ? 'bg-green-500 text-white hover:bg-green-600' 
                     : 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                }`}
+                } min-h-[44px]`}
               >
                 Download Mockup
               </button>
@@ -355,7 +401,7 @@ const MobileFrameMockup = ({ selectedModel, onDesignComplete }) => {
                   userImage 
                     ? 'bg-purple-500 text-white hover:bg-purple-600' 
                     : 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                }`}
+                } min-h-[44px]`}
               >
                 Save Design
               </button>

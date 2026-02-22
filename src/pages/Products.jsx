@@ -6,6 +6,7 @@ import { FiFilter, FiSearch, FiX, FiGrid, FiList } from 'react-icons/fi';
 import ProductCard from '../components/ProductCard';
 import Loader, { CardSkeleton } from '../components/Loader';
 import SEO from '../components/SEO';
+import Breadcrumb from '../components/Breadcrumb';
 
 const Products = () => {
   const dispatch = useDispatch();
@@ -144,10 +145,17 @@ const Products = () => {
       />
       <div className="min-h-screen bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Breadcrumb */}
+        <div className="mb-4">
+          <Breadcrumb items={[
+            { name: 'Home', url: '/' },
+            { name: 'Products' },
+          ]} />
+        </div>
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Products</h1>
-          <p className="text-gray-600">Discover our collection of custom mobile covers</p>
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">Buy Mobile Covers Online — All Brands & Designs</h1>
+          <p className="text-gray-600">Discover our collection of custom mobile covers for iPhone, Samsung, OnePlus & more</p>
         </div>
 
         {/* Search and Filters Bar */}
@@ -162,18 +170,18 @@ const Products = () => {
                   placeholder="Search products..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                  className="w-full pl-10 pr-4 py-3 text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent min-h-[44px]"
                 />
               </div>
             </form>
 
             {/* Sort */}
-            <div className="flex items-center space-x-2">
-              <span className="text-sm text-gray-600">Sort by:</span>
+            <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-2">
+              <span className="text-sm text-gray-600 whitespace-nowrap">Sort by:</span>
               <select
                 value={sortBy}
                 onChange={(e) => handleSortChange(e.target.value)}
-                className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                className="w-full sm:w-auto border border-gray-300 rounded-lg px-3 py-3 text-sm focus:ring-2 focus:ring-primary-500 focus:border-transparent min-h-[44px]"
               >
                 <option value="-createdAt">Newest</option>
                 <option value="price">Price: Low to High</option>
@@ -183,16 +191,20 @@ const Products = () => {
             </div>
 
             {/* View Mode */}
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center gap-2">
               <button
+                type="button"
                 onClick={() => setViewMode('grid')}
-                className={`p-2 rounded-lg ${viewMode === 'grid' ? 'bg-primary-100 text-primary-600' : 'text-gray-600 hover:bg-gray-100'}`}
+                className={`touch-target inline-flex items-center justify-center p-2 rounded-lg ${viewMode === 'grid' ? 'bg-primary-100 text-primary-600' : 'text-gray-600 hover:bg-gray-100'}`}
+                aria-label="Grid view"
               >
                 <FiGrid className="w-5 h-5" />
               </button>
               <button
+                type="button"
                 onClick={() => setViewMode('list')}
-                className={`p-2 rounded-lg ${viewMode === 'list' ? 'bg-primary-100 text-primary-600' : 'text-gray-600 hover:bg-gray-100'}`}
+                className={`touch-target inline-flex items-center justify-center p-2 rounded-lg ${viewMode === 'list' ? 'bg-primary-100 text-primary-600' : 'text-gray-600 hover:bg-gray-100'}`}
+                aria-label="List view"
               >
                 <FiList className="w-5 h-5" />
               </button>
@@ -200,8 +212,9 @@ const Products = () => {
 
             {/* Filter Toggle */}
             <button
+              type="button"
               onClick={() => setShowFilters(!showFilters)}
-              className={`flex items-center space-x-2 px-4 py-2 rounded-lg border ${
+              className={`w-full sm:w-auto min-h-[44px] flex items-center justify-center sm:justify-start space-x-2 px-4 py-3 rounded-lg border ${
                 showFilters ? 'bg-primary-600 text-white border-primary-600' : 'border-gray-300 text-gray-700 hover:bg-gray-50'
               }`}
             >
@@ -357,8 +370,9 @@ const Products = () => {
           <div className="text-center py-12">
             <p className="text-red-600 mb-4">Error loading products: {error}</p>
             <button
+              type="button"
               onClick={() => dispatch(fetchProducts({ ...filters, sortBy, page: pagination.currentPage, limit: 12 }))}
-              className="bg-primary-600 text-white px-6 py-2 rounded-lg hover:bg-primary-700"
+              className="inline-flex items-center justify-center bg-primary-600 text-white px-6 py-3 rounded-lg hover:bg-primary-700 min-h-[44px]"
             >
               Try Again
             </button>
@@ -367,8 +381,9 @@ const Products = () => {
           <div className="text-center py-12">
             <p className="text-gray-600 mb-4">No products found matching your criteria.</p>
             <button
+              type="button"
               onClick={clearAllFilters}
-              className="bg-primary-600 text-white px-6 py-2 rounded-lg hover:bg-primary-700"
+              className="inline-flex items-center justify-center bg-primary-600 text-white px-6 py-3 rounded-lg hover:bg-primary-700 min-h-[44px]"
             >
               Clear Filters
             </button>
@@ -388,20 +403,22 @@ const Products = () => {
         {/* Pagination */}
         {pagination.totalPages > 1 && (
           <div className="mt-12 flex justify-center">
-            <nav className="flex items-center space-x-2">
+            <nav className="flex flex-wrap items-center justify-center gap-2 max-w-full">
               <button
+                type="button"
                 onClick={() => handlePageChange(pagination.currentPage - 1)}
                 disabled={!pagination.hasPrev}
-                className="px-3 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="px-3 py-3 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px]"
               >
                 Previous
               </button>
 
               {Array.from({ length: pagination.totalPages }, (_, i) => i + 1).map((page) => (
                 <button
+                  type="button"
                   key={page}
                   onClick={() => handlePageChange(page)}
-                  className={`px-3 py-2 rounded-lg border ${
+                  className={`px-3 py-3 rounded-lg border min-h-[44px] ${
                     page === pagination.currentPage
                       ? 'bg-primary-600 text-white border-primary-600'
                       : 'border-gray-300 text-gray-700 hover:bg-gray-50'
@@ -412,9 +429,10 @@ const Products = () => {
               ))}
 
               <button
+                type="button"
                 onClick={() => handlePageChange(pagination.currentPage + 1)}
                 disabled={!pagination.hasNext}
-                className="px-3 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="px-3 py-3 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px]"
               >
                 Next
               </button>

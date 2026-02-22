@@ -16,14 +16,21 @@ const staticRoutes = [
   { url: '/', changefreq: 'daily', priority: '1.0' },
   { url: '/products', changefreq: 'daily', priority: '0.9' },
   { url: '/themes', changefreq: 'weekly', priority: '0.8' },
+  { url: '/blog', changefreq: 'weekly', priority: '0.8' },
   { url: '/customizer', changefreq: 'monthly', priority: '0.7' },
   { url: '/custom-mobile', changefreq: 'monthly', priority: '0.7' },
-  { url: '/login', changefreq: 'monthly', priority: '0.5' },
+  { url: '/category/iphone', changefreq: 'weekly', priority: '0.8' },
+  { url: '/category/samsung', changefreq: 'weekly', priority: '0.8' },
+  { url: '/category/oneplus', changefreq: 'weekly', priority: '0.8' },
+  { url: '/category/realme', changefreq: 'weekly', priority: '0.7' },
+  { url: '/category/vivo', changefreq: 'weekly', priority: '0.7' },
+  { url: '/category/oppo', changefreq: 'weekly', priority: '0.7' },
+  { url: '/category/xiaomi', changefreq: 'weekly', priority: '0.7' },
+  { url: '/track-order', changefreq: 'monthly', priority: '0.4' },
   { url: '/privacy-policy', changefreq: 'monthly', priority: '0.3' },
   { url: '/terms-conditions', changefreq: 'monthly', priority: '0.3' },
   { url: '/returns-refunds', changefreq: 'monthly', priority: '0.3' },
   { url: '/shipping-policy', changefreq: 'monthly', priority: '0.3' },
-  { url: '/track-order', changefreq: 'monthly', priority: '0.4' },
 ];
 
 async function fetchDynamicRoutes() {
@@ -60,7 +67,37 @@ async function fetchDynamicRoutes() {
           priority: '0.8',
           lastmod: collection.updatedAt ? new Date(collection.updatedAt).toISOString().split('T')[0] : undefined
         });
+        // Also add gallery pages for collections with images
+        if (collection.images?.length > 0) {
+          dynamicRoutes.push({
+            url: `/collection/${collection.handle}/gallery`,
+            changefreq: 'weekly',
+            priority: '0.6',
+            lastmod: collection.updatedAt ? new Date(collection.updatedAt).toISOString().split('T')[0] : undefined
+          });
+        }
       });
+    }
+
+    // 3. Fetch Blog Posts
+    try {
+      const blogRes = await axios.get(`${API_URL}/api/blogs?limit=500`);
+      const blogs = blogRes.data?.data?.blogs || blogRes.data?.blogs || [];
+      if (Array.isArray(blogs) && blogs.length > 0) {
+        console.log(`Found ${blogs.length} blog posts.`);
+        blogs.forEach(blog => {
+          if (blog.slug && blog.published !== false) {
+            dynamicRoutes.push({
+              url: `/blog/${blog.slug}`,
+              changefreq: 'monthly',
+              priority: '0.7',
+              lastmod: blog.updatedAt ? new Date(blog.updatedAt).toISOString().split('T')[0] : undefined
+            });
+          }
+        });
+      }
+    } catch (blogErr) {
+      console.warn('Could not fetch blog posts for sitemap:', blogErr.message);
     }
 
   } catch (error) {

@@ -19,7 +19,7 @@ const ThemeShowcase = ({ theme, model, models = [], onModelChange }) => {
         </div>
         {models.length > 0 && (
           <select
-            className="border rounded-lg px-3 py-2 text-sm"
+            className="border rounded-lg px-3 py-2.5 text-sm w-full sm:w-auto max-w-full"
             value={model?._id || ''}
             onChange={(e) => onModelChange?.(e.target.value)}
           >
@@ -31,7 +31,7 @@ const ThemeShowcase = ({ theme, model, models = [], onModelChange }) => {
         )}
       </div>
 
-      <div className="relative mx-auto w-56 h-[420px] bg-gray-100 rounded-[30px] overflow-hidden shadow-inner">
+      <div className="relative mx-auto w-full max-w-[16rem] sm:max-w-[18rem] bg-gray-100 rounded-[30px] overflow-hidden shadow-inner aspect-[8/15]">
         {posterUrl && (
           <img
             src={resolveImageUrl(posterUrl)}

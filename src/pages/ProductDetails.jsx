@@ -22,6 +22,7 @@ import ProductCard from '../components/ProductCard';
 import ProductReviewsSection from '../components/ProductReviewsSection';
 import PincodeChecker from '../components/PincodeChecker';
 import SEO from '../components/SEO';
+import Breadcrumb from '../components/Breadcrumb';
 import { formatPrice, getAvailableVariants, getProductImage, isInStock, resolveImageUrl } from '../utils/helpers';
 
 
@@ -181,27 +182,36 @@ const ProductDetails = ({ productIdOverride }) => {
         schema={productSchema}
       />
       <div className="min-h-screen bg-[#faf7f2] text-gray-900">
-    
-
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-4">
+          <Breadcrumb items={[
+            { name: 'Home', url: '/' },
+            { name: 'Products', url: '/products' },
+            { name: currentProduct.title },
+          ]} />
+        </div>
 
       <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pb-16 space-y-14">
         <section className="grid gap-10 lg:grid-cols-[1.1fr_0.9fr] pt-10">
           <div className="space-y-4">
             <div className="bg-white rounded-3xl shadow-md border border-gray-100 p-6 relative overflow-hidden">
               <div className="aspect-[3/4] bg-[#f9f5ef] rounded-2xl flex items-center justify-center">
-                <img src={heroImage} alt={currentProduct.title} className="max-h-full object-contain" />
+                <img src={heroImage} alt={currentProduct.title} className="w-full h-full object-contain" />
               </div>
               {productImages.length > 1 && (
                 <>
                   <button
                     onClick={prevImage}
-                    className="absolute left-6 top-1/2 -translate-y-1/2 bg-white/90 backdrop-blur-sm rounded-full p-3 border border-gray-200 shadow"
+                    type="button"
+                    aria-label="Previous image"
+                    className="absolute left-3 sm:left-6 top-1/2 -translate-y-1/2 bg-white/90 backdrop-blur-sm rounded-full p-3 border border-gray-200 shadow"
                   >
                     <FiChevronLeft />
                   </button>
                   <button
                     onClick={nextImage}
-                    className="absolute right-6 top-1/2 -translate-y-1/2 bg-white/90 backdrop-blur-sm rounded-full p-3 border border-gray-200 shadow"
+                    type="button"
+                    aria-label="Next image"
+                    className="absolute right-3 sm:right-6 top-1/2 -translate-y-1/2 bg-white/90 backdrop-blur-sm rounded-full p-3 border border-gray-200 shadow"
                   >
                     <FiChevronRight />
                   </button>
@@ -210,14 +220,15 @@ const ProductDetails = ({ productIdOverride }) => {
             </div>
 
             {productImages.length > 1 && (
-              <div className="flex gap-3 overflow-x-auto pb-2">
+              <div className="flex gap-3 overflow-x-auto pb-2 no-scrollbar">
                 {productImages.map((image, index) => (
                   <button
                     key={image || index}
                     onClick={() => setCurrentImageIndex(index)}
-                    className={`relative w-24 h-28 rounded-2xl border-2 ${currentImageIndex === index ? 'border-black' : 'border-transparent'} bg-white shadow-sm flex items-center justify-center`}
+                    type="button"
+                    className={`relative flex-shrink-0 w-20 h-24 sm:w-24 sm:h-28 rounded-2xl border-2 ${currentImageIndex === index ? 'border-black' : 'border-transparent'} bg-white shadow-sm flex items-center justify-center`}
                   >
-                    <img src={resolveImageUrl(image)} alt={`${currentProduct.title} ${index + 1}`} className="object-contain max-h-full" />
+                    <img src={resolveImageUrl(image)} alt={`${currentProduct.title} ${index + 1}`} className="w-full h-full object-contain" />
                   </button>
                 ))}
               </div>
