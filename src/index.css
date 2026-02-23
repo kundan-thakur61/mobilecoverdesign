@@ -452,15 +452,9 @@
 /* ============================================
    PERFORMANCE OPTIMIZATIONS
    ============================================ */
+/* Note: img, header/main/nav contain, and @font-face rules are in critical.css */
 img {
-  max-width: 100%;
-  content-visibility: auto;
   contain-intrinsic-size: auto 200px;
-}
-
-/* Contain layout for major sections to reduce CLS and reflow */
-header, main, nav {
-  contain: layout style;
 }
 
 /* Reserve space for fixed header to prevent CLS */
@@ -473,13 +467,7 @@ header, main, nav {
   }
 }
 
-/* Optimized font-face fallback with font-display: swap */
-@font-face {
-  font-family: 'Inter';
-  font-style: normal;
-  font-display: swap;
-  src: local('Inter');
-}
+/* Font-face declaration is in critical.css — no duplicate here */
 
 /* GPU-accelerated animations only - use sparingly */
 .animate-fade-in,

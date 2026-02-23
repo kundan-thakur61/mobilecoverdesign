@@ -1,24 +1,24 @@
-import { useRef, useState, useCallback, memo } from 'react';
+import { useRef, useCallback, memo } from 'react';
 import { Link } from 'react-router-dom';
 import OptimizedImage from '../components/OptimizedImage';
 import SEO from '../components/SEO';
+import './Home.css';
 
 const PremiumCard = memo(({ image, title, subtitle, badge, priority = false }) => {
-  const [mousePos, setMousePos] = useState({ x: 0.5, y: 0.5 });
   const cardRef = useRef(null);
+  const overlayRef = useRef(null);
   const rafRef = useRef(null);
 
-  // Throttled mouse tracking with requestAnimationFrame (prevents excessive re-renders)
+  // Mouse tracking with direct DOM manipulation (no re-renders)
   const handleMouseMove = useCallback((e) => {
-    if (!cardRef.current || window.innerWidth < 768) return;
-    if (rafRef.current) return; // Skip if a frame is already pending
+    if (!cardRef.current || !overlayRef.current || window.innerWidth < 768) return;
+    if (rafRef.current) return;
     rafRef.current = requestAnimationFrame(() => {
-      if (!cardRef.current) return;
+      if (!cardRef.current || !overlayRef.current) { rafRef.current = null; return; }
       const rect = cardRef.current.getBoundingClientRect();
-      setMousePos({
-        x: (e.clientX - rect.left) / rect.width,
-        y: (e.clientY - rect.top) / rect.height,
-      });
+      const x = ((e.clientX - rect.left) / rect.width) * 100;
+      const y = ((e.clientY - rect.top) / rect.height) * 100;
+      overlayRef.current.style.background = `radial-gradient(circle at ${x}% ${y}%, rgba(255,255,255,0.2), transparent 50%)`;
       rafRef.current = null;
     });
   }, []);
@@ -44,10 +44,8 @@ const PremiumCard = memo(({ image, title, subtitle, badge, priority = false }) =
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
           <div
+            ref={overlayRef}
             className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 hidden sm:block"
-            style={{
-              background: `radial-gradient(circle at ${mousePos.x * 100}% ${mousePos.y * 100}%, rgba(255,255,255,0.2), transparent 50%)`
-            }}
           ></div>
           {badge && (
             <div className="absolute top-2 left-2 sm:top-4 sm:left-4 bg-white/90 backdrop-blur-sm text-gray-900 px-2 py-1 sm:px-3 sm:py-1 rounded-full text-xs sm:text-sm font-semibold shadow-lg">
@@ -299,53 +297,6 @@ function PremiumHero() {
 
       <PremiumCardSection />
       <CTASection />
-
-      <style>{`
-        @keyframes blob {
-          0%, 100% { transform: translate(0, 0) scale(1); }
-          25% { transform: translate(20px, -50px) scale(1.1); }
-          50% { transform: translate(-20px, 20px) scale(0.9); }
-          75% { transform: translate(50px, 50px) scale(1.05); }
-        }
-        @keyframes fade-in-up {
-          from { opacity: 0; transform: translateY(30px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes slide-in-left {
-          from { opacity: 0; transform: translateX(-50px); }
-          to { opacity: 1; transform: translateX(0); }
-        }
-        @keyframes fade-in {
-          from { opacity: 0; }
-          to { opacity: 1; }
-        }
-        @keyframes pulse-slow {
-          0%, 100% { opacity: 1; }
-          50% { opacity: 0.8; }
-        }
-        .animate-blob { animation: blob 7s infinite; will-change: transform; }
-        .animate-fade-in-up { animation: fade-in-up 0.8s ease-out forwards; }
-        .animate-slide-in-left { animation: slide-in-left 0.8s ease-out forwards; }
-        .animate-fade-in { animation: fade-in 0.8s ease-out forwards; }
-        .animate-pulse-slow { animation: pulse-slow 3s ease-in-out infinite; }
-        .animation-delay-200 { animation-delay: 0.2s; }
-        .animation-delay-400 { animation-delay: 0.4s; }
-        .animation-delay-600 { animation-delay: 0.6s; }
-        .animation-delay-800 { animation-delay: 0.8s; }
-        .animation-delay-1000 { animation-delay: 1s; }
-        .animation-delay-2000 { animation-delay: 2s; }
-        .animation-delay-4000 { animation-delay: 4s; }
-        /* Disable heavy animations on mobile for performance */
-        @media (max-width: 768px) {
-          .animate-blob { animation: none; }
-          .animate-slide-in-left { animation: fade-in 0.5s ease-out forwards; }
-        }
-        @media (prefers-reduced-motion: reduce) {
-          .animate-blob, .animate-fade-in-up, .animate-slide-in-left, .animate-fade-in, .animate-pulse-slow {
-            animation: none !important;
-          }
-        }
-      `}</style>
     </div>
   );
 }

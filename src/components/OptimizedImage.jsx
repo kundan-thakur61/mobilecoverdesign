@@ -4,7 +4,7 @@ import { useState, useRef, useEffect, memo } from 'react';
  * OptimizedImage - High-performance image component
  * 
  * Features:
- * - Lazy loading with Intersection Observer
+ * - Lazy loading with a shared Intersection Observer (one observer for all instances)
  * - Blur placeholder during load
  * - Error fallback handling
  * - WebP/AVIF format support via Cloudinary auto format
@@ -14,6 +14,28 @@ import { useState, useRef, useEffect, memo } from 'react';
  */
 
 const PLACEHOLDER_BLUR = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiB2aWV3Qm94PSIwIDAgMTAwIDEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZjNmNGY2Ii8+PC9zdmc+';
+
+// Shared Intersection Observer - single instance for all OptimizedImage components
+const observerCallbacks = new WeakMap();
+let sharedObserver = null;
+
+function getSharedObserver() {
+  if (sharedObserver) return sharedObserver;
+  sharedObserver = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const cb = observerCallbacks.get(entry.target);
+          if (cb) cb();
+          observerCallbacks.delete(entry.target);
+          sharedObserver.unobserve(entry.target);
+        }
+      });
+    },
+    { rootMargin: '200px', threshold: 0.01 }
+  );
+  return sharedObserver;
+}
 
 // Cloudinary transformation helpers
 const getCloudinaryUrl = (url, width, format = 'auto', quality = 'auto') => {
@@ -67,33 +89,24 @@ const OptimizedImage = memo(({
     const [isInView, setIsInView] = useState(priority);
     const imgRef = useRef(null);
 
-    // Intersection Observer for lazy loading
+    // Shared Intersection Observer for lazy loading
     useEffect(() => {
         if (priority || loading !== 'lazy') {
             setIsInView(true);
             return;
         }
 
-        const observer = new IntersectionObserver(
-            (entries) => {
-                entries.forEach((entry) => {
-                    if (entry.isIntersecting) {
-                        setIsInView(true);
-                        observer.disconnect();
-                    }
-                });
-            },
-            {
-                rootMargin: '200px', // Start loading 200px before entering viewport
-                threshold: 0.01,
-            }
-        );
+        const el = imgRef.current;
+        if (!el) return;
 
-        if (imgRef.current) {
-            observer.observe(imgRef.current);
-        }
+        const observer = getSharedObserver();
+        observerCallbacks.set(el, () => setIsInView(true));
+        observer.observe(el);
 
-        return () => observer.disconnect();
+        return () => {
+            observerCallbacks.delete(el);
+            observer.unobserve(el);
+        };
     }, [priority, loading]);
 
     const handleLoad = (e) => {
@@ -143,7 +156,7 @@ const OptimizedImage = memo(({
                     alt={alt}
                     width={width || undefined}
                     height={height || undefined}
-                    loading={priority ? 'eager' : 'lazy'}
+                    loading={priority ? 'eager' : undefined}
                     decoding={priority ? 'sync' : 'async'}
                     fetchpriority={fetchPriority || (priority ? 'high' : undefined)}
                     onLoad={handleLoad}

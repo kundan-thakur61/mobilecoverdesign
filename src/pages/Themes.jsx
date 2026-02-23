@@ -189,13 +189,13 @@ const Themes = () => {
               </Link>
             </div>
 
-            <div className="bg-white/25 rounded-2xl p-3 ">
+            <div className="bg-white/25 rounded-2xl p-3">
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 {loading
                   ? Array.from({ length: 6 }).map((_, i) => (
                     <div
                       key={i}
-                      className="h-64 rounded-2xl"
+                      className="h-64 rounded-2xl bg-gray-200 animate-pulse"
                     />
                   ))
                   : cards.map((card) => (
@@ -206,72 +206,62 @@ const Themes = () => {
                       aria-label={`Browse ${card.title} mobile cover collection`}
                       className="group relative h-64 rounded-2xl overflow-hidden"
                     >
-                      {/* Image with enhanced effects - Fixed to show full image */}
+                      {/* Image */}
                       <img
                         src={resolveImageUrl(card.image) || IMAGE_ERROR_FALLBACK}
                         alt={`${card.title} themed mobile covers and phone cases collection`}
                         loading="lazy"
                         onError={handleImgError}
-                        className="absolute inset-0 w-full h-full object-cover"
+                        className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                       />
 
                       {/* Gradient Overlay */}
                       <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
 
-                      {/* Badge */}
-                      {/*  */}
+                      {/* Card Content */}
+                      <div className="relative z-10 h-full flex flex-col justify-between p-5 text-white">
 
-                      {/* Text Content */}
-                      <div className="relative z-10 h-full flex flex-col justify-end items-end p-6 text-white">
-                        <h3
-                          className="text-3xl sm:text-5xl font-black mb-2 cursor-pointer select-none"
-                          style={{
-                            background: 'linear-gradient(45deg, #ff0000, #ff6b00, #ffd000, #ff0000)',
-                            backgroundSize: '200% 200%',
-                            WebkitBackgroundClip: 'text',
-                            WebkitTextFillColor: 'transparent',
-                            backgroundClip: 'text',
-                            textShadow: '0 0 20px rgba(255,0,0,0.5), 0 0 40px rgba(255,107,0,0.3)',
-                            filter: 'drop-shadow(4px 4px 0px rgba(0,0,0,0.4)) drop-shadow(8px 8px 0px rgba(0,0,0,0.2))',
-                            transform: 'perspective(800px) rotateY(-20deg) rotateX(10deg)',
-                            transformStyle: 'preserve-3d',
-                            animation: 'gradient 3s ease infinite, float 3s ease-in-out infinite',
-                            transition: 'all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
-                          }}
-                          onMouseEnter={(e) => {
-                            e.currentTarget.style.transform = 'perspective(800px) rotateY(0deg) rotateX(0deg) translateZ(30px) scale(1.1)';
-                            e.currentTarget.style.filter = 'drop-shadow(6px 6px 0px rgba(255,0,0,0.6)) drop-shadow(12px 12px 20px rgba(255,107,0,0.4))';
-                          }}
-                          onMouseLeave={(e) => {
-                            e.currentTarget.style.transform = 'perspective(800px) rotateY(-20deg) rotateX(10deg)';
-                            e.currentTarget.style.filter = 'drop-shadow(4px 4px 0px rgba(0,0,0,0.4)) drop-shadow(8px 8px 0px rgba(0,0,0,0.2))';
-                          }}
-                        >
-                          ✨ Click Here ✨
-                        </h3>
+                        {/* Top-right arrow indicator */}
+                        <div className="self-end">
+                          <div className="flex items-center justify-center w-9 h-9 rounded-full bg-white/20 backdrop-blur-sm border border-white/30 group-hover:bg-white/40 group-hover:scale-110 transition-all duration-300">
+                            <svg
+                              className="w-4 h-4 text-white -rotate-45 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform duration-300"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M5 12h14M12 5l7 7-7 7" />
+                            </svg>
+                          </div>
+                        </div>
 
-                        <style jsx>{`
-    @keyframes gradient {
-      0%, 100% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-    }
-    
-    @keyframes float {
-      0%, 100% { transform: perspective(800px) rotateY(-20deg) rotateX(10deg) translateY(0px); }
-      50% { transform: perspective(800px) rotateY(-20deg) rotateX(10deg) translateY(-10px); }
-    }
-  `}</style>
+                        {/* Bottom: title + explore pill */}
+                        <div className="flex items-end justify-between">
+                          <h3 className="text-xl font-bold leading-tight drop-shadow-lg">
+                            {card.title}
+                          </h3>
+                          <div className="flex items-center gap-1.5 bg-white/20 backdrop-blur-sm border border-white/30 rounded-full px-3 py-1.5 group-hover:bg-white/30 group-hover:translate-x-0.5 transition-all duration-300">
+                            <span className="text-xs font-semibold tracking-wide">Explore</span>
+                            <svg
+                              className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform duration-300"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M9 5l7 7-7 7" />
+                            </svg>
+                          </div>
+                        </div>
+
                       </div>
 
-                      {/* Hover Effect Border */}
-                      {/* <div className="absolute inset-0 border-4 border-primary-500 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity" /> */}
+                      {/* Hover border glow */}
+                      <div className="absolute inset-0 rounded-2xl ring-2 ring-white/0 group-hover:ring-white/40 transition-all duration-300" />
                     </Link>
                   ))}
               </div>
             </div>
           </div>
-
-
 
           {/* SEO-Rich Content Section */}
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8 mb-12">
@@ -360,8 +350,6 @@ const Themes = () => {
               </div>
             </div>
           </div>
-
-
 
           {/* FAQ Section for Themes */}
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8 mb-12">

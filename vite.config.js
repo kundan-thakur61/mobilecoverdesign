@@ -21,7 +21,6 @@ export default defineConfig(({ mode }) => {
 
         optimizeDeps: {
             include: ['react', 'react-dom', 'react-router-dom', 'react-redux', '@reduxjs/toolkit'],
-            exclude: ['fabric'], // Don't pre-bundle heavy libs that are lazy loaded
         },
 
         server: {
@@ -90,26 +89,22 @@ export default defineConfig(({ mode }) => {
                             return 'vendor-http';
                         }
                         // Heavy libs - lazy loaded, separate chunks
-                        if (id.includes('fabric')) {
-                            return 'vendor-fabric';
-                        }
-                        if (id.includes('framer-motion')) {
-                            return 'vendor-motion';
-                        }
-                        if (id.includes('@mui/') || id.includes('@emotion/')) {
-                            return 'vendor-mui';
-                        }
                         if (id.includes('socket.io-client')) {
                             return 'vendor-socket';
                         }
                         if (id.includes('@sentry/')) {
                             return 'vendor-sentry';
                         }
-                        // UI utilities - smaller, group together
-                        if (id.includes('react-toastify') || id.includes('react-icons') || id.includes('react-hot-toast')) {
-                            return 'vendor-ui';
+                        // Toast - separate chunk (lazy loaded via ToastContainerLazy)
+                        if (id.includes('react-toastify')) {
+                            return 'vendor-toast';
                         }
-                        if (id.includes('react-helmet') || id.includes('react-loading-skeleton') || id.includes('react-lazyload')) {
+                        // Icons - loaded with shell components
+                        if (id.includes('react-icons')) {
+                            return 'vendor-icons';
+                        }
+                        // Utilities
+                        if (id.includes('react-helmet')) {
                             return 'vendor-utils';
                         }
                     },
