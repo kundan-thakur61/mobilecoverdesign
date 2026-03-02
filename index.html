@@ -17,6 +17,8 @@
 
   <link rel="icon" type="image/png" href="/favicon.ico">
   <link rel="apple-touch-icon" href="/favicon.ico">
+  <!-- Preload logo for header LCP -->
+  <link rel="preload" as="image" href="/logo.png" fetchpriority="high">
 
   <!-- Open Graph (helps with logo display) -->
   <meta property="og:image" content="/og-image.jpg">
@@ -63,28 +65,37 @@
     content="https://res.cloudinary.com/dwmytphop/image/upload/v1766473299/ChatGPT_Image_Dec_23_2025_12_30_26_PM_oyeb3g.jpg" />
 
   <!-- Preconnect for Performance (must be early in <head>) -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preconnect" href="https://res.cloudinary.com" crossorigin>
   <link rel="dns-prefetch" href="https://res.cloudinary.com">
   <link rel="dns-prefetch" href="https://fonts.googleapis.com">
 
-  <!-- Preload LCP hero image with responsive sizes -->
-  <link rel="preload" as="image" type="image/webp"
-    href="https://res.cloudinary.com/dwmytphop/image/upload/f_auto,q_auto,w_768,c_limit/v1768802259/main_background_theame_aqmriv.png"
-    imagesrcset="https://res.cloudinary.com/dwmytphop/image/upload/f_auto,q_auto,w_480,c_limit/v1768802259/main_background_theame_aqmriv.png 480w,
-                https://res.cloudinary.com/dwmytphop/image/upload/f_auto,q_auto,w_768,c_limit/v1768802259/main_background_theame_aqmriv.png 768w,
-                https://res.cloudinary.com/dwmytphop/image/upload/f_auto,q_auto,w_1024,c_limit/v1768802259/main_background_theame_aqmriv.png 1024w"
+  <!-- Preload LCP hero image — AVIF for smallest size, responsive -->
+  <link rel="preload" as="image" type="image/avif"
+    href="https://res.cloudinary.com/dwmytphop/image/upload/f_avif,q_60,w_480,c_limit/v1768802259/main_background_theame_aqmriv.png"
+    imagesrcset="https://res.cloudinary.com/dwmytphop/image/upload/f_avif,q_60,w_320,c_limit/v1768802259/main_background_theame_aqmriv.png 320w,
+                https://res.cloudinary.com/dwmytphop/image/upload/f_avif,q_60,w_480,c_limit/v1768802259/main_background_theame_aqmriv.png 480w,
+                https://res.cloudinary.com/dwmytphop/image/upload/f_avif,q_60,w_768,c_limit/v1768802259/main_background_theame_aqmriv.png 768w,
+                https://res.cloudinary.com/dwmytphop/image/upload/f_avif,q_70,w_1024,c_limit/v1768802259/main_background_theame_aqmriv.png 1024w"
     imagesizes="(min-width: 1024px) 45vw, 90vw"
     fetchpriority="high">
 
-  <!-- Fonts - load only 400 & 600 weights (most used), non-render-blocking -->
-  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap"
+  <!-- Fonts — only 400 & 600 weights (drop 700, use 600 for bold), non-render-blocking -->
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap"
     rel="stylesheet" media="print" onload="this.media='all'">
   <noscript>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
   </noscript>
+
+  <!-- Inline critical above-the-fold hero styles for instant FCP -->
+  <style>
+    .hero-gradient{background:linear-gradient(135deg,#111827,#581c87,#1e3a8a)}
+    .hero-badge{background:rgba(250,204,21,.2);color:#fde68a;padding:6px 12px;border-radius:9999px;font-size:.75rem;font-weight:600;border:1px solid rgba(250,204,21,.3);display:inline-block}
+    .hero-h1{font-size:1.875rem;font-weight:700;line-height:1.2;color:#fff}
+    @media(min-width:640px){.hero-h1{font-size:2.25rem}}
+    @media(min-width:1024px){.hero-h1{font-size:3rem}}
+  </style>
 
   <!-- Structured data loaded after critical content -->
 </head>

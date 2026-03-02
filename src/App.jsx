@@ -23,7 +23,9 @@ const ToastContainerLazy = lazy(() =>
 
 // Layout components - loaded immediately for shell
 import Header from './components/Header';
-import BottomNav from './components/BottomNav';
+
+// BottomNav is below-the-fold on mobile — lazy load to reduce initial bundle
+const BottomNav = lazy(() => import('./components/BottomNav'));
 
 // Footer is below the fold - lazy load it
 const Footer = lazy(() => import('./components/Footer'));
@@ -105,7 +107,9 @@ const Layout = () => (
       <Suspense fallback={<div className="h-64 bg-gray-900" />}>
         <Footer />
       </Suspense>
-      <BottomNav />
+      <Suspense fallback={<div className="md:hidden fixed bottom-0 left-0 right-0 h-16 bg-white border-t" />}>
+        <BottomNav />
+      </Suspense>
       <Suspense fallback={null}>
         <ToastContainerLazy
           position="top-right"

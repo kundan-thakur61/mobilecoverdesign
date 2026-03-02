@@ -33,6 +33,9 @@ export default defineConfig(({ mode }) => {
             },
         },
 
+        // CSS optimization — Tailwind uses PostCSS, so keep default transformer
+        // Lightning CSS is used only for minification (cssMinify below)
+
         build: {
             minify: 'terser',
             terserOptions: {
@@ -40,47 +43,50 @@ export default defineConfig(({ mode }) => {
                     drop_console: true,
                     drop_debugger: true,
                     pure_funcs: ['console.log', 'console.info', 'console.debug', 'console.trace'],
-                    passes: 2,
+                    passes: 3, // extra pass for deeper optimization
                     ecma: 2020,
-                    // Additional compression
                     dead_code: true,
                     collapse_vars: true,
                     reduce_vars: true,
                     hoist_funs: true,
                     toplevel: false,
+                    // Aggressive unused code removal
+                    unused: true,
+                    booleans_as_integers: true,
                 },
                 mangle: {
                     safari10: true,
+                    toplevel: false,
                 },
                 format: {
-                    comments: false, // Remove all comments
+                    comments: false,
                     ecma: 2020,
+                    ascii_only: true,
                 },
             },
 
-            chunkSizeWarningLimit: 500,
+            chunkSizeWarningLimit: 300, // tighter warning threshold
             cssCodeSplit: true,
             sourcemap: false,
-            cssMinify: true, // Use default CSS minifier (esbuild)
+            cssMinify: true, // Use esbuild for CSS minification (compatible with Tailwind)
             target: 'es2020',
             modulePreload: {
-                polyfill: false, // Modern browsers support this natively
+                polyfill: false,
             },
-            // Optimize asset inlining threshold
-            assetsInlineLimit: 4096, // Inline assets < 4KB as base64
+            assetsInlineLimit: 4096,
 
             rollupOptions: {
                 output: {
                     manualChunks(id) {
-                        // Core React - always needed
+                        // Core React — always needed
                         if (id.includes('react-dom') || (id.includes('/react/') && !id.includes('react-'))) {
                             return 'vendor-react';
                         }
-                        // Router - needed for navigation
+                        // Router — needed for navigation
                         if (id.includes('react-router')) {
                             return 'vendor-router';
                         }
-                        // Redux - state management
+                        // Redux — state management
                         if (id.includes('react-redux') || id.includes('@reduxjs/toolkit') || id.includes('redux')) {
                             return 'vendor-redux';
                         }
@@ -88,22 +94,22 @@ export default defineConfig(({ mode }) => {
                         if (id.includes('axios')) {
                             return 'vendor-http';
                         }
-                        // Heavy libs - lazy loaded, separate chunks
+                        // Heavy libs — separate chunks (lazy loaded)
                         if (id.includes('socket.io-client')) {
                             return 'vendor-socket';
                         }
                         if (id.includes('@sentry/')) {
                             return 'vendor-sentry';
                         }
-                        // Toast - separate chunk (lazy loaded via ToastContainerLazy)
+                        // Toast — separate chunk (lazy loaded)
                         if (id.includes('react-toastify')) {
                             return 'vendor-toast';
                         }
-                        // Icons - loaded with shell components
+                        // Icons — tree-shake, separate chunk
                         if (id.includes('react-icons')) {
                             return 'vendor-icons';
                         }
-                        // Utilities
+                        // Helmet
                         if (id.includes('react-helmet')) {
                             return 'vendor-utils';
                         }

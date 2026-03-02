@@ -1,8 +1,14 @@
 import { useRef, useCallback, memo } from 'react';
 import { Link } from 'react-router-dom';
-import OptimizedImage from '../components/OptimizedImage';
 import SEO from '../components/SEO';
 import './Home.css';
+
+// Cloudinary AVIF URL builder for hero images (critical path - no external component)
+const heroImgUrl = (publicId, w, q = 60) =>
+  `https://res.cloudinary.com/dwmytphop/image/upload/f_avif,q_${q},w_${w},c_limit/${publicId}`;
+
+const heroSrcSet = (publicId) =>
+  [320, 480, 640, 768, 1024].map(w => `${heroImgUrl(publicId, w)} ${w}w`).join(', ');
 
 const PremiumCard = memo(({ image, title, subtitle, badge, priority = false }) => {
   const cardRef = useRef(null);
@@ -29,18 +35,21 @@ const PremiumCard = memo(({ image, title, subtitle, badge, priority = false }) =
       onMouseMove={handleMouseMove}
       className="group relative overflow-hidden rounded-2xl sm:rounded-3xl cursor-pointer animate-fade-in-up"
     >
-      <div className="absolute inset-0 bg-gradient-to-br from-purple-500 via-pink-500 to-blue-500 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl"></div>
       <div className="relative">
         <div className="relative" style={{ aspectRatio: '16/10' }}>
-          <OptimizedImage
-            src={image}
-            alt={title}
-            priority={priority}
-            loading={priority ? 'eager' : 'lazy'}
-            fetchPriority={priority ? 'high' : 'auto'}
+          {/* Native <img> for hero cards — eliminates JS overhead for LCP-critical images */}
+          <img
+            src={heroImgUrl(image, 480)}
+            srcSet={heroSrcSet(image)}
             sizes="(min-width: 1024px) 45vw, (min-width: 640px) 90vw, 100vw"
-            aspectRatio="16/10"
-            className="w-full h-full"
+            alt={title}
+            width="768"
+            height="480"
+            loading={priority ? 'eager' : 'lazy'}
+            decoding={priority ? 'sync' : 'async'}
+            fetchPriority={priority ? 'high' : 'auto'}
+            className="w-full h-full object-cover"
+            style={{ aspectRatio: '16/10' }}
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
           <div
@@ -75,16 +84,11 @@ PremiumCard.displayName = 'PremiumCard';
 function PremiumCardSection() {
   return (
     <section className="py-8 sm:py-12 md:py-16 lg:py-20 bg-gradient-to-b from-white via-purple-50/30 to-white relative overflow-hidden">
-      <div className="absolute inset-0 overflow-hidden pointer-events-none hidden sm:block">
-        <div className="absolute top-1/4 left-10 w-64 h-64 bg-purple-200/30 rounded-full blur-3xl animate-pulse-slow"></div>
-        <div className="absolute bottom-1/4 right-10 w-96 h-96 bg-blue-200/30 rounded-full blur-3xl animate-pulse-slow animation-delay-2000"></div>
-      </div>
-
       <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8 relative z-10">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 lg:gap-8 xl:gap-12">
           <Link to="/themes">
             <PremiumCard
-              image="https://res.cloudinary.com/dwmytphop/image/upload/v1768802259/main_background_theame_aqmriv.png"
+              image="v1768802259/main_background_theame_aqmriv.png"
               title="Pre-Designed Themes"
               subtitle="Explore 1000+ professionally crafted designs across anime, sports, nature, and abstract categories"
               badge="🎨 1000+ Designs"
@@ -93,7 +97,7 @@ function PremiumCardSection() {
           </Link>
           <Link to="/customizer">
             <PremiumCard
-              image="https://res.cloudinary.com/dwmytphop/image/upload/v1768802258/Customised_theam_my15vv.png"
+              image="v1768802258/Customised_theam_my15vv.png"
               title="Custom Design"
               subtitle="Upload your photos and create a one-of-a-kind mobile cover with our advanced design editor"
               badge="✨ Your Photos"
@@ -127,12 +131,6 @@ function PremiumCardSection() {
 function CTASection() {
   return (
     <section className="relative text-white py-10 sm:py-16 md:py-20 overflow-hidden bg-gradient-to-br from-gray-900 via-purple-900 to-blue-900">
-      <div className="absolute inset-0 opacity-30 hidden sm:block">
-        <div className="absolute top-0 left-0 w-96 h-96 bg-yellow-400 rounded-full mix-blend-multiply filter blur-3xl animate-blob"></div>
-        <div className="absolute top-0 right-0 w-96 h-96 bg-pink-400 rounded-full mix-blend-multiply filter blur-3xl animate-blob animation-delay-2000"></div>
-        <div className="absolute bottom-0 left-1/2 w-96 h-96 bg-blue-400 rounded-full mix-blend-multiply filter blur-3xl animate-blob animation-delay-4000"></div>
-      </div>
-
       <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8 relative z-10">
         <div className="flex flex-col gap-3 sm:gap-4 justify-center animate-fade-in-up animation-delay-800">
           {/* Primary CTA - Full width on mobile */}
@@ -225,12 +223,6 @@ function PremiumHero() {
         schema={homeSchema}
       />
       <section className="relative text-white py-12 sm:py-16 md:py-20 overflow-hidden">
-        <div className="absolute inset-0 opacity-30 hidden sm:block">
-          <div className="absolute top-0 left-0 w-96 h-96 bg-yellow-400 rounded-full mix-blend-multiply filter blur-3xl animate-blob"></div>
-          <div className="absolute top-0 right-0 w-96 h-96 bg-pink-400 rounded-full mix-blend-multiply filter blur-3xl animate-blob animation-delay-2000"></div>
-          <div className="absolute bottom-0 left-1/2 w-96 h-96 bg-blue-400 rounded-full mix-blend-multiply filter blur-3xl animate-blob animation-delay-4000"></div>
-        </div>
-
         <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8 relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
             <div className="space-y-4 sm:space-y-6 animate-fade-in-up text-center lg:text-left">
@@ -275,22 +267,30 @@ function PremiumHero() {
                 </Link>
               </div>
             </div>
-            <div className="hidden lg:block">
-              <div className="bg-gradient-to-br from-purple-500/20 to-blue-500/20 rounded-3xl p-8 backdrop-blur-sm border border-white/10">
-                <div className="text-center text-white/80">
-                  <div className="text-6xl mb-4">📱</div>
-                  <h3 className="text-2xl font-bold mb-2">Interactive 3D Preview</h3>
-                  <p className="text-white/70">Coming Soon - Real-time phone case visualization</p>
-                </div>
-              </div>
+            {/* Desktop CTA — replaces the "3D Preview" placeholder to reduce DOM nodes */}
+            <div className="hidden lg:flex flex-col gap-4 items-center justify-center">
+              <Link
+                to="/customizer"
+                className="inline-flex items-center justify-center bg-gradient-to-r from-yellow-400 to-yellow-500 text-gray-900 px-8 py-4 rounded-xl font-semibold text-lg hover:from-yellow-300 hover:to-yellow-400 transition-all shadow-2xl hover:shadow-yellow-400/50 hover:scale-105 transform"
+              >
+                Design Your Cover
+                <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                </svg>
+              </Link>
+              <Link
+                to="/products"
+                className="inline-flex items-center justify-center bg-white/10 text-white px-8 py-4 rounded-xl font-semibold text-lg hover:bg-white/20 transition-all border-2 border-white/30"
+              >
+                Browse Designs
+              </Link>
             </div>
           </div>
         </div>
 
         <div className="absolute bottom-0 left-0 right-0 pointer-events-none">
-          <svg viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full">
-            <path d="M0 120L60 105C120 90 240 60 360 45C480 30 600 30 720 37.5C840 45 960 60 1080 67.5C1200 75 1320 75 1380 75L1440 75V120H1380C1320 120 1200 120 1080 120C960 120 840 120 720 120C600 120 480 120 360 120C240 120 120 120 60 120H0Z" fill="white" fillOpacity="0.1"/>
-            <path d="M0 120L60 112.5C120 105 240 90 360 82.5C480 75 600 75 720 78.75C840 82.5 960 90 1080 93.75C1200 97.5 1320 97.5 1380 97.5L1440 97.5V120H1380C1320 120 1200 120 1080 120C960 120 840 120 720 120C600 120 480 120 360 120C240 120 120 120 60 120H0Z" fill="white"/>
+          <svg viewBox="0 0 1440 60" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full" aria-hidden="true">
+            <path d="M0 60L60 52.5C120 45 240 30 360 22.5C480 15 600 15 720 18.75C840 22.5 960 30 1080 33.75C1200 37.5 1320 37.5 1380 37.5L1440 37.5V60H0Z" fill="white"/>
           </svg>
         </div>
       </section>

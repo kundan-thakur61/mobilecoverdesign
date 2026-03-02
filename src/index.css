@@ -293,6 +293,16 @@
 /* ============================================
    ANIMATIONS
    ============================================ */
+/* Core animations defined here; Home-specific animations are in Home.css */
+
+.animate-fade-in {
+  animation: fade-in 0.3s ease-out;
+}
+
+.animate-slide-up {
+  animation: slide-up 0.4s ease-out;
+}
+
 @keyframes fade-in {
   from { opacity: 0; }
   to { opacity: 1; }
@@ -304,22 +314,8 @@
 }
 
 @keyframes slide-in-from-top-2 {
-  from {
-    opacity: 0;
-    transform: translateY(-8px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.animate-fade-in {
-  animation: fade-in 0.3s ease-out;
-}
-
-.animate-slide-up {
-  animation: slide-up 0.4s ease-out;
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 /* ============================================
@@ -467,15 +463,17 @@ img {
   }
 }
 
-/* Font-face declaration is in critical.css — no duplicate here */
+/* Content-visibility for below-fold sections — skips rendering until scrolled */
+section:not(:first-child) {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 600px;
+}
 
 /* GPU-accelerated animations only - use sparingly */
 .animate-fade-in,
 .animate-slide-up {
   will-change: opacity, transform;
 }
-
-/* Remove will-change from pulse - it runs forever and wastes GPU memory */
 
 /* Reduce backdrop-filter on mobile for GPU performance */
 @media (max-width: 768px) {
